@@ -248,8 +248,10 @@ function submitProfildaten() {
 	 // process the confirmation dialog result
     function onConfirm(button) {
         if (button==2)
+		{
 			hide('#savebutton');
-			window.location.hash="#/mm";
+			window.location.hash="#/t/mm";
+		}
     }
 
     // Show a custom confirmation dialog
@@ -262,10 +264,10 @@ function submitProfildaten() {
             'Nein,Hauptmenü'          // buttonLabels
         );
    	} else {
-			var r=confirm('Saved. Go back to main menu?');
+			var r=confirm('Möchten Sie zurück zum Hauptmenü?');
 			if (r==true) 
 			{
-				window.location.hash="#/mm";
+				window.location.hash="#/t/mm";
 			}
 	}
 		
