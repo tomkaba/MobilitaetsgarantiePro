@@ -252,6 +252,8 @@ function submitProfildaten() {
 			hide('#savebutton');
 			window.location.hash="#/t/mm";
 		}
+		else 
+			window.location.hash="#/t/profildaten";
     }
 
     // Show a custom confirmation dialog

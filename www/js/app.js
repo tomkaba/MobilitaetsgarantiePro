@@ -144,7 +144,7 @@ angular.module('todo', ['ionic'])
   $scope.$on('$ionicView.afterEnter', function(){
     setTimeout(function(){
       document.getElementById("custom-overlay").style.display = "none";      
-    }, 1500);
+    }, 2000);
   });  
 })
 
