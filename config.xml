@@ -20,13 +20,8 @@
   <preference name="android-installLocation" value="auto"/>
   
   <preference name="show-splash-screen-spinner" value="true"/>
-  <preference name="auto-hide-splash-screen" value="false"/>
+  <preference name="auto-hide-splash-screen" value="true"/>
   
-  <preference name="SplashScreen" value="screen" />
-  <!-- Do not auto hide splash on iOS -->
-  <preference name="AutoHideSplashScreen" value="false" />
-  <!-- Do not auto hide splash on Android -->
-  <preference name="SplashScreenDelay" value="10000"/>
   
   
   <gap:plugin name="org.apache.cordova.battery-status"/>
