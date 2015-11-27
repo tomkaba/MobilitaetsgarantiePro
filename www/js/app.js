@@ -141,6 +141,11 @@ angular.module('todo', ['ionic'])
   $scope.toggleMenu = function() {
     $ionicSideMenuDelegate.toggleLeft();
   };
+  $scope.$on('$ionicView.afterEnter', function(){
+    setTimeout(function(){
+      document.getElementById("custom-overlay").style.display = "none";      
+    }, 1500);
+  });  
 })
 
 .controller('MainmenuCtrl', function($scope) {
