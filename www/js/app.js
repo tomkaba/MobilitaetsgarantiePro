@@ -161,6 +161,7 @@ angular.module('todo', ['ionic'])
 	set_topbar_title('Unpünktlichkeit melden');
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
+	hide('#savebutton'); 
 	hide('#unpunktlichbutton'); 
 	displaybottombar();
 	assignLsProfildaten();

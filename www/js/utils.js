@@ -1,11 +1,13 @@
-function css_click(id,color) {
+function css_click(id) {
 	
-	$(id).css("background",color);
+	$(id).css("background","#adb9a6");
+	/*
 	$(id).css("background-image","-webkit-linear-gradient(top, color, #2980b9)");
 	$(id).css("background-image","-moz-linear-gradient(top, color, #2980b9)");
 	$(id).css("background-image","-ms-linear-gradient(top, color, #2980b9)");
 	$(id).css("background-image","-o-linear-gradient(top, color, #2980b9)");
 	$(id).css("background-image","linear-gradient(to bottom, color, #2980b9)");
+	*/
 	$(id).css("-webkit-border-radius","28");
 	$(id).css("-moz-border-radius","28");
 	$(id).css("border-radius","28");
@@ -18,7 +20,7 @@ function css_click(id,color) {
 }
 
 function css_unclick(id) {
-	$(id).css("background","#3498db");
+	$(id).css("background","#008a4e");
 	$(id).css("border","0px");
 	$(id).css("-webkit-border-radius","28");
 	$(id).css("-moz-border-radius","28");
@@ -116,7 +118,7 @@ function hidePopUpMessage() {
 
 function o1d1n() {
 		var description="Nach der Mobilitätsgarantie gibt es einen Erstattungsanspruch ab einer Verspätung bei der Abfahrt von 20 Minuten Ist die Verspätung kürzer als 20 Minuten, haben Sie keinen Erstattungsanspruch. Melden Sie uns die Verspätung trotzdem!";
-		
+		css_click("#button_nein");
 		set_description(description);
 		show("#dialog_description");
 		show('#unpunktlichbutton'); 
@@ -124,8 +126,8 @@ function o1d1n() {
 
 
 function o1d2n() {
-		var description="In Ihrem Fall kommt eine Entschädigung nach dem Fahrgastrechtegesetz in Betracht, wenn Ihre Verspätung sich am Zielbahnhof auf mehr als 60 Minuten beläuft. Weitere Informationen dazu finden Sie unter <a href=\"#\" onclick=\"window.open('http://www.example.org', '_system'); return false;\">www.example.org</a>";
-		
+		var description="In Ihrem Fall kommt eine Entschädigung nach dem Fahrgastrechtegesetz in Betracht, wenn Ihre Verspätung sich am Zielbahnhof auf mehr als 60 Minuten beläuft. Weitere Informationen dazu finden Sie unter <a href=\"#\" onclick=\"window.open('http://www.schlichtungsstelle-nahverkehr.de/fahrgastrechte', '_system'); return false;\">http://www.schlichtungsstelle-nahverkehr.de/fahrgastrechte</a>";
+		css_click("#button_nein");
 		set_description(description);
 		show("#dialog_description");
 		show('#unpunktlichbutton'); 
@@ -133,6 +135,7 @@ function o1d2n() {
 
 function o1d3y() {
 		
+		css_click("#button_ja");
 		show("#d3subquestion");
 		show("#dialog_subquestion_description");
 		show("#d3subquestion_janein");
@@ -143,6 +146,7 @@ function o1d3y() {
 function o1d3By() {
 		var description="Sie müssen eine zumutbare Fahrtalternative nutzen. Ein Erstattungsanspruch nach Mobilitätsgarantie NRW besteht nicht. Melden Sie uns die Verspätung trotzdem!";	
 		set_description(description);
+		css_click("#button_ja2");
 		show("#dialog_description");
 		show('#unpunktlichbutton'); 
 }
@@ -150,27 +154,27 @@ function o1d3By() {
 
 function o1d4y() {
 		var description="Sie haben keinen Anspruch nach der Mobilitätsgarantie.  Melden Sie uns die Verspätung trotzdem!";
-		
+		css_click("#button_ja");
 		set_description(description);
 		show("#dialog_description");
 		show('#unpunktlichbutton'); 
 }
 
 function o1d5y() {
-		var description="Sie müssen ein Ticket für den Fernverkehrszug kaufen. Der Preis wird inklusive Bordpreis voll erstattet. <br/>Sie dürfen zwischen Taxi und Fernverkehrszug frei wählen, wenn an Ihrer Haltestelle beides möglich ist. ";
-		css_click("#button_ja","#3cb0fd");	
+		var description="Sie müssen ein Ticket für den Fernverkehrszug kaufen. Der Preis wird inklusive Bordpreis voll erstattet. Sie dürfen zwischen Taxi und Fernverkehrszug frei wählen, wenn an Ihrer Haltestelle beides möglich ist. ";
+		css_click("#button_ja");	
 		css_unclick("#button_nein");
 		enable("#button_next");
-		//show("#dialog_ja_nein");	
+		show("#dialog_ja_nein");	
 		set_description(description);
 		show("#dialog_description");
-		$("#weiterbutton").attr("href","#/t/o17");
-		show("#weiterbutton");
+		//$("#weiterbutton").attr("href","#/t/o17");
+		//show("#weiterbutton");
 }
 
 function o1d6y() {
 		var description="Verspätung tagsüber (05:00 bis 20:00 Uhr)?";
-		css_click("#button_ja","#3cb0fd");	
+		css_click("#button_ja");	
 		css_unclick("#button_nein");
 		$("#d6subquestion").css('height','60px');
 		$("#d6subquestion").css('font-size','17px');
@@ -184,7 +188,11 @@ function o1d6y() {
 
 function o1d6n() {
 		var description="Sie haben keinen Anspruch aufgrund der Verspätung, da es bei der Mobilitätsgarantie nur um die Erstattung tatsächlich entstandener Kosten für die Weiterreise geht und nicht um eine Kompensation für Verspätungen/Wartezeit. In Ihrem Fall kommt vielleicht eine Entschädigung nach dem Fahrgastrechtegesetz in Betracht, wenn Ihre Verspätung sich am Zielbahnhof auf mehr als 60 Minuten beläuft. Weitere Informationen dazu finden Sie unter <a href=\"#\" onclick=\"window.open('http://www.example.org', '_system'); return false;\">www.example.org</a>.";
-		
+		css_click("#button_nein");	
+		css_unclick("#button_ja");
+		css_unclick("#button_ja2");
+		css_unclick("#button_nein2");
+		hide("#weiterbutton");
 		hide("#dialog_description");
 		hide("#d6subquestion_janein");
 	    $("#d6subquestion").css('height','260px');
@@ -200,7 +208,8 @@ function o1d6Bn() {
 		var description="Bei einer Verspätung zwischen 20:00 Uhr und 05:00 Uhr können nach der Mobilitätsgarantie die Kosten für das Taxi bis zu <b>50,- € pro Person</b> erstattet werden. <b>Mehr...</b>";
 		
 		enable("#button_next");
-		
+		css_unclick("#button_ja2");
+		css_click("#button_nein2");
 		set_description(description);
 		show("#dialog_description");
 		$("#weiterbutton").attr("href","#/t/o17");
@@ -211,7 +220,8 @@ function o1d6By() {
 		var description="Bei einer Verspätung zwischen 05:00 Uhr und 20:00 Uhr können nach der Mobilitätsgarantie die Kosten für das Taxi bis zu <b>25,- € pro Person</b> erstattet werden. <b>Mehr...</b>";
 		
 		enable("#button_next");
-		
+		css_click("#button_ja2");
+		css_unclick("#button_nein2");
 		set_description(description);
 		show("#dialog_description");
 		$("#weiterbutton").attr("href","#/t/o17");
