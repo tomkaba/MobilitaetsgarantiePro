@@ -235,27 +235,46 @@ function submitProfildaten() {
 	var email=$("[name='email']").val();
 	var phone=$("[name='phone']").val();
 	var flat=$("[name='flat']").val();
+	var street=$("[name='street']").val();
 	var postcode=$("[name='postcode']").val();
 	var city=$("[name='city']").val();
-	var account_holder=$("[name='account_holder']").val();
+	var accountholder=$("[name='accountholder']").val();
 	var iban=$("[name='iban']").val();
 	var bic=$("[name='bic']").val();
+	var ticketname=$("[name='ticketname']").val();
+	var tarifraum=$("[name='tarifraum']").val();
+	var startpunkt=$("[name='startpunkt']").val();
+	var endpunkt=$("[name='endpunkt']").val();
+	var stadt=$("[name='stadt']").val();
+	var linie=$("[name='linie']").val();
+	var richtung=$("[name='richtung']").val();
+	var verkehrsunternehmen=$("[name='verkehrsunternehmen']").val();
+	
 
 	window.localStorage.setItem('vorname',vorname);
 	window.localStorage.setItem('name',name);
 	window.localStorage.setItem('email',email);
 	window.localStorage.setItem('phone',phone);
+	window.localStorage.setItem('street',street);
 	window.localStorage.setItem('flat',flat);
 	window.localStorage.setItem('postcode',postcode);
 	window.localStorage.setItem('city',city);
-	window.localStorage.setItem('account_holder',account_holder);
+	window.localStorage.setItem('accountholder',accountholder);
 	window.localStorage.setItem('iban',iban);
 	window.localStorage.setItem('bic',bic);
-	
+	window.localStorage.setItem('ticketname',ticketname);
+	window.localStorage.setItem('tarifraum',tarifraum);
+	window.localStorage.setItem('startpunkt',startpunkt);
+	window.localStorage.setItem('endpunkt',endpunkt);
+	window.localStorage.setItem('stadt',stadt);
+	window.localStorage.setItem('linie',linie);
+	window.localStorage.setItem('richtung',richtung);
+	window.localStorage.setItem('verkehrsunternehmen',verkehrsunternehmen);
 	
 	
 	
 	 // process the confirmation dialog result
+	 
     function onConfirm(button) {
         if (button==2)
 		{
@@ -282,7 +301,7 @@ function submitProfildaten() {
 				window.location.hash="#/t/mm";
 			}
 	}
-		
+	
 		
     
 	
@@ -294,13 +313,70 @@ function assignLsProfildaten() {
 	$("[name='name']").val(window.localStorage.getItem('name'));
 	$("[name='email']").val(window.localStorage.getItem('email'));
 	$("[name='phone']").val(window.localStorage.getItem('phone'));
+	$("[name='street']").val(window.localStorage.getItem('street'));
 	$("[name='flat']").val(window.localStorage.getItem('flat'));
 	$("[name='postcode']").val(window.localStorage.getItem('postcode'));
 	$("[name='city']").val(window.localStorage.getItem('city'));
-	$("[name='account_holder']").val(window.localStorage.getItem('account_holder'));
+	$("[name='accountholder']").val(window.localStorage.getItem('accountholder'));
 	$("[name='iban']").val(window.localStorage.getItem('iban'));
 	$("[name='bic']").val(window.localStorage.getItem('bic'));
-	
+	$("[name='ticketname']").val(window.localStorage.getItem('ticketname'));
+	$("[name='tarifraum']").val(window.localStorage.getItem('tarifraum'));
+	$("[name='startpunkt']").val(window.localStorage.getItem('startpunkt'));
+	$("[name='endpunkt']").val(window.localStorage.getItem('endpunkt'));
+	$("[name='stadt']").val(window.localStorage.getItem('stadt'));
+	$("[name='linie']").val(window.localStorage.getItem('linie'));
+	$("[name='richtung']").val(window.localStorage.getItem('richtung'));
+	$("[name='verkehrsunternehmen']").val(window.localStorage.getItem('verkehrsunternehmen'));
+}
 
+
+function a() {
+                //var wsUrl = "http://s18591189.onlinehome-server.info/portals/dataportal";
+				var wsUrl = "http://195.244.239.47/portals/dataportal";
+                var request =
+'<?xml version="1.0" encoding="utf-8"?> \
+    <mserviceRequest responseEncoding="UTF-8" version="2.0.2"> \
+    <portal version="5.7.0" name="handyPortal" triggerTime="2015-11-09 17:49:48 +0000"> \
+        <data/> \
+    </portal> \
+    <device appName="HT Beta" appVersion="6" deviceName="iPhone" deviceTyp="iOS" osVersion="8.1" \
+            deviceId="A42419D9-8F07-4155-A431-9E9147D5DD33"/> \
+    <processes> \
+        <process act="generic.ListOrganisationProzess" id="proc01" lang="pl"> \
+            <ident> \
+                <alias/> \
+                <scode type="0"/> \
+            </ident> \
+            <data> \
+                <listOrganisations> \
+                    <gps> \
+                        <longitude>8.49648</longitude> \
+                        <latitude>50.1211</latitude> \
+                    </gps> \
+                </listOrganisations> \
+            </data> \
+        </process> \
+    </processes> \
+</mserviceRequest> ';
+
+                $.ajax({
+                    type: "POST",
+                    url: wsUrl,
+                    contentType: "text/html",
+                    dataType: "xml",
+                    data: request,
+                    success: processSuccess,
+                    error: processError
+                });
 
 }
+
+        function processSuccess(data, status, req) {
+            if (status == "success")
+                alert('success! RESPONSE ' + $(req.responseXML).text() + ' RESPONSE END');
+        }
+
+        function processError(data, status, req) {
+            alert("REQ: " + req.responseText + " STATUS: " + status);
+        }  

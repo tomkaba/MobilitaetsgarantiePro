@@ -22,6 +22,11 @@
                                    /* offset horizontal: half of text area width */
 }
 
+.greenwhite {
+	background: #008a4e!important;
+	color: white;
+}
+
 .logo {
 	margin-top:-200px;
 	margin-bottom:30px;
