@@ -2,7 +2,7 @@
 			<ion-content>
 			<div class="margintop">&nbsp;</div>
 			
-			<form name="unpunktlichForm" id="unpunktlich" novalidate="" > 	
+			<form name="unpunktlichForm" id="unpunktlich"  	
 				<p class="infotext">
 					Wenn Sie auf unpünktliche Fahrten oder unzureichende Informationen hinweisen möchten, melden Sie uns die Unpünktlichkeit. Wir möchten auch wissen, was Sie außer der Unpünktlichkeit noch gestört hat, zum Beispiel ob Ihnen Informationen fehlten. Die Ihre Angaben werden in der Schlichtungsstelle gesammelt, anonym ausgewertet und in Berichten veröffentlicht.<br/>
 
@@ -37,27 +37,27 @@ Die Eingabe Ihrer Mailadresse ermöglicht uns (gegebenenfalls) Rückfragen zu st
 					  </div>
 					<li class="item item-checkbox">
 						 <label class="checkbox">
-						   <input type="radio" name="group">
+						   <input type="radio" name="verspaetung" value="verfruehung" >
 						 </label>
 						 <span style="font-size:14px;">Verfrühung</span>
 				     </li>
 					 <li class="item item-checkbox">
 						 <label class="checkbox">
-						   <input type="radio" name="group">
+						   <input type="radio" name="verspaetung" value="min10">
 						 </label>
 						 <span style="font-size:14px;">> 10 Minuten Verspätung</span>
 				     </li>
 					 <li class="item item-checkbox">
 						 <label class="checkbox">
-						   <input type="radio" name="group">
+						   <input type="radio" name="verspaetung" value="min20">
 						 </label>
 						 <span style="font-size:14px;">> 20 Minuten Verspätung</span>
 				     </li>
 					 <li class="item item-checkbox">
 						 <label class="checkbox">
-						   <input type="radio" name="group">
+						   <input type="radio" name="verspaetung" value="min60">
 						 </label>
-						 <span style="font-size:14px;">> 30 Minuten Verspätung</span>
+						 <span style="font-size:14px;">> 60 Minuten Verspätung</span>
 				     </li>
 				</div>
 				
@@ -65,13 +65,13 @@ Die Eingabe Ihrer Mailadresse ermöglicht uns (gegebenenfalls) Rückfragen zu st
 				<div class="list">
 					<li class="item item-checkbox">
 						 <label class="checkbox">
-						   <input type="checkbox" name="check1">
+						   <input type="checkbox" name="informiert" value="1">
 						 </label>
 						 <span style="font-size:14px;">Über die Verspätung wurde<br/>informiert</span>
 				     </li>
 					<li class="item item-checkbox">
 						 <label class="checkbox">
-						   <input type="checkbox" name="check1">
+						   <input type="checkbox" name="verpasst" value="1">
 						 </label>
 						 <span style="font-size:14px;">Durch die Verspätung wurde ein <br/>Anschluss verpasst</span>
 				     </li>
@@ -79,31 +79,32 @@ Die Eingabe Ihrer Mailadresse ermöglicht uns (gegebenenfalls) Rückfragen zu st
 				<div class="list">
 					  <label class="item item-input item-stacked-label" style="text-align:left">
 						<span class="input-label" >Datum</span>
-						<input type="date" >
+						<input type="date" name="datum">
 					  </label>
 					  <label class="item item-input item-stacked-label" style="text-align:left">
 						<span class="input-label" >Planmäßige Abfahrtszeit</span>
-						<input type="time">
+						<input type="time" name="uhrzeit" >
 					  </label>
 					  <label class="item item-input item-stacked-label" style="text-align:left">
 						<span class="input-label" >Startpunkt</span>
-						<input type="text" placeholder="Startpunkt">
+						<input type="text" name="startpunkt" placeholder="Startpunkt">
 					  </label>
 					  <label class="item item-input item-stacked-label" style="text-align:left">
 						<span class="input-label" >Endpunkt</span>
-						<input type="text" placeholder="Endpunkt">
+						<input type="text" name="endpunkt" placeholder="Endpunkt">
 					  </label>
 					  <label class="item item-input item-stacked-label" style="text-align:left">
 						<span class="input-label" >Linie</span>
-						<input type="text" placeholder="Linie">
+						<input type="text" name="linie" placeholder="Linie">
 					  </label>
 					  <label class="item item-input item-stacked-label" style="text-align:left">
 						<span class="input-label" >Zusätzliche Nachricht</span>
-						<textarea rows=7 placeholder="Zusätzliche Nachricht"></textarea>
+						<textarea rows=7 name="mitteilung" placeholder="Zusätzliche Nachricht"></textarea>
 						
 					  </label>
 					</div>
 				<div style="height:60px"><p>&nbsp;</p></div>	
+				<input type="hidden" name="app" value="true">
 			</form>
 			</ion-content>
 			</ion-view>

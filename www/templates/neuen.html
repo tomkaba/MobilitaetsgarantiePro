@@ -1,0 +1,62 @@
+<ion-view >
+<ion-content>
+			<div class="margintop" style="height:60px";>&nbsp;</div>
+			<form name="neuenForm" id="neuenForm" novalidate="" > 
+				
+			<ion-list >
+				<div ng-repeat="group in groups">	
+				<ion-item class="item-stable"
+                          ng-click="toggleGroup(group)"
+                          ng-class="{active: isGroupShown(group)}">
+                    <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
+                     
+                    {{group.name}}
+                </ion-item>
+				<ion-item class="item-accordion"
+                          ng-repeat="item in group.items"
+                          ng-show="isGroupShown(group)">
+							<div ng-if="item.type=='select'">
+						    <label class="item item-input item-select">
+								<div class="input-label">
+								  {{item.placeholder}}
+								</div>
+								<select name="{{item.name}}">
+										
+										<option ng-selected="tarifraum == 'VRR'" value="VRR">Verkehrsverbund Rhein-Ruhr (VRR)</option>
+										<option ng-selected="tarifraum == 'VGMVRL'" value="VGMVRL">Münsterland-/Ruhr-Lippe-Tarif (VGM/VRL)</option>
+										<option ng-selected="tarifraum == 'VGWS'" value="VGWS">Verkehrsgemeinschaft Westfalen-Süd (VGWS)</option>
+										<option ng-selected="tarifraum == 'VRS'" value="VRS">Verkehrsverbund Rhein-Sieg (VRS)</option>
+										<option ng-selected="tarifraum == 'OWL'" value="OWL">Der Sechser (OWL Verkehr)</option>
+										<option ng-selected="tarifraum == 'VGN'" value="VGN">Verkehrsgemeinschaft Niederrhein (VGN)</option>
+										<option ng-selected="tarifraum == 'AVV'" value="AVV">Aachener Verkehrsverbund (AVV)</option>
+										<option ng-selected="tarifraum == 'VPH'" value="VPH">Verkehrs-Servicegesellschaft Paderborn/Höxter (VPH)</option>
+										<option ng-selected="tarifraum == 'NRW'" value="NRW">NRW-Tarif</option>
+								</select>
+							 </label>
+						  </div>
+						  <div ng-if="item.type=='textarea'">
+							<textarea rows=7 name="{{item.name}}" placeholder="{{item.placeholder}}">{{item.value}}</textarea>
+						  </div>
+						  <div ng-if="item.type=='checkbox'">
+							<li class="item item-checkbox">
+							 <label class="checkbox">
+							   <input type="checkbox" name="{{item.name}}">
+							 </label>
+							 <span class="item-text-wrap" style="font-size:14px;">{{item.value}}</span>
+						    </li>
+						  </div>
+						  <div ng-if="item.type!='select' && item.type!='textarea' &&  item.type!='checkbox'">
+							<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}">
+						  </div>
+                </ion-item>
+				</div>
+			</ion-list>
+		
+				
+			
+
+				<div style="height:60px"><p>&nbsp;</p></div>
+			</form>
+				
+</ion-content>
+</ion-view>

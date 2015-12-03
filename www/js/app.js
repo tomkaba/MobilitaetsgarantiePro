@@ -44,6 +44,17 @@ angular.module('todo', ['ionic'])
       }
     })
 	
+	.state('t.neuen', {
+	url: "/neuen",
+	  cache: false,
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/neuen.html",
+		  controller: "NeuenCtrl"
+        }
+      }
+    })
+	
 	.state('t.o1', {
       url: "/o1",
 	  cache: false,
@@ -144,11 +155,53 @@ angular.module('todo', ['ionic'])
   $scope.toggleMenu = function() {
     $ionicSideMenuDelegate.toggleLeft();
   };
+  
   $scope.$on('$ionicView.afterEnter', function(){
     setTimeout(function(){
       document.getElementById("custom-overlay").style.display = "none";      
-    }, 2000);
-  });  
+    }, 1);
+  }); 
+  
+  
+  
+  $scope.submitUnpunktlich = function() {
+	
+		var startpunkt_v = $("[name='startpunkt']").val();
+		var linie_v = $("[name='linie']").val();
+		if(!startpunkt_v.length) 
+		{
+			$ionicPopup.alert({title:'No data',template:'Please enter Startpunkt'});
+			return false;
+		}
+		if(!linie_v.length) 
+		{
+			$ionicPopup.alert({title:'No data',template:'Please enter Linie'});
+			return false;
+		}
+
+		$ionicPopup.confirm({
+			title: 'Send?',
+			template: 'Are you sure you wana send this form?'
+		  }).then(function(res) {
+			if (res) {
+				var url = "http://etho.pl/unpunktlich.php";
+		
+				var request_arr=[ {vorname: $("[name='vorname']").val(), name: $("[name='name']").val(), email: $("[name='email']").val() , verspaetung: $("[name='verspaetung']").val(), informiert: $("[name='informiert']").val() , verpasst: $("[name='verpasst']").val(), datum: $("[name='daum']").val(),  uhrzeit: $("[name='uhrzeit']").val(),  startpunkt: startpunkt_v,  endpunkt: $("[name='endpunkt']").val(), linie: linie_v, mitteilung: $("[name='mitteilung']").val()   } ];
+				
+				var request= array2json(request_arr);
+				
+				$.ajax({
+								url: url,
+								crossDomain: true,
+								data: { 'app': request },
+								success: $ionicPopup.alert({title:'Success!',template:'Your form was sent'}), 
+								error: $ionicPopup.alert({title:'Error!',template:'Your form was NOT sent. Try again later'})
+							});
+					
+			}
+		});
+
+	}; 
 })
 
 .controller('MainmenuCtrl', function($scope) {
@@ -156,6 +209,7 @@ angular.module('todo', ['ionic'])
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
 	hidebottombar();
 	assignLsProfildaten();
 })
@@ -166,16 +220,23 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#savebutton'); 
 	hide('#unpunktlichbutton'); 
+	show('#unpsendbutton');
 	displaybottombar();
 	assignLsProfildaten();
+	
+
 })
 
 
 .controller('ProfildatenCtrl', function($scope) {
+	
+	
+
 	set_topbar_title('Profildaten / Vorlagen');
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
 	show('#savebutton');
 	displaybottombar();
 	
@@ -201,6 +262,64 @@ angular.module('todo', ['ionic'])
 })
 
 
+.controller('NeuenCtrl', function($scope) {
+	set_topbar_title('Neues Erstattungsformular');
+	hide('#formularbutton'); 
+	hide('#weiterbutton'); 
+	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
+	show('#savebutton');
+	displaybottombar();
+	
+	var vorname=window.localStorage.getItem('vorname');
+	var name=window.localStorage.getItem('name');
+	var email=window.localStorage.getItem('email');
+	var phone=window.localStorage.getItem('phone');
+	var flat=window.localStorage.getItem('flat');
+	var street=window.localStorage.getItem('street');
+	var postcode=window.localStorage.getItem('postcode');
+	var city=window.localStorage.getItem('city');
+	var accountholder=window.localStorage.getItem('accountholder');
+	var iban=window.localStorage.getItem('iban');
+	var bic=window.localStorage.getItem('bic');
+	var ticketname=window.localStorage.getItem('ticketname');
+	var tarifraum=window.localStorage.getItem('tarifraum');
+	var startpunkt=window.localStorage.getItem('startpunkt');
+	var endpunkt=window.localStorage.getItem('endpunkt');
+	var stadt=window.localStorage.getItem('stadt');
+	var linie=window.localStorage.getItem('linie');
+	var richtung=window.localStorage.getItem('richtung');
+	var verkehrsunternehmen=window.localStorage.getItem('verkehrsunternehmen');
+	
+	var n_taxinutzung=window.localStorage.getItem('n_taxinutzung');
+	var n_fernverkehr=window.localStorage.getItem('n_fernverkehr');
+	var n_bemerkungen=window.localStorage.getItem('n_bemerkungen');
+	
+	
+	var currentTime=new Date();
+	var datum=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) ;
+	
+	$scope.tarifraum=window.localStorage.getItem('tarifraum');
+	
+	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: datum, value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'text', name: 'abfahrt', placeholder: 'Planmäßige Abfahrt:', value: startpunkt }, { type: 'text', name:'einstieg', placeholder: 'Einstiegshaltestell', value: endpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung kosten', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr kosten', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
+	
+	
+    $scope.toggleGroup = function (group) {
+        if ($scope.isGroupShown(group)) {
+            $scope.shownGroup = null;
+        } else {
+            $scope.shownGroup = group;
+        }
+    };
+    $scope.isGroupShown = function (group) {
+		
+		return $scope.shownGroup === group;
+    };
+	
+})
+
+
+
 
 
 .controller('O1Ctrl', function($scope) {
@@ -208,6 +327,7 @@ angular.module('todo', ['ionic'])
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 1/7'); 
 	displaybottombar();
@@ -217,6 +337,7 @@ angular.module('todo', ['ionic'])
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 2/7'); 
 	displaybottombar();
@@ -226,6 +347,7 @@ angular.module('todo', ['ionic'])
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 3/7'); 
 	displaybottombar();
@@ -235,6 +357,7 @@ angular.module('todo', ['ionic'])
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 4/7'); 
 	displaybottombar();
@@ -244,6 +367,7 @@ angular.module('todo', ['ionic'])
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 5/7'); 
 	displaybottombar();
@@ -253,6 +377,7 @@ angular.module('todo', ['ionic'])
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 6/7'); 
 	displaybottombar();
@@ -262,6 +387,7 @@ angular.module('todo', ['ionic'])
 	show('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 7/7'); 
 	displaybottombar();
