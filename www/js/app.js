@@ -151,7 +151,11 @@ angular.module('todo', ['ionic'])
 
 })
 
-.controller('TodoCtrl', function($scope,$ionicSideMenuDelegate,$ionicPopup) {
+.controller('TodoCtrl', function($scope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading) {
+
+ 
+  	
+
   $scope.toggleMenu = function() {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -165,9 +169,12 @@ angular.module('todo', ['ionic'])
   
   
   $scope.submitUnpunktlich = function() {
-	
 		var startpunkt_v = $("[name='startpunkt']").val();
 		var linie_v = $("[name='linie']").val();
+		$scope.preventSuccessPopup=0;
+		
+	
+		
 		if(!startpunkt_v.length) 
 		{
 			$ionicPopup.alert({title:'No data',template:'Please enter Startpunkt'});
@@ -178,30 +185,67 @@ angular.module('todo', ['ionic'])
 			$ionicPopup.alert({title:'No data',template:'Please enter Linie'});
 			return false;
 		}
-
-		$ionicPopup.confirm({
+		
+		var myPopup =$ionicPopup.confirm({
 			title: 'Send?',
-			template: 'Are you sure you wana send this form?'
+			template: 'Are you sure you wana send this form?',
+			okText: 'Ja',
+			cancelText: 'Nein'
 		  }).then(function(res) {
 			if (res) {
-				var url = "http://etho.pl/unpunktlich.php";
-		
-				var request_arr=[ {vorname: $("[name='vorname']").val(), name: $("[name='name']").val(), email: $("[name='email']").val() , verspaetung: $("[name='verspaetung']").val(), informiert: $("[name='informiert']").val() , verpasst: $("[name='verpasst']").val(), datum: $("[name='daum']").val(),  uhrzeit: $("[name='uhrzeit']").val(),  startpunkt: startpunkt_v,  endpunkt: $("[name='endpunkt']").val(), linie: linie_v, mitteilung: $("[name='mitteilung']").val()   } ];
+					// Setup the loader
+			$ionicLoading.show({
+					template: 'Sending...',
+					animation: 'fade-in',
+					showBackdrop: true,
+					maxWidth: 200,
+					showDelay: 0
+			});
+					
+			
+			var url = "http://etho.pl/unpunktlich.php";
+			var request_arr=[ {vorname: $("[name='vorname']").val(), name: $("[name='name']").val(), email: $("[name='email']").val() , verspaetung: $("[name='verspaetung']").val(), informiert: $("[name='informiert']").val() , verpasst: $("[name='verpasst']").val(), datum: $("[name='daum']").val(),  uhrzeit: $("[name='uhrzeit']").val(),  startpunkt: startpunkt_v,  endpunkt: $("[name='endpunkt']").val(), linie: linie_v, mitteilung: $("[name='mitteilung']").val()   } ];
+			var request= array2json(request_arr);
 				
-				var request= array2json(request_arr);
-				
+				jQuery.support.cors = true;
 				$.ajax({
 								url: url,
-								crossDomain: true,
-								data: { 'app': request },
-								success: $ionicPopup.alert({title:'Success!',template:'Your form was sent'}), 
-								error: $ionicPopup.alert({title:'Error!',template:'Your form was NOT sent. Try again later'})
+								async: false,
+								contentType: "text/html",
+								data: { 'unpunktlichkeitmelden': request },
+								
+								success: function () {
+									$ionicLoading.hide();
+									if($scope.preventSuccessPopup==0) $ionicPopup.alert({title:'Success!',template:'Your form was sent'})
+									
+								},
+								error:  function(jqXHR, textStatus, ex) {
+									//alert(textStatus + "," + ex + "," + jqXHR.responseText);
+									$scope.preventSuccessPopup=1;
+									$ionicLoading.hide();
+									$ionicPopup.alert({title:'Network error!',template:'Your form was NOT sent. Try again later'});
+									
+								}
 							});
-					
+			}
+			});
+				 
+		
+	}; 
+	
+	$scope.clearNeues = function() {
+	
+		$ionicPopup.confirm({
+			title: 'Clear form?',
+			template: 'Are you sure you wana clear all data in this form?'
+		  }).then(function(res) {
+			if (res) {
+				clearNeuesForm();
+				$scope.tarifraum=0;
 			}
 		});
-
-	}; 
+	
+	}
 })
 
 .controller('MainmenuCtrl', function($scope) {
@@ -210,6 +254,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
+	hide('#clearbutton');
 	hidebottombar();
 	assignLsProfildaten();
 })
@@ -220,6 +265,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#savebutton'); 
 	hide('#unpunktlichbutton'); 
+	hide('#clearbutton');
 	show('#unpsendbutton');
 	displaybottombar();
 	assignLsProfildaten();
@@ -237,6 +283,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
+	hide('#clearbutton');
 	show('#savebutton');
 	displaybottombar();
 	
@@ -268,7 +315,8 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
-	show('#savebutton');
+	show('#clearbutton');
+	hide('#savebutton');
 	displaybottombar();
 	
 	var vorname=window.localStorage.getItem('vorname');
@@ -301,7 +349,7 @@ angular.module('todo', ['ionic'])
 	
 	$scope.tarifraum=window.localStorage.getItem('tarifraum');
 	
-	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: datum, value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'text', name: 'abfahrt', placeholder: 'Planmäßige Abfahrt:', value: startpunkt }, { type: 'text', name:'einstieg', placeholder: 'Einstiegshaltestell', value: endpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung kosten', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr kosten', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
+	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: datum, value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'text', name: 'startpunkt', placeholder: 'Planmäßige Abfahrt:', value: startpunkt }, { type: 'text', name:'endpunkt', placeholder: 'Einstiegshaltestell', value: endpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung kosten', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr kosten', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
 	
 	
     $scope.toggleGroup = function (group) {
@@ -328,6 +376,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
+	hide('#clearbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 1/7'); 
 	displaybottombar();
@@ -338,6 +387,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
+	hide('#clearbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 2/7'); 
 	displaybottombar();
@@ -348,6 +398,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
+	hide('#clearbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 3/7'); 
 	displaybottombar();
@@ -358,6 +409,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
+	hide('#clearbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 4/7'); 
 	displaybottombar();
@@ -368,6 +420,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
+	hide('#clearbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 5/7'); 
 	displaybottombar();
@@ -378,6 +431,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
+	hide('#clearbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 6/7'); 
 	displaybottombar();
@@ -388,6 +442,7 @@ angular.module('todo', ['ionic'])
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
 	hide('#unpsendbutton');
+	hide('#clearbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Erstattungsanspruch prüfen 7/7'); 
 	displaybottombar();

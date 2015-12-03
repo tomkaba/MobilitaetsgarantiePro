@@ -44,8 +44,11 @@
 			</div>
 			  <ion-nav-view name="menuContent"></ion-nav-view>
 			  <div class="bar bar-footer bar-dark" id="bottombar" style="display:none">
-				<a href="#mm" id="zuruckbutton" class="button button-small button-dark">
+				<a href="#mm" id="zuruckbutton" class="button button-small button-dark" style="float:left">
 					Zurück
+				</a>
+				<a ng-click="clearNeues()" id="clearbutton" class="button button-small button-dark" style="display:none;float:left;margin-left:5px;">
+					Clear form
 				</a>
 				<a href="#mm" id="weiterbutton" class="button button-small button-positive" style="display:none;float:right">
 					Weiter

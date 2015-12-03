@@ -330,6 +330,36 @@ function assignLsProfildaten() {
 	$("[name='verkehrsunternehmen']").val(window.localStorage.getItem('verkehrsunternehmen'));
 }
 
+function clearNeuesForm() {
+	
+	$("[name='vorname']").val('');
+	$("[name='name']").val('');
+	$("[name='email']").val('');
+	$("[name='phone']").val('');
+	$("[name='street']").val('');
+	$("[name='flat']").val('');
+	$("[name='postcode']").val('');
+	$("[name='city']").val('');
+	$("[name='accountholder']").val('');
+	$("[name='iban']").val('');
+	$("[name='bic']").val('');
+	$("[name='ticketname']").val('');
+	$("[name='tarifraum']").val('');
+	$("[name='startpunkt']").val('');
+	$("[name='endpunkt']").val('');
+	$("[name='stadt']").val('');
+	$("[name='linie']").val('');
+	$("[name='richtung']").val('');
+	$("[name='verkehrsunternehmen']").val('');
+	var currentTime=new Date();
+	var datum=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) ;
+	$("[name='datum']").val(datum);
+	$("[name='taxinutzung']").val('');
+	$("[name='fernverkehr']").val('');
+	$("[name='bemerkungen']").val('');
+	$("[name='check1']").attr('checked', false);
+	$("[name='check2']").attr('checked', false);
+}
 
 function a() {
                 //var wsUrl = "http://s18591189.onlinehome-server.info/portals/dataportal";
