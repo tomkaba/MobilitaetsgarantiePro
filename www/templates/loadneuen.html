@@ -57,8 +57,8 @@
 							Photo documentation
 						</div>
 						<div class="item item-text-wrap">
-						 <button class="button button-small icon-left ion-ios-camera" ng-click="addImage(0)">Capture Photo</button>
-						 <button class="button button-small icon-left ion-images" ng-click="getImage(0);">Photo from Album</button> 
+						 <button class="button button-small icon-left ion-ios-camera" ng-click="addImage(1)">Capture Photo</button>
+						 <button class="button button-small icon-left ion-images" ng-click="getImage(1);">Photo from Album</button> 
 						<!--
 						<button class="button button-small icon-left ion-camera" onclick="capturePhoto();">Capture Photo	</button> <button class="button button-small icon-left ion-images" onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">Photo from Album</button> 
 						-->
@@ -66,8 +66,8 @@
 						
 						
 						<div class="item item-text-wrap">
-							   <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" height="60px"
-							   width="60px" style="padding:5px;" ng-click="showImages($index)" />
+							 <img ng-repeat="image in loadimages" ng-src="{{image}}" height="60px"
+							  width="60px" style="padding:5px;" />
 						</div>
 
 			</ion-item>

@@ -60,7 +60,7 @@ angular.module('todo', ['ionic','ngCordova'])
 		cache: false,
 		views: {
         'menuContent' :{
-          templateUrl: "templates/neuen.html",
+          templateUrl: "templates/loadneuen.html",
 		  controller: "LoadNeuenCtrl"
         }
       }
@@ -395,9 +395,11 @@ angular.module('todo', ['ionic','ngCordova'])
 	
 	
 	$scope.images = [];
+	$scope.loadimages = [];
 	$scope.loadNeueFromOld = 0;
 	 
-	$scope.addImage = function() {
+	$scope.addImage = function(loadmode) {
+		var mode=loadmode;
 		 // 2
 		 var options = {
 		 destinationType : Camera.DestinationType.FILE_URI,
@@ -413,7 +415,7 @@ angular.module('todo', ['ionic','ngCordova'])
 		 // 4
 		 onImageSuccess(imageData);
 		 
-		 function onImageSuccess(fileURI) {
+		 function onImageSuccess(fileURI,loadmode) {
 			createFileEntry(fileURI);
 		 }
 		 
@@ -439,8 +441,11 @@ angular.module('todo', ['ionic','ngCordova'])
 		 
 		 // 6
 		 function onCopySuccess(entry) {
+			
 			 $scope.$apply(function () {
-			 $scope.images.push(entry.nativeURL);
+					if(mode==1)
+						$scope.loadimages.push(entry.nativeURL);
+					else $scope.images.push(entry.nativeURL);
 			 });
 		 }
 		 
@@ -465,7 +470,8 @@ angular.module('todo', ['ionic','ngCordova'])
 	}
 	
 	
-	$scope.getImage = function() {
+	$scope.getImage = function(loadmode) {
+		 var mode=loadmode; 	
 		 // 2
 		 var options = {
 		 destinationType : Camera.DestinationType.FILE_URI,
@@ -482,7 +488,8 @@ angular.module('todo', ['ionic','ngCordova'])
 		 onImageSuccess(imageData);
 		 
 		 function onImageSuccess(fileURI) {
-			 $scope.images.push(fileURI);
+			 if(mode==1) $scope.loadimages.push(fileURI);
+			 else $scope.images.push(fileURI);
 		 }
 		 
 		 });
@@ -641,7 +648,7 @@ angular.module('todo', ['ionic','ngCordova'])
 		var n_bemerkungen=record['record'][0]['bemerkungen'];
 		var datum=record['record'][0]['datum'];
 		
-		$scope.images=record['record'][0]['images'];
+		$scope.loadimages=record['record'][0]['images'];
 	
 	
 	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: datum, value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'text', name: 'startpunkt', placeholder: 'Planmäßige Abfahrt:', value: startpunkt }, { type: 'text', name:'endpunkt', placeholder: 'Einstiegshaltestell', value: endpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung kosten', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr kosten', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
@@ -675,7 +682,6 @@ angular.module('todo', ['ionic','ngCordova'])
 	
 	
 		//alert($scope.$state.current.url);
-		$scope.images=[];
 		var vorname=window.localStorage.getItem('vorname');
 		var name=window.localStorage.getItem('name');
 		var email=window.localStorage.getItem('email');
