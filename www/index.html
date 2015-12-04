@@ -10,12 +10,15 @@
 
 	<script src="lib/jquery-1.11.1.min.js"></script>
 	<script src="js/storage/ls-store.js"></script>
+	<script src="lib/jsPDF/jspdf.min.js"></script>
+	<script src="lib/ng-cordova.min.js"></script>
+	<script src="cordova.js"></script>
 	<script src="js/camera.js"></script>
 	<script src="js/utils.js"></script>
 	
 	
 	<script src="js/app.js"></script>
-    <script src="cordova.js"></script>
+    
   </head>
   <body ng-app="todo" ng-controller="TodoCtrl">
  
@@ -52,6 +55,12 @@
 				<a ng-click="clearNeues()" id="clearbutton" class="button button-small button-dark" style="display:none;float:left;margin-left:5px;">
 					Clear form
 				</a>
+				<a ng-click="saveNeues()" data-ng-show="$state.includes('t.neuen') || $state.includes('t.neuen2')" id="saveneuesbutton" class="button button-small button-dark" style="float:left;margin-left:5px;">
+					Save form
+				</a>
+				<a ng-click="deleteNeues()" data-ng-show="$state.includes('t.saved')" id="deleteneuesbutton" class="button button-small button-dark" style="float:left;margin-left:5px;">
+					Delete all
+				</a>
 				<a href="#mm" id="weiterbutton" class="button button-small button-positive" style="display:none;float:right">
 					Weiter
 				</a>
@@ -67,6 +76,11 @@
 				<a ng-click="submitUnpunktlich()" id="unpsendbutton" class="button button-small button-positive" style="display:none;float:right">
 					Send
 				</a>
+<!--				
+				<a ng-click="submitNeues()" data-ng-show="$state.includes('t.neuen') || $state.includes('t.neuen2')" id="submitneuesbutton" class="button button-small button-positive">
+					Generate & E-mail
+				</a>
+-->				
 			</div>
 			</ion-side-menu-content> 
 
@@ -79,7 +93,7 @@
 								<ion-item><a ng-cloak menu-close href="#/t/mm" >Hauptmenu</a></ion-item>
 								<ion-item><a ng-cloak menu-close href="#" >Einstellungen</a></ion-item>
 								<ion-item><a ng-cloak menu-close href="#/t/profildaten" >Profildaten/Vorlagen</a></ion-item>
-								<ion-item><a ng-cloak menu-close href="#" >Meine Erstattungen</a></ion-item>
+								<ion-item><a ng-cloak menu-close href="#/t/saved" >Meine Erstattungen</a></ion-item>
 								<ion-item><a ng-cloak menu-close href="#" >Rechtliche Hinweise</a></ion-item>
 								<ion-item><a ng-cloak menu-close href="#" >Infos zur Mobilitätsgarantie</a></ion-item>
 				</ion-list>

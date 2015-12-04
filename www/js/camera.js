@@ -1,22 +1,17 @@
 var pictureSource;   // picture source
 var destinationType; // sets the format of returned value
 
+	
+	
+	
 	function onPhotoDataSuccess(imageData) {
-      // Uncomment to view the base64-encoded image data
-      // console.log(imageData);
 
-      // Get image handle
-      //
-      var smallImage = document.getElementById('smallImage');
-
-      // Unhide image elements
-      //
-      smallImage.style.display = 'block';
-
-      // Show the captured photo
-      // The in-line CSS rules are used to resize the image
-      //
-      smallImage.src = "data:image/jpeg;base64," + imageData;
+	
+		
+	$("#images").html(	$("#images").html() + '<img style="width:60px;height:60px;" src="' + "data:image/jpeg;base64," + imageData +'" />' );
+		
+	
+      
     }
 
     // Called when a photo is successfully retrieved
@@ -25,18 +20,7 @@ var destinationType; // sets the format of returned value
       // Uncomment to view the image file URI
       // console.log(imageURI);
 
-      // Get image handle
-      //
-      var largeImage = document.getElementById('largeImage');
-
-      // Unhide image elements
-      //
-      largeImage.style.display = 'block';
-
-      // Show the captured photo
-      // The in-line CSS rules are used to resize the image
-      //
-      largeImage.src = imageURI;
+      	$("#images").html(	$("#images").html() + '<img style="width:60px;height:60px;" src="' + imageURI +'" />' );
     }
 
     // A button will call this function

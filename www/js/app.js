@@ -1,8 +1,8 @@
-angular.module('todo', ['ionic'])
+angular.module('todo', ['ionic','ngCordova'])
 
 
-.run(function($ionicPlatform, $ionicPopup) {
-  
+.run(function ($state,$rootScope) {
+    $rootScope.$state = $state;
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -45,9 +45,9 @@ angular.module('todo', ['ionic'])
     })
 	
 	.state('t.neuen', {
-	url: "/neuen",
-	  cache: false,
-      views: {
+		url: "/neuen",
+		cache: false,
+		views: {
         'menuContent' :{
           templateUrl: "templates/neuen.html",
 		  controller: "NeuenCtrl"
@@ -55,13 +55,26 @@ angular.module('todo', ['ionic'])
       }
     })
 	
-	.state('t.o1', {
-      url: "/o1",
+	.state('t.neuen2', {
+		url: "/loadneuen",
+		cache: false,
+		views: {
+        'menuContent' :{
+          templateUrl: "templates/neuen.html",
+		  controller: "LoadNeuenCtrl"
+        }
+      }
+    })
+	
+
+	
+	.state('t.saved', {
+      url: "/saved",
 	  cache: false,
       views: {
         'menuContent' :{
-          templateUrl: "templates/o1.html",
-		  controller: "O1Ctrl"
+          templateUrl: "templates/saved.html",
+		  controller: "SavedCtrl"
         }
       }
     })
@@ -151,7 +164,7 @@ angular.module('todo', ['ionic'])
 
 })
 
-.controller('TodoCtrl', function($scope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading) {
+.controller('TodoCtrl', function($scope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading,$cordovaCamera,$cordovaFile,$ionicModal) {
 
  
   	
@@ -165,15 +178,11 @@ angular.module('todo', ['ionic'])
       document.getElementById("custom-overlay").style.display = "none";      
     }, 1);
   }); 
-  
-  
-  
+
   $scope.submitUnpunktlich = function() {
 		var startpunkt_v = $("[name='startpunkt']").val();
 		var linie_v = $("[name='linie']").val();
 		$scope.preventSuccessPopup=0;
-		
-	
 		
 		if(!startpunkt_v.length) 
 		{
@@ -234,7 +243,6 @@ angular.module('todo', ['ionic'])
 	}; 
 	
 	$scope.clearNeues = function() {
-	
 		$ionicPopup.confirm({
 			title: 'Clear form?',
 			template: 'Are you sure you wana clear all data in this form?'
@@ -246,6 +254,268 @@ angular.module('todo', ['ionic'])
 		});
 	
 	}
+	
+	$scope.saveNeues = function() {
+	
+		var record = [ {
+			vorname: $("[name='vorname']").val(),
+			name: $("[name='name']").val(),
+			email: $("[name='email']").val(),
+			phone: $("[name='phone']").val(),
+			street: $("[name='street']").val(),
+			flat: $("[name='flat']").val(),
+			postcode: $("[name='postcode']").val(),
+			city: $("[name='city']").val(),
+			accountholder: $("[name='accountholder']").val(),
+			iban: $("[name='iban']").val(),
+			bic: $("[name='bic']").val(),
+			ticketname: $("[name='ticketname']").val(),
+			tarifraum: $("[name='tarifraum']").val(),
+			startpunkt: $("[name='startpunkt']").val(),
+			endpunkt: $("[name='endpunkt']").val(),
+			stadt: $("[name='stadt']").val(),
+			linie: $("[name='linie']").val(),
+			richtung: $("[name='richtung']").val(),
+			verkehrsunternehmen: $("[name='verkehrsunternehmen']").val(),
+			datum: $("[name='datum']").val(),
+			taxinutzung: $("[name='taxinutzung']").val(),
+			fernverkehr: $("[name='fernverkehr']").val(),
+			bemerkungen: $("[name='bemerkungen']").val(),
+			images: $scope.images 
+			} ];
+		
+		var currentTime=new Date();
+		var key=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) + ' ' + pad(currentTime.getHours(),2) + ':' + pad(currentTime.getMinutes(),2) + ':' + pad(currentTime.getSeconds(),2);
+	
+		
+		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
+		var formsInProgress;
+		var formsInProgress=eval("(" + formsInProgress_js + ")");
+		if (!(Object.prototype.toString.call( formsInProgress ) === '[object Array]'))
+		{
+			formsInProgress = [ { title: key , record: record }  ];
+		}
+		else 
+		{
+			formsInProgress.push( { title: key , record: record } );
+		}
+		window.localStorage.setItem('formsInProgress',array2json(formsInProgress));
+		$ionicPopup.alert({title:'Success!',template:'Your form has been saved'});
+		return false;
+	}
+	
+	$scope.deleteNeues = function () {
+		window.localStorage.removeItem('formsInProgress');
+		window.location.hash="#/t/mm";
+		return false;
+	}
+	
+	$scope.loadNeueForm = function (id) {
+		$scope.loadNeueFromOld=id+1;
+		$scope.$state.go('t.neuen2', {id:id+1, cache: false}, {cache:false,reload: true});
+		return true;
+	}
+	
+	$scope.deleteNeueForm = function (id) {
+		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
+		var formsInProgress=eval("(" + formsInProgress_js + ")");
+		formsInProgress.splice(id, 1);
+		window.localStorage.setItem('formsInProgress',array2json(formsInProgress));
+		
+		formsInProgress_js = window.localStorage.getItem('formsInProgress');
+		$scope.savedforms=eval("(" + formsInProgress_js + ")");
+		$scope.$state.go($scope.$state.current, {}, {reload: true});
+		return true;
+	}
+	
+	$scope.submitNeues = function (email) {
+		 $scope.email=	$("[name='email']").val();
+		 $scope.preventSuccessPopup=0;
+		 
+		 $ionicModal.fromTemplateUrl('templates/email-modal.html', {
+			scope: $scope,
+			animation: 'slide-in-up'
+		  }).then(function(modal) {
+			$scope.modal = modal
+			$scope.modal.show(); 	
+		  })  
+		  
+		$scope.closeModal = function() {
+			$scope.modal.hide();
+		};  
+		
+		$scope.sendPDF = function () {
+		//FIRST GENERATE THE PDF DOCUMENT
+			$ionicLoading.show();
+			console.log("generating pdf...");
+			var doc = new jsPDF();
+			 
+			doc.text(20, 20, 'HELLO!');
+			 
+			doc.setFont("courier");
+			doc.setFontType("normal");
+			doc.text(20, 30, 'This is a PDF document generated using JSPDF.');
+			doc.text(20, 50, 'YES, Inside of PhoneGap!');
+			
+			var pdfOutput = doc.output();
+			
+			var sendto = $("[name='sendto']").val();
+			
+			var request_arr=[ ];
+			
+			var packet= [ { email: sendto, pdf: pdfOutput } ];
+			var request = array2json(packet);
+			request=encodeURIComponent(request);
+			var request2 = array2json(request_arr);
+			
+			var url = "http://etho.pl/neues.php";
+			alert(request);	
+			jQuery.support.cors = true;
+			$.ajax({
+								url: url,
+								async: false,
+								contentType: "text/html",
+								data: { 'neues': request },
+								
+								success: function () {
+									$ionicLoading.hide();
+									if($scope.preventSuccessPopup==0) $ionicPopup.alert({title:'Success!',template:'Your form was sent'})
+									
+								},
+								error:  function(jqXHR, textStatus, ex) {
+									$scope.preventSuccessPopup=1;
+									$ionicLoading.hide();
+									$ionicPopup.alert({title:'Network error!',template:'Your form was NOT sent. Try again later'});
+								}
+			});
+
+		}
+	}
+	
+	
+	
+	$scope.images = [];
+	$scope.loadNeueFromOld = 0;
+	 
+	$scope.addImage = function() {
+		 // 2
+		 var options = {
+		 destinationType : Camera.DestinationType.FILE_URI,
+		 sourceType : Camera.PictureSourceType.CAMERA, // Camera.PictureSourceType.PHOTOLIBRARY
+		 allowEdit : false,
+		 encodingType: Camera.EncodingType.JPEG,
+		 popoverOptions: CameraPopoverOptions,
+		 };
+		 
+		 // 3
+		 $cordovaCamera.getPicture(options).then(function(imageData) {
+		 
+		 // 4
+		 onImageSuccess(imageData);
+		 
+		 function onImageSuccess(fileURI) {
+			createFileEntry(fileURI);
+		 }
+		 
+		 function createFileEntry(fileURI) {
+			window.resolveLocalFileSystemURL(fileURI, copyFile, fail);
+		 }
+		 
+		 // 5
+		 function copyFile(fileEntry) {
+			 var name = fileEntry.fullPath.substr(fileEntry.fullPath.lastIndexOf('/') + 1);
+			 var newName = makeid() + name;
+			 
+			 window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(fileSystem2) {
+			 fileEntry.copyTo(
+			 fileSystem2,
+			 newName,
+			 onCopySuccess,
+			 fail
+			 );
+			 },
+			 fail);
+		 }
+		 
+		 // 6
+		 function onCopySuccess(entry) {
+			 $scope.$apply(function () {
+			 $scope.images.push(entry.nativeURL);
+			 });
+		 }
+		 
+		 function fail(error) {
+			alert("error: " + error.code);
+		 }
+		 
+		 function makeid() {
+			 var text = "";
+			 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			 
+			 for (var i=0; i < 5; i++) {
+			 text += possible.charAt(Math.floor(Math.random() * possible.length));
+			 }
+			 return text;
+			 }
+			 
+			 }, function(err) {
+			 console.log(err);
+		 });
+		 
+	}
+	
+	
+	$scope.getImage = function() {
+		 // 2
+		 var options = {
+		 destinationType : Camera.DestinationType.FILE_URI,
+		 sourceType : Camera.PictureSourceType.PHOTOLIBRARY, // Camera.PictureSourceType.PHOTOLIBRARY
+		 allowEdit : false,
+		 encodingType: Camera.EncodingType.JPEG,
+		 popoverOptions: CameraPopoverOptions,
+		 };
+		 
+		 // 3
+		 $cordovaCamera.getPicture(options).then(function(imageData) {
+		 
+		 // 4
+		 onImageSuccess(imageData);
+		 
+		 function onImageSuccess(fileURI) {
+			 $scope.images.push(fileURI);
+		 }
+		 
+		 });
+	}
+	
+	$scope.urlForImage = function(imageName) {
+	  var name = imageName.substr(imageName.lastIndexOf('/') + 1);
+	  var trueOrigin = cordova.file.dataDirectory + name;
+	  //return trueOrigin;
+	  return imageName;
+	}
+	
+	$scope.showImages = function(index) {
+		 $scope.activeSlide = index;
+		 $scope.showModal('templates/image-popover.html');
+	}
+	
+	$scope.showModal = function(templateUrl) {
+		 $ionicModal.fromTemplateUrl(templateUrl, {
+			scope: $scope
+		 }).then(function(modal) {
+			 $scope.modal = modal;
+			 $scope.modal.show();
+		 });
+	}
+	 
+	 // Close the modal
+	$scope.closeModal = function() {
+		$scope.modal.hide();
+		$scope.modal.remove()
+	};
+	
+	
 })
 
 .controller('MainmenuCtrl', function($scope) {
@@ -273,6 +543,19 @@ angular.module('todo', ['ionic'])
 
 })
 
+.controller('SavedCtrl', function($scope) {
+	set_topbar_title('Meine Erstattungen');
+	hide('#formularbutton'); 
+	hide('#weiterbutton'); 
+	hide('#savebutton'); 
+	hide('#unpunktlichbutton'); 
+	hide('#clearbutton');
+	hide('#unpsendbutton');
+	displaybottombar();
+	
+	var formsInProgress_js = window.localStorage.getItem('formsInProgress');
+	$scope.savedforms=eval("(" + formsInProgress_js + ")");
+})
 
 .controller('ProfildatenCtrl', function($scope) {
 	
@@ -309,7 +592,7 @@ angular.module('todo', ['ionic'])
 })
 
 
-.controller('NeuenCtrl', function($scope) {
+.controller('LoadNeuenCtrl', function($scope) {
 	set_topbar_title('Neues Erstattungsformular');
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -319,41 +602,47 @@ angular.module('todo', ['ionic'])
 	hide('#savebutton');
 	displaybottombar();
 	
-	if (navigator.camera!=undefined)
-	{
-		pictureSource=navigator.camera.PictureSourceType;
-		destinationType=navigator.camera.DestinationType;
-	}
+	
+
+		console.log($scope.$state.current);
+		//alert($scope.$state.current.url);
 		
-	var vorname=window.localStorage.getItem('vorname');
-	var name=window.localStorage.getItem('name');
-	var email=window.localStorage.getItem('email');
-	var phone=window.localStorage.getItem('phone');
-	var flat=window.localStorage.getItem('flat');
-	var street=window.localStorage.getItem('street');
-	var postcode=window.localStorage.getItem('postcode');
-	var city=window.localStorage.getItem('city');
-	var accountholder=window.localStorage.getItem('accountholder');
-	var iban=window.localStorage.getItem('iban');
-	var bic=window.localStorage.getItem('bic');
-	var ticketname=window.localStorage.getItem('ticketname');
-	var tarifraum=window.localStorage.getItem('tarifraum');
-	var startpunkt=window.localStorage.getItem('startpunkt');
-	var endpunkt=window.localStorage.getItem('endpunkt');
-	var stadt=window.localStorage.getItem('stadt');
-	var linie=window.localStorage.getItem('linie');
-	var richtung=window.localStorage.getItem('richtung');
-	var verkehrsunternehmen=window.localStorage.getItem('verkehrsunternehmen');
+		
+		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
+		var formsInProgress=eval("(" + formsInProgress_js + ")");
+		var record=formsInProgress[$scope.loadNeueFromOld-1];
+		
+		
+		
+		
+		//console.log(record);
+		var vorname=record['record'][0]['vorname'];
+		var name=record['record'][0]['name'];
+		var email=record['record'][0]['email'];
+		var phone=record['record'][0]['phone'];
+		var flat=record['record'][0]['flat'];
+		var street=record['record'][0]['street'];
+		var postcode=record['record'][0]['postcode'];
+		var city=record['record'][0]['city'];
+		var accountholder=record['record'][0]['accountholder'];
+		var iban=record['record'][0]['iban'];
+		var bic=record['record'][0]['bic'];
+		var ticketname=record['record'][0]['ticketname'];
+		var tarifraum=record['record'][0]['tarifraum'];
+		var startpunkt=record['record'][0]['startpunkt'];
+		var endpunkt=record['record'][0]['endpunkt'];
+		var stadt=record['record'][0]['stadt'];
+		var linie=record['record'][0]['linie'];
+		var richtung=record['record'][0]['richtung'];
+		var verkehrsunternehmen=record['record'][0]['verkehrsunternehmen'];
+		
+		var n_taxinutzung=record['record'][0]['taxinutzung'];
+		var n_fernverkehr=record['record'][0]['fernverkehr'];
+		var n_bemerkungen=record['record'][0]['bemerkungen'];
+		var datum=record['record'][0]['datum'];
+		
+		$scope.images=record['record'][0]['images'];
 	
-	var n_taxinutzung=window.localStorage.getItem('n_taxinutzung');
-	var n_fernverkehr=window.localStorage.getItem('n_fernverkehr');
-	var n_bemerkungen=window.localStorage.getItem('n_bemerkungen');
-	
-	
-	var currentTime=new Date();
-	var datum=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) ;
-	
-	$scope.tarifraum=window.localStorage.getItem('tarifraum');
 	
 	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: datum, value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'text', name: 'startpunkt', placeholder: 'Planmäßige Abfahrt:', value: startpunkt }, { type: 'text', name:'endpunkt', placeholder: 'Einstiegshaltestell', value: endpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung kosten', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr kosten', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
 	
@@ -373,6 +662,69 @@ angular.module('todo', ['ionic'])
 })
 
 
+.controller('NeuenCtrl', function($scope) {
+	set_topbar_title('Neues Erstattungsformular');
+	hide('#formularbutton'); 
+	hide('#weiterbutton'); 
+	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
+	show('#clearbutton');
+	hide('#savebutton');
+	displaybottombar();
+	
+	
+	
+		//alert($scope.$state.current.url);
+		$scope.images=[];
+		var vorname=window.localStorage.getItem('vorname');
+		var name=window.localStorage.getItem('name');
+		var email=window.localStorage.getItem('email');
+		var phone=window.localStorage.getItem('phone');
+		var flat=window.localStorage.getItem('flat');
+		var street=window.localStorage.getItem('street');
+		var postcode=window.localStorage.getItem('postcode');
+		var city=window.localStorage.getItem('city');
+		var accountholder=window.localStorage.getItem('accountholder');
+		var iban=window.localStorage.getItem('iban');
+		var bic=window.localStorage.getItem('bic');
+		var ticketname=window.localStorage.getItem('ticketname');
+		var tarifraum=window.localStorage.getItem('tarifraum');
+		var startpunkt=window.localStorage.getItem('startpunkt');
+		var endpunkt=window.localStorage.getItem('endpunkt');
+		var stadt=window.localStorage.getItem('stadt');
+		var linie=window.localStorage.getItem('linie');
+		var richtung=window.localStorage.getItem('richtung');
+		var verkehrsunternehmen=window.localStorage.getItem('verkehrsunternehmen');
+		
+		var n_taxinutzung=window.localStorage.getItem('n_taxinutzung');
+		var n_fernverkehr=window.localStorage.getItem('n_fernverkehr');
+		var n_bemerkungen=window.localStorage.getItem('n_bemerkungen');
+	
+	
+		var currentTime=new Date();
+		var datum=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) ;
+		
+		$scope.tarifraum=window.localStorage.getItem('tarifraum');
+		
+	
+	
+	
+	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: datum, value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'text', name: 'startpunkt', placeholder: 'Planmäßige Abfahrt:', value: startpunkt }, { type: 'text', name:'endpunkt', placeholder: 'Einstiegshaltestell', value: endpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung kosten', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr kosten', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
+	
+	
+    $scope.toggleGroup = function (group) {
+        if ($scope.isGroupShown(group)) {
+            $scope.shownGroup = null;
+        } else {
+            $scope.shownGroup = group;
+        }
+    };
+    $scope.isGroupShown = function (group) {
+		
+		return $scope.shownGroup === group;
+    };
+	
+})
 
 
 

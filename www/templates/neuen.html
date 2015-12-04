@@ -50,20 +50,28 @@
 						  </div>
                 </ion-item>
 				
-			</div>
-			<ion-item>
-					<div ng-show="navigator.camera!=undefined">
-						<button onclick="capturePhoto();">Capture Photo</button> <br>
-						<button onclick="capturePhotoEdit();">Capture Editable Photo</button> <br>
-						<button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br> 
-						<button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+				</div>
+			<ion-item class="item-stable">
 						
-						<img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
-						<img style="display:none;" id="largeImage" src="" />
-					</div>
-					<div ng-show="navigator.camera==undefined">
-						NO CAMERA. Photo documentation unavailable.
-					</div>
+						<div class="item item-text-wrap">
+							Photo documentation
+						</div>
+						<div class="item item-text-wrap">
+						 <button class="button button-small icon-left ion-ios-camera" ng-click="addImage()">Capture Photo</button>
+						 <button class="button button-small icon-left ion-images" ng-click="getImage();">Photo from Album</button> 
+						<!--
+						<button class="button button-small icon-left ion-camera" onclick="capturePhoto();">Capture Photo	</button> <button class="button button-small icon-left ion-images" onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">Photo from Album</button> 
+						-->
+						</div>	
+						
+						
+						<div class="item item-text-wrap">
+							 <ion-scroll>
+							   <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" height="60px"
+							   width="60px" style="padding:5px;" ng-click="showImages($index)" />
+							  </ion-scroll>
+						</div>
+
 			</ion-item>
 			</ion-list>
 			
