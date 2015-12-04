@@ -49,9 +49,25 @@
 							<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}">
 						  </div>
                 </ion-item>
-				</div>
+				
+			</div>
+			<ion-item>
+					<div ng-show="navigator.camera!=undefined">
+						<button onclick="capturePhoto();">Capture Photo</button> <br>
+						<button onclick="capturePhotoEdit();">Capture Editable Photo</button> <br>
+						<button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br> 
+						<button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+						
+						<img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+						<img style="display:none;" id="largeImage" src="" />
+					</div>
+					<div ng-show="navigator.camera==undefined">
+						NO CAMERA. Photo documentation unavailable.
+					</div>
+			</ion-item>
 			</ion-list>
-		
+			
+			
 				
 			
 

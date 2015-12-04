@@ -204,7 +204,7 @@ angular.module('todo', ['ionic'])
 					
 			
 			var url = "http://etho.pl/unpunktlich.php";
-			var request_arr=[ {vorname: $("[name='vorname']").val(), name: $("[name='name']").val(), email: $("[name='email']").val() , verspaetung: $("[name='verspaetung']").val(), informiert: $("[name='informiert']").val() , verpasst: $("[name='verpasst']").val(), datum: $("[name='daum']").val(),  uhrzeit: $("[name='uhrzeit']").val(),  startpunkt: startpunkt_v,  endpunkt: $("[name='endpunkt']").val(), linie: linie_v, mitteilung: $("[name='mitteilung']").val()   } ];
+			var request_arr=[ {vorname: $("[name='vorname']").val(), name: $("[name='name']").val(), email: $("[name='email']").val() , verspaetung: $("[name='verspaetung']").val(), informiert: $("[name='informiert']").val() , verpasst: $("[name='verpasst']").val(), datum: $("[name='datum']").val(),  uhrzeit: $("[name='uhrzeit']").val(),  startpunkt: startpunkt_v,  endpunkt: $("[name='endpunkt']").val(), linie: linie_v, mitteilung: $("[name='mitteilung']").val()   } ];
 			var request= array2json(request_arr);
 				
 				jQuery.support.cors = true;
@@ -319,6 +319,12 @@ angular.module('todo', ['ionic'])
 	hide('#savebutton');
 	displaybottombar();
 	
+	if (navigator.camera!=undefined)
+	{
+		pictureSource=navigator.camera.PictureSourceType;
+		destinationType=navigator.camera.DestinationType;
+	}
+		
 	var vorname=window.localStorage.getItem('vorname');
 	var name=window.localStorage.getItem('name');
 	var email=window.localStorage.getItem('email');
