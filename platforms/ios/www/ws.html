@@ -1,0 +1,74 @@
+<html>
+ <head>
+    <title>Calling Web Service from jQuery</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnCallWebService").click(function (event) {
+                var wsUrl = "http://s18591189.onlinehome-server.info/portals/dataportal";
+
+                var soapRequest =
+'<?xml version="1.0" encoding="utf-8"?> \
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" \
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" \
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"> \
+  <soap:Body> \
+	<?xml version="1.0" encoding="utf-8"?> \
+    <mserviceRequest responseEncoding="UTF-8" version="2.0.2"> \
+    <portal version="5.7.0" name="handyPortal" triggerTime="2015-11-09 17:49:48 +0000"> \
+        <data/> \
+    </portal> \
+    <device appName="HT Beta" appVersion="6" deviceName="iPhone" deviceTyp="iOS" osVersion="8.1" \
+            deviceId="A42419D9-8F07-4155-A431-9E9147D5DD33"/> \
+    <processes> \
+        <process act="generic.ListOrganisationProzess" id="proc01" lang="pl"> \
+            <ident> \
+                <alias/> \
+                <scode type="0"/> \
+            </ident> \
+            <data> \
+                <listOrganisations> \
+                    <gps> \
+                        <longitude>8.49648</longitude> \
+                        <latitude>50.1211</latitude> \
+                    </gps> \
+                </listOrganisations> \
+            </data> \
+        </process> \
+    </processes> \
+</mserviceRequest> \
+  </soap:Body> \
+</soap:Envelope>';
+
+                $.ajax({
+                    type: "POST",
+                    url: wsUrl,
+                    contentType: "text/xml",
+                    dataType: "xml",
+                    data: soapRequest,
+                    success: processSuccess,
+                    error: processError
+                });
+
+            });
+        });
+
+        function processSuccess(data, status, req) {
+            if (status == "success")
+               alert('success! RESPONSE' + $(req.responseXML).find('organisation').text() + ' RESPONSE END');
+        }
+
+        function processError(data, status, req) {
+            alert("REQ: " + req.responseText + " STATUS: " + status);
+        }  
+
+    </script>
+</head>
+<body>
+    <h3>
+        Calling Web Services with jQuery/AJAX
+    </h3>
+    <input id="btnCallWebService" value="Call web service" type="button" />
+    <div id="response" />
+</body>
+</html>

@@ -79,6 +79,17 @@ angular.module('todo', ['ionic','ngCordova'])
       }
     })
 	
+	.state('t.o1', {
+      url: "/o1",
+	  cache: false,
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/o1.html",
+		  controller: "O1Ctrl"
+        }
+      }
+    })
+	
 	.state('t.o12', {
       url: "/o12",
 	  cache: false,
@@ -328,7 +339,7 @@ angular.module('todo', ['ionic','ngCordova'])
 		return true;
 	}
 	
-	$scope.submitNeues = function (email) {
+	$scope.submitNeues = function () {
 		 $scope.email=	$("[name='email']").val();
 		 $scope.preventSuccessPopup=0;
 		 
@@ -342,54 +353,28 @@ angular.module('todo', ['ionic','ngCordova'])
 		  
 		$scope.closeModal = function() {
 			$scope.modal.hide();
-		};  
+	    };  
+	}	
+	
+	$scope.sendPDF = function () {
+		alert('a');
+		cordova.plugins.email.isServiceAvailable(
+			function (isAvailable) {
+				alert(isAvailable ? 'Service is available' : 'Service NOT available');
+				
+			}
+		);
 		
-		$scope.sendPDF = function () {
-		//FIRST GENERATE THE PDF DOCUMENT
-			$ionicLoading.show();
-			console.log("generating pdf...");
-			var doc = new jsPDF();
-			 
-			doc.text(20, 20, 'HELLO!');
-			 
-			doc.setFont("courier");
-			doc.setFontType("normal");
-			doc.text(20, 30, 'This is a PDF document generated using JSPDF.');
-			doc.text(20, 50, 'YES, Inside of PhoneGap!');
-			
-			var pdfOutput = doc.output();
-			
-			var sendto = $("[name='sendto']").val();
-			
-			var request_arr=[ ];
-			
-			var packet= [ { email: sendto, pdf: pdfOutput } ];
-			var request = array2json(packet);
-			request=encodeURIComponent(request);
-			var request2 = array2json(request_arr);
-			
-			var url = "http://etho.pl/neues.php";
-			alert(request);	
-			jQuery.support.cors = true;
-			$.ajax({
-								url: url,
-								async: false,
-								contentType: "text/html",
-								data: { 'neues': request },
-								
-								success: function () {
-									$ionicLoading.hide();
-									if($scope.preventSuccessPopup==0) $ionicPopup.alert({title:'Success!',template:'Your form was sent'})
-									
-								},
-								error:  function(jqXHR, textStatus, ex) {
-									$scope.preventSuccessPopup=1;
-									$ionicLoading.hide();
-									$ionicPopup.alert({title:'Network error!',template:'Your form was NOT sent. Try again later'});
-								}
-			});
-
-		}
+		alert('b');
+		cordova.plugins.email.open({
+				to:      ['max.mustermann@appplant.de'],
+				cc:      ['erika.mustermann@appplant.de'],
+				bcc:     ['john.doe@appplant.com', 'jane.doe@appplant.com'],
+				subject: 'Hello World!',
+				body:    '<h3>TEST</h3><h2>TEST</h2><h1>TEST</h1>',
+				isHtml:  true
+		});
+		alert('c');
 	}
 	
 	
