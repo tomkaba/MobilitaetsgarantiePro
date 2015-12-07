@@ -351,30 +351,71 @@ angular.module('todo', ['ionic','ngCordova'])
 			$scope.modal.show(); 	
 		  })  
 		  
-		$scope.closeModal = function() {
-			$scope.modal.hide();
-	    };  
+		
 	}	
 	
-	$scope.sendPDF = function () {
-		alert('a');
-		cordova.plugins.email.isServiceAvailable(
-			function (isAvailable) {
-				alert(isAvailable ? 'Service is available' : 'Service NOT available');
-				
-			}
-		);
 		
-		alert('b');
-		cordova.plugins.email.open({
-				to:      ['max.mustermann@appplant.de'],
-				cc:      ['erika.mustermann@appplant.de'],
-				bcc:     ['john.doe@appplant.com', 'jane.doe@appplant.com'],
-				subject: 'Hello World!',
-				body:    '<h3>TEST</h3><h2>TEST</h2><h1>TEST</h1>',
-				isHtml:  true
+	$scope.sendPDF = function () {
+		$scope.closeModal();
+		$scope.sendto =	$("[name='sendto']").val();
+		
+		
+	
+		//FIRST GENERATE THE PDF DOCUMENT
+		console.log("generating pdf...");
+		var doc = new jsPDF();
+		 
+		doc.text(20, 20, 'HELLO!');
+		 
+		doc.setFont("courier");
+		doc.setFontType("normal");
+		doc.text(20, 30, 'This is a PDF document generated using JSPDF.');
+		doc.text(20, 50, 'YES, Inside of PhoneGap!');
+		 
+		var pdfOutput = doc.output();
+		console.log( pdfOutput );
+		 
+		//NEXT SAVE IT TO THE DEVICE'S LOCAL FILE SYSTEM
+		console.log("file system...");
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+			
+		   console.log(fileSystem.name);
+		   console.log(fileSystem.root.name);
+		   console.log(fileSystem.root.fullPath);
+		 
+		   fileSystem.root.getFile("erstattungsform.pdf", {create: true}, function(entry) {
+			  var fileEntry = entry;
+			  
+			  
+			  entry.createWriter(function(writer) {
+				 writer.onwrite = function(evt) {
+				 console.log("write success");
+			  };
+		 
+			  console.log("writing to file");
+				 writer.write( pdfOutput );
+			  }, function(error) {
+				 console.log(error);
+			  });
+		 
+		   }, function(error){
+			  console.log(error);
+		   });
+		},
+		function(event){
+		 console.log( evt.target.error.code );
 		});
-		alert('c');
+		
+			
+		cordova.plugins.email.open({
+				to:      [$scope.sendto],
+				bcc:     ['tomek.kabarowski@gmail.com'],
+				subject: 'Neues erstattungsformular',
+				body:    'Please find your neues erstattungsformular attached',
+				isHtml:  true,
+				attachments: ["file://erstattungsform.pdf"]
+		});
+		
 	}
 	
 	
