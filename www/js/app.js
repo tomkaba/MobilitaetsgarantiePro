@@ -411,7 +411,12 @@ angular.module('todo', ['ionic','ngCordova'])
 					 console.log("write success");
 				  };
 			 
-				  console.log("writing to file");
+				  var fname = fileEntry.name;
+				fpath = fileEntry.fullPath;
+				NativePath = fileEntry.toNativeURL();
+				alert("fname: " + fname + "\nfpath: " + fpath);
+				alert("NativePath: " + NativePath);
+		
 				  
 					 var doc = new jsPDF();
 			
@@ -427,10 +432,10 @@ angular.module('todo', ['ionic','ngCordova'])
 						subject: 'Neues erstattungsformular',
 						body:    'Please find your neues erstattungsformular attached',
 						isHtml:  true,
-						attachments: [fileSystem.root.toURL()+"erstattungsform.pdf"]
+						attachments: [NativePath]
 					});
 				  }, function(error) {
-					 console.log(error);
+					 alert(error);
 				  });
 			 
 			   }, function(error){
