@@ -181,23 +181,20 @@ angular.module('todo', ['ionic','ngCordova'])
   document.addEventListener("deviceready", onDeviceReady, false);
   
   function onDeviceReady() {
-		console.log("device is ready");
+		//alert('device ready');
 		window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, failFS);
+
+		function gotFS(fileSystem) {
+		  //alert("entered gotFS: " + fileSystem.root.toURL());
+		}
+		
+		function failFS() {
+			alert('fail');
+		}
   }
 
-  function fail() {
-		console.log("failed to get filesystem");
-	}
-
-	function gotFS(fileSystem) {
-		console.log("got filesystem");
-		var entry=fileSystem.root; 
-		
-		entry.getDirectory(cordova.file.applicationStorageDirectory+"Documents2", {create: true, exclusive: false}, function onGetDirectorySuccess(){ console.log("Created directory") }, function(e){ console.log("error"); console.log(e)})
-		
-	}	
-
+ 
   $scope.toggleMenu = function() {
     $ionicSideMenuDelegate.toggleLeft();
   };
@@ -404,8 +401,8 @@ angular.module('todo', ['ionic','ngCordova'])
 					
 
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-			
-			   fileSystem.root.getFile("erstattungsform.pdf", {create: true}, function(entry) {
+				
+			    fileSystem.root.getFile("erstattungsform.pdf", {create: true}, function(entry) {
 				  var fileEntry = entry;
 				  
 				  
@@ -430,7 +427,7 @@ angular.module('todo', ['ionic','ngCordova'])
 						subject: 'Neues erstattungsformular',
 						body:    'Please find your neues erstattungsformular attached',
 						isHtml:  true,
-						attachments: ["file:///erstattungsform.pdf"]
+						attachments: [fileSystem.root.toURL()+"erstattungsform.pdf"]
 					});
 				  }, function(error) {
 					 console.log(error);
