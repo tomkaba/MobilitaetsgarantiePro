@@ -3,6 +3,7 @@ angular.module('todo', ['ionic','ngCordova'])
 
 .run(function ($state,$rootScope) {
     $rootScope.$state = $state;
+	
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -177,8 +178,25 @@ angular.module('todo', ['ionic','ngCordova'])
 
 .controller('TodoCtrl', function($scope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading,$cordovaCamera,$cordovaFile,$ionicModal) {
 
- 
-  	
+  document.addEventListener("deviceready", onDeviceReady, false);
+  
+  function onDeviceReady() {
+		console.log("device is ready");
+		window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+  }
+
+  function fail() {
+		console.log("failed to get filesystem");
+	}
+
+	function gotFS(fileSystem) {
+		console.log("got filesystem");
+		var entry=fileSystem.root; 
+		
+		entry.getDirectory(cordova.file.applicationStorageDirectory+"Documents2", {create: true, exclusive: false}, function onGetDirectorySuccess(){ console.log("Created directory") }, function(e){ console.log("error"); console.log(e)})
+		
+	}	
 
   $scope.toggleMenu = function() {
     $ionicSideMenuDelegate.toggleLeft();
@@ -379,10 +397,14 @@ angular.module('todo', ['ionic','ngCordova'])
 		console.log("file system...");
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
 			
-		   console.log(fileSystem.name);
-		   console.log(fileSystem.root.name);
-		   console.log(fileSystem.root.fullPath);
+		   alert(fileSystem.name);
+		   alert(fileSystem.root.name);
+		   alert(fileSystem.root.fullPath);
 		 
+		   
+		  
+		   
+		   
 		   fileSystem.root.getFile("erstattungsform.pdf", {create: true}, function(entry) {
 			  var fileEntry = entry;
 			  
@@ -401,6 +423,8 @@ angular.module('todo', ['ionic','ngCordova'])
 		   }, function(error){
 			  console.log(error);
 		   });
+		   
+		   
 		},
 		function(event){
 		 console.log( evt.target.error.code );
@@ -413,7 +437,7 @@ angular.module('todo', ['ionic','ngCordova'])
 				subject: 'Neues erstattungsformular',
 				body:    'Please find your neues erstattungsformular attached',
 				isHtml:  true,
-				attachments: ["file://erstattungsform.pdf"]
+				attachments: ["file:///erstattungsform.pdf"]
 		});
 		
 	}
