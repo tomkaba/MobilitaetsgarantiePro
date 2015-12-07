@@ -377,69 +377,87 @@ angular.module('todo', ['ionic','ngCordova'])
 		$scope.closeModal();
 		$scope.sendto =	$("[name='sendto']").val();
 		
+		$ionicLoading.show({
+					template: 'Generating PDF...',
+					animation: 'fade-in',
+					showBackdrop: true,
+					maxWidth: 200,
+					showDelay: 0
+			});
 		
-	
 		//FIRST GENERATE THE PDF DOCUMENT
-		console.log("generating pdf...");
-		var doc = new jsPDF();
-		 
-		doc.text(20, 20, 'HELLO!');
-		 
-		doc.setFont("courier");
-		doc.setFontType("normal");
-		doc.text(20, 30, 'This is a PDF document generated using JSPDF.');
-		doc.text(20, 50, 'YES, Inside of PhoneGap!');
-		 
-		var pdfOutput = doc.output();
-		console.log( pdfOutput );
-		 
+		var getImageFromUrl = function(url, callback) {
+			var img = new Image();
+
+			img.onError = function() {
+				alert('Cannot load image: "'+url+'"');
+			};
+			img.onload = function() {
+				callback(img);
+			};
+			img.src = url;
+		}
+			
+		
+		
+		var createPDF = function(imgData) {
+					
+
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+			
+			   fileSystem.root.getFile("erstattungsform.pdf", {create: true}, function(entry) {
+				  var fileEntry = entry;
+				  
+				  
+				  entry.createWriter(function(writer) {
+					 writer.onwrite = function(evt) {
+					 console.log("write success");
+				  };
+			 
+				  console.log("writing to file");
+				  
+					 var doc = new jsPDF();
+			
+					doc.addImage(imgData, 'JPEG', 0, 0, 200, 350); 
+					doc.text(70,50,'This is form to'+$scope.sendto);
+					
+					writer.write(  doc.output("blob") );
+					$ionicLoading.hide();
+				    
+					cordova.plugins.email.open({
+						to:      [$scope.sendto],
+						bcc:     ['tomek.kabarowski@gmail.com'],
+						subject: 'Neues erstattungsformular',
+						body:    'Please find your neues erstattungsformular attached',
+						isHtml:  true,
+						attachments: ["file:///erstattungsform.pdf"]
+					});
+				  }, function(error) {
+					 console.log(error);
+				  });
+			 
+			   }, function(error){
+				  console.log(error);
+			   });
+			   
+			   
+			},
+			function(event){
+			 console.log( evt.target.error.code );
+			});
+			
+		};
+		
+		getImageFromUrl('img/form.jpg', createPDF);
+		/*
+		
+
 		//NEXT SAVE IT TO THE DEVICE'S LOCAL FILE SYSTEM
-		console.log("file system...");
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-			
-		   alert(fileSystem.name);
-		   alert(fileSystem.root.name);
-		   alert(fileSystem.root.fullPath);
-		 
-		   
-		  
-		   
-		   
-		   fileSystem.root.getFile("erstattungsform.pdf", {create: true}, function(entry) {
-			  var fileEntry = entry;
-			  
-			  
-			  entry.createWriter(function(writer) {
-				 writer.onwrite = function(evt) {
-				 console.log("write success");
-			  };
-		 
-			  console.log("writing to file");
-				 writer.write( pdfOutput );
-			  }, function(error) {
-				 console.log(error);
-			  });
-		 
-		   }, function(error){
-			  console.log(error);
-		   });
-		   
-		   
-		},
-		function(event){
-		 console.log( evt.target.error.code );
-		});
+		
 		
 			
-		cordova.plugins.email.open({
-				to:      [$scope.sendto],
-				bcc:     ['tomek.kabarowski@gmail.com'],
-				subject: 'Neues erstattungsformular',
-				body:    'Please find your neues erstattungsformular attached',
-				isHtml:  true,
-				attachments: ["file:///erstattungsform.pdf"]
-		});
 		
+		*/
 	}
 	
 	
