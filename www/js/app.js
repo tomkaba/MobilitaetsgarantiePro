@@ -414,8 +414,8 @@ angular.module('todo', ['ionic','ngCordova'])
 				var fname = fileEntry.name;
 				fpath = fileEntry.fullPath;
 				NativePath = fileEntry.toNativeURL();
-				//alert("fname: " + fname + "\nfpath: " + fpath);
-				//alert("NativePath: " + NativePath);
+				alert("fname: " + fname + "\nfpath: " + fpath);
+				alert("NativePath: " + NativePath);
 		
 				  
 					var doc = new jsPDF();
@@ -431,8 +431,15 @@ angular.module('todo', ['ionic','ngCordova'])
 					doc.addImage(imgData8, 'JPEG', 168, 0, 21, 297); 
 					doc.addImage(imgData9, 'JPEG', 189, 0, 21, 297); 
 					
-					doc.setFontSize(12);
-					doc.text(70,50,'This is form to'+$scope.sendto);
+					doc.setFontSize(9);
+					doc.text(115,170,$scope.sendto);
+					doc.setFontSize(7);
+					var comment=$("[name='bemerkungen']").val();
+					var c_arr=comment.match(/(.|[\r\n]){1,60}/g); 
+					for(i=0;i<c_arr.length&&i<4;i++)
+					{
+					   doc.text(80,125+(i*5),c_arr[i]);
+					}
 					
 					writer.write(  doc.output("blob") );
 					$ionicLoading.hide();
@@ -461,7 +468,7 @@ angular.module('todo', ['ionic','ngCordova'])
 			
 		};
 		
-		
+		/*
 		var doc = new jsPDF();
 			
 					doc.addImage(imgData0, 'JPEG', 0, 0, 21, 297); 
@@ -487,8 +494,8 @@ angular.module('todo', ['ionic','ngCordova'])
 					
 					//doc.text(80,125,comment);
 					doc.output("dataurlnewwindow");
-				
-		//createPDF();
+		*/		
+		createPDF();
 		
 				
 		
