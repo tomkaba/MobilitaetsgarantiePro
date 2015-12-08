@@ -281,7 +281,7 @@ angular.module('todo', ['ionic','ngCordova'])
 	
 	}
 	
-	$scope.saveNeues = function() {
+	$scope.saveNeues = function(alert_off) {
 	
 		var record = [ {
 			vorname: $("[name='vorname']").val(),
@@ -326,7 +326,7 @@ angular.module('todo', ['ionic','ngCordova'])
 			formsInProgress.push( { title: key , record: record } );
 		}
 		window.localStorage.setItem('formsInProgress',array2json(formsInProgress));
-		$ionicPopup.alert({title:'Success!',template:'Das Formular wurde gesichert'});
+		if(!alert_off) $ionicPopup.alert({title:'Success!',template:'Das Formular wurde gesichert'});
 		return false;
 	}
 	
@@ -372,6 +372,7 @@ angular.module('todo', ['ionic','ngCordova'])
 		
 	$scope.sendPDF = function () {
 		$scope.closeModal();
+		$scope.saveNeues(1);
 		$scope.sendto =	$("[name='sendto']").val();
 		
 		$ionicLoading.show({
@@ -399,10 +400,6 @@ angular.module('todo', ['ionic','ngCordova'])
 		var margin = 0;
 		
 		var createPDF = function() {
-			
-			
-		
-			
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
 				
 			    fileSystem.root.getFile("erstattungsform.pdf", {create: true}, function(entry) {
@@ -423,17 +420,18 @@ angular.module('todo', ['ionic','ngCordova'])
 				  
 					var doc = new jsPDF();
 			
-					doc.addImage(imgData0, 'JPEG', 0, 0, 20, 350); 
-					doc.addImage(imgData1, 'JPEG', 20, 0, 20, 350); 
-					doc.addImage(imgData2, 'JPEG', 40, 0, 20, 350); 
-					doc.addImage(imgData3, 'JPEG', 60, 0, 20, 350); 
-					doc.addImage(imgData4, 'JPEG', 80, 0, 20, 350); 
-					doc.addImage(imgData5, 'JPEG', 100, 0, 20, 350); 
-					doc.addImage(imgData6, 'JPEG', 120, 0, 20, 350); 
-					doc.addImage(imgData7, 'JPEG', 140, 0, 20, 350); 
-					doc.addImage(imgData8, 'JPEG', 160, 0, 20, 350); 
-					doc.addImage(imgData9, 'JPEG', 180, 0, 20, 350); 
+					doc.addImage(imgData0, 'JPEG', 0, 0, 21, 297); 
+					doc.addImage(imgData1, 'JPEG', 21, 0, 21, 297); 
+					doc.addImage(imgData2, 'JPEG', 42, 0, 21, 297); 
+					doc.addImage(imgData3, 'JPEG', 63, 0, 21, 297); 
+					doc.addImage(imgData4, 'JPEG', 84, 0, 21, 297); 
+					doc.addImage(imgData5, 'JPEG', 105, 0, 21, 297); 
+					doc.addImage(imgData6, 'JPEG', 126, 0, 21, 297); 
+					doc.addImage(imgData7, 'JPEG', 147, 0, 21, 297); 
+					doc.addImage(imgData8, 'JPEG', 168, 0, 21, 297); 
+					doc.addImage(imgData9, 'JPEG', 189, 0, 21, 297); 
 					
+					doc.setFontSize(12);
 					doc.text(70,50,'This is form to'+$scope.sendto);
 					
 					writer.write(  doc.output("blob") );
@@ -463,9 +461,34 @@ angular.module('todo', ['ionic','ngCordova'])
 			
 		};
 		
-		//getImageFromUrl('img/form1-01-00.jpg', createPDF);
 		
-		createPDF();
+		var doc = new jsPDF();
+			
+					doc.addImage(imgData0, 'JPEG', 0, 0, 21, 297); 
+					doc.addImage(imgData1, 'JPEG', 21, 0, 21, 297); 
+					doc.addImage(imgData2, 'JPEG', 42, 0, 21, 297); 
+					doc.addImage(imgData3, 'JPEG', 63, 0, 21, 297); 
+					doc.addImage(imgData4, 'JPEG', 84, 0, 21, 297); 
+					doc.addImage(imgData5, 'JPEG', 105, 0, 21, 297); 
+					doc.addImage(imgData6, 'JPEG', 126, 0, 21, 297); 
+					doc.addImage(imgData7, 'JPEG', 147, 0, 21, 297); 
+					doc.addImage(imgData8, 'JPEG', 168, 0, 21, 297); 
+					doc.addImage(imgData9, 'JPEG', 189, 0, 21, 297); 
+					
+					doc.setFontSize(9);
+					doc.text(115,170,$scope.sendto);
+					doc.setFontSize(7);
+					var comment=$("[name='bemerkungen']").val();
+					var c_arr=comment.match(/(.|[\r\n]){1,60}/g); 
+					for(i=0;i<c_arr.length&&i<4;i++)
+					{
+					   doc.text(80,125+(i*5),c_arr[i]);
+					}
+					
+					//doc.text(80,125,comment);
+					doc.output("dataurlnewwindow");
+				
+		//createPDF();
 		
 				
 		
