@@ -23,13 +23,13 @@
 								<select name="{{item.name}}">
 										
 										<option ng-selected="tarifraum == 'VRR'" value="VRR">Verkehrsverbund Rhein-Ruhr (VRR)</option>
-										<option ng-selected="tarifraum == 'VGMVRL'" value="VGMVRL">Münsterland-/Ruhr-Lippe-Tarif (VGM/VRL)</option>
-										<option ng-selected="tarifraum == 'VGWS'" value="VGWS">Verkehrsgemeinschaft Westfalen-Süd (VGWS)</option>
+										<option ng-selected="tarifraum == 'VGMVRL'" value="VGMVRL">MÃ¼nsterland-/Ruhr-Lippe-Tarif (VGM/VRL)</option>
+										<option ng-selected="tarifraum == 'VGWS'" value="VGWS">Verkehrsgemeinschaft Westfalen-SÃ¼d (VGWS)</option>
 										<option ng-selected="tarifraum == 'VRS'" value="VRS">Verkehrsverbund Rhein-Sieg (VRS)</option>
 										<option ng-selected="tarifraum == 'OWL'" value="OWL">Der Sechser (OWL Verkehr)</option>
 										<option ng-selected="tarifraum == 'VGN'" value="VGN">Verkehrsgemeinschaft Niederrhein (VGN)</option>
 										<option ng-selected="tarifraum == 'AVV'" value="AVV">Aachener Verkehrsverbund (AVV)</option>
-										<option ng-selected="tarifraum == 'VPH'" value="VPH">Verkehrs-Servicegesellschaft Paderborn/Höxter (VPH)</option>
+										<option ng-selected="tarifraum == 'VPH'" value="VPH">Verkehrs-Servicegesellschaft Paderborn/HÃ¶xter (VPH)</option>
 										<option ng-selected="tarifraum == 'NRW'" value="NRW">NRW-Tarif</option>
 								</select>
 							 </label>
@@ -45,7 +45,10 @@
 							 <span class="item-text-wrap" style="font-size:14px;">{{item.value}}</span>
 						    </li>
 						  </div>
-						  <div ng-if="item.type!='select' && item.type!='textarea' &&  item.type!='checkbox'">
+						  <div ng-if="item.type=='date'">
+							<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}">
+						  </div>
+						  <div ng-if="item.type!='select' && item.type!='textarea' &&  item.type!='checkbox' && item.type!='date' ">
 							<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}">
 						  </div>
                 </ion-item>
@@ -54,11 +57,11 @@
 			<ion-item class="item-stable">
 						
 						<div class="item item-text-wrap">
-							Photo documentation
+							Foto einfÃ¼gen
 						</div>
 						<div class="item item-text-wrap">
-						 <button class="button button-small icon-left ion-ios-camera" ng-click="addImage(0)">Capture Photo</button>
-						 <button class="button button-small icon-left ion-images" ng-click="getImage(0);">Photo from Album</button> 
+						 <button class="button button-small icon-left ion-ios-camera" ng-click="addImage(0)">Foto aufnehmen</button>
+						 <button class="button button-small icon-left ion-images" ng-click="getImage(0);">Fotoarchiv</button> 
 						<!--
 						<button class="button button-small icon-left ion-camera" onclick="capturePhoto();">Capture Photo	</button> <button class="button button-small icon-left ion-images" onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">Photo from Album</button> 
 						-->

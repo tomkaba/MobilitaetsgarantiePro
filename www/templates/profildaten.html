@@ -34,8 +34,14 @@
 								</select>
 							 </label>
 						  </div>
-						  <div ng-if="item.type!='select'">
-							<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}">
+						  <div ng-if="item.type=='stacked'">
+								<label class="item item-input item-stacked-label">
+									<span class="input-label">{{item.placeholder}}</span>
+									<input type="text" name="{{item.name}}" placeholder="{{item.value}}" size=40>
+								 </label>
+						  </div>
+						  <div ng-if="item.type!='select' && item.type!='stacked' ">
+							<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}" size=40>
 						  </div>
                 </ion-item>
 				</div>

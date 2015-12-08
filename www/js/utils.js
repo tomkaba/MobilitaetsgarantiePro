@@ -243,8 +243,9 @@ function submitProfildaten() {
 	var bic=$("[name='bic']").val();
 	var ticketname=$("[name='ticketname']").val();
 	var tarifraum=$("[name='tarifraum']").val();
+	var starttime=$("[name='starttime']").val();
 	var startpunkt=$("[name='startpunkt']").val();
-	var endpunkt=$("[name='endpunkt']").val();
+	
 	var stadt=$("[name='stadt']").val();
 	var linie=$("[name='linie']").val();
 	var richtung=$("[name='richtung']").val();
@@ -264,8 +265,8 @@ function submitProfildaten() {
 	window.localStorage.setItem('bic',bic);
 	window.localStorage.setItem('ticketname',ticketname);
 	window.localStorage.setItem('tarifraum',tarifraum);
+	window.localStorage.setItem('starttime',starttime);
 	window.localStorage.setItem('startpunkt',startpunkt);
-	window.localStorage.setItem('endpunkt',endpunkt);
 	window.localStorage.setItem('stadt',stadt);
 	window.localStorage.setItem('linie',linie);
 	window.localStorage.setItem('richtung',richtung);
@@ -285,14 +286,13 @@ function submitProfildaten() {
 			window.location.hash="#/t/profildaten";
     }
 
-    // Show a custom confirmation dialog
-    //
+    
     if (navigator.notification) {
 	    navigator.notification.confirm(
-            'Möchten Sie zurück zum Hauptmenü?',  // message
-            onConfirm,              // callback to invoke with index of button pressed
-            'Daten wurden gesichert',            // title
-            'Nein,Hauptmenü'          // buttonLabels
+            'Möchten Sie zurück zum Hauptmenü?',  
+            onConfirm,              
+            'Daten wurden gesichert',
+            'Nein,Hauptmenü'         
         );
    	} else {
 			var r=confirm('Möchten Sie zurück zum Hauptmenü?');
@@ -322,8 +322,8 @@ function assignLsProfildaten() {
 	$("[name='bic']").val(window.localStorage.getItem('bic'));
 	$("[name='ticketname']").val(window.localStorage.getItem('ticketname'));
 	$("[name='tarifraum']").val(window.localStorage.getItem('tarifraum'));
+	$("[name='starttime']").val(window.localStorage.getItem('starttime'));
 	$("[name='startpunkt']").val(window.localStorage.getItem('startpunkt'));
-	$("[name='endpunkt']").val(window.localStorage.getItem('endpunkt'));
 	$("[name='stadt']").val(window.localStorage.getItem('stadt'));
 	$("[name='linie']").val(window.localStorage.getItem('linie'));
 	$("[name='richtung']").val(window.localStorage.getItem('richtung'));
@@ -345,8 +345,8 @@ function clearNeuesForm() {
 	$("[name='bic']").val('');
 	$("[name='ticketname']").val('');
 	$("[name='tarifraum']").val('');
+	$("[name='starttime']").val('');
 	$("[name='startpunkt']").val('');
-	$("[name='endpunkt']").val('');
 	$("[name='stadt']").val('');
 	$("[name='linie']").val('');
 	$("[name='richtung']").val('');
