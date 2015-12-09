@@ -406,18 +406,30 @@ angular.module('todo', ['ionic','ngCordova'])
 				  var fileEntry = entry;
 				  
 				  
-				  entry.createWriter(function(writer) {
+				entry.createWriter(function(writer) {
 					 writer.onwrite = function(evt) {
-					 console.log("write success");
-				  };
+						console.log("write success");
+				     };
+					 
+					 writer.onwriteend = function(evt) {
+						$ionicLoading.hide();
+						cordova.plugins.email.open({
+						to:      [$scope.sendto],
+						bcc:     ['tomek.kabarowski@gmail.com'],
+						subject: 'Neues erstattungsformular',
+						body:    'Please find your neues erstattungsformular attached',
+						isHtml:  true,
+						attachments: [NativePath]
+						});
+					};
 			 
-				var fname = fileEntry.name;
-				fpath = fileEntry.fullPath;
-				NativePath = fileEntry.toNativeURL();
-				//alert("fname: " + fname + "\nfpath: " + fpath);
-				
-				NativePath = NativePath.replace('file:///localhost/','');
-				 alert("NativePath: " + NativePath); 
+					var fname = fileEntry.name;
+					fpath = fileEntry.fullPath;
+					NativePath = fileEntry.toNativeURL();
+					//alert("fname: " + fname + "\nfpath: " + fpath);
+					
+					NativePath = NativePath.replace('file:///localhost/','');
+					// alert("NativePath: " + NativePath); 
 					var doc = new jsPDF();
 			
 					doc.addImage(imgData0, 'JPEG', 0, 0, 21, 297); 
@@ -442,17 +454,9 @@ angular.module('todo', ['ionic','ngCordova'])
 					   doc.text(80,125+(i*5),c_arr[i]);
 					}
 					*/
+					
 					writer.write(  doc.output("blob") );
-					$ionicLoading.hide();
-				    
-					cordova.plugins.email.open({
-						to:      [$scope.sendto],
-						bcc:     ['tomek.kabarowski@gmail.com'],
-						subject: 'Neues erstattungsformular',
-						body:    'Please find your neues erstattungsformular attached',
-						isHtml:  true,
-						attachments: [NativePath]
-					});
+					
 				  }, function(error) {
 					 alert(error);
 				  });
