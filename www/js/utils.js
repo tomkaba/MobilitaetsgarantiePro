@@ -454,22 +454,41 @@ function array2json(arr) {
     return '{' + json + '}';//Return associative JSON
 }
 
-
-function convertImgToDataURLviaCanvas(url, callback, outputFormat){
-    var img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.onload = function(){
-        var canvas = document.createElement('CANVAS');
-        var ctx = canvas.getContext('2d');
-        var dataURL;
-        canvas.height = this.height;
-        canvas.width = this.width;
-        ctx.drawImage(this, 0, 0);
-        dataURL = canvas.toDataURL(outputFormat);
-        callback(dataURL);
-        canvas = null; 
-    };
-    img.src = url;
+function decodeURIArray(arr)
+{
+    var parts=[];
+	var is_list = (Object.prototype.toString.apply(arr) === '[object Array]');
+	
+	for(var key in arr) {
+    	var value = arr[key];
+		if(typeof value == "object") { //Custom handling for arrays
+            if(is_list) parts[key]=decodeURIArray(value); /* :RECURSION: */
+			else parts[key]=decodeURIArray(value); /* :RECURSION: */
+        } else {
+			parts[key]=decodeURI(value);
+		}
+    }
+    
+    return parts;
 }
+
+function encodeURIArray(arr)
+{
+    var parts=[];
+	var is_list = (Object.prototype.toString.apply(arr) === '[object Array]');
+	
+	for(var key in arr) {
+    	var value = arr[key];
+		if(typeof value == "object") { //Custom handling for arrays
+            if(is_list) parts[key]=encodeURIArray(value); /* :RECURSION: */
+			else parts[key]=encodeURIArray(value); /* :RECURSION: */
+        } else {
+			parts[key]=encodeURI(value);
+		}
+    }
+    
+    return parts;
+}
+
 
 
