@@ -857,7 +857,10 @@ angular.module('todo', ['ionic','ngCordova'])
 	hide('#savebutton');
 	displaybottombar();
 	
-	
+		$scope.$on('$ionicView.beforeEnter', function() {
+			$scope.loadimages=[];
+			
+		});
 
 		console.log($scope.$state.current);
 		//alert($scope.$state.current.url);
@@ -929,8 +932,10 @@ angular.module('todo', ['ionic','ngCordova'])
 	hide('#savebutton');
 	displaybottombar();
 	
-	
-	
+		$scope.$on('$ionicView.beforeEnter', function() {
+			$scope.images=[];
+		});
+		
 		//alert($scope.$state.current.url);
 		var vorname=window.localStorage.getItem('vorname');
 		var name=window.localStorage.getItem('name');
