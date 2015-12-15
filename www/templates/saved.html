@@ -7,14 +7,24 @@
 						Your saved forms
 					</div>
 					<div class="item " ng-repeat="form in savedforms">
+						<div ng-if="form.status === 'true'">
+							<button ng-click="loadNeueForm($index)" class="button button-small icon ion-ios-play">
+							 {{form.title}} <i class="icon ion-email"></i>								 
+							 </button> 
+							<button ng-click="deleteNeueForm($index)" class="button button-small icon ion-ios-minus " style="float:right;margin-right:10px;">
+							 </button>
+						</div>
+						<div ng-if="form.status !== 'true'">
+							<button ng-click="loadNeueForm($index)" class="button button-small icon ion-ios-play">
+							 {{form.title}} <i class="icon ion-ios-compose-outline"></i>						 
+							 </button> 
+							 <button ng-click="deleteNeueForm($index)" class="button button-small icon ion-ios-minus " style="float:right;margin-right:10px;">
+							 </button>
+						</div>
 						
-						<button ng-click="loadNeueForm($index)" class="button button-small icon ion-ios-play">
-						 {{form.title}} </button> 
-						
-						
-						<button ng-click="deleteNeueForm($index)" class="button button-small icon ion-ios-minus" style="float:right;margin-left:10px;">
-						 </button>
 					</div>
 				</div>
+			<div class="margintop">&nbsp;</div>
+				
 	</ion-content>
 </ion-view>

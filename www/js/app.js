@@ -16,7 +16,7 @@ angular.module('todo', ['ionic','ngCordova'])
     })
     .state('t.mainmenu', {
       url: "/mm",
-	  cache: false,
+	  cache: true,
       views: {
         'menuContent' :{
           templateUrl: "templates/mainmenu.html",
@@ -204,6 +204,122 @@ angular.module('todo', ['ionic','ngCordova'])
       document.getElementById("custom-overlay").style.display = "none";      
     }, 1);
   }); 
+  
+  $scope.listdata=[];
+  
+  $scope.showList = function(){
+	$ionicLoading.show({
+					template: 'Please wait...',
+					animation: 'fade-in',
+					showBackdrop: true,
+					maxWidth: 200,
+					showDelay: 0
+			});
+			
+	function getStations() {
+						var wsUrl = "http://s18591189.onlinehome-server.info/portals/dataportal";
+						//var wsUrl = "http://195.244.239.47/portals/dataportal";
+						
+						var request =
+		'<?xml version="1.0" encoding="utf-8"?> \
+			<mserviceRequest responseEncoding="UTF-8" version="2.0.2"> \
+			<portal version="5.7.0" name="handyPortal" triggerTime="2015-11-09 17:49:48 +0000"> \
+				<data/> \
+			</portal> \
+			<device appName="HT Beta" appVersion="6" deviceName="iPhone" deviceTyp="iOS" osVersion="8.1" \
+					deviceId="A42419D9-8F07-4155-A431-9E9147D5DD33"/> \
+			<processes> \
+				<process act="generic.ListOrganisationProzess" id="proc01" lang="pl"> \
+					<ident> \
+						<alias/> \
+						<scode type="0"/> \
+					</ident> \
+					<data> \
+						<listOrganisations> \
+							<gps> \
+								<longitude>8.49648</longitude> \
+								<latitude>50.1211</latitude> \
+							</gps> \
+						</listOrganisations> \
+					</data> \
+				</process> \
+			</processes> \
+		</mserviceRequest> ';
+
+						$.ajax({
+							type: "POST",
+							url: wsUrl,
+							contentType: "text/html",
+							dataType: "xml",
+							data: request,
+							success: processSuccess,
+							error: processError
+						});
+
+			};
+	
+			function processSuccess(data, status, req) {
+				   $ionicLoading.hide();
+				   $scope.listdata = [];
+				   alert(req.responseText);
+				   
+				   
+				   
+				  
+				   
+				   //$arr=xml2array(req.responseText);
+				   
+				   for (var i=0; i<10;i++){
+					 $scope.listdata.push(i)
+				   }
+				   
+				   
+				   var confirmPopup = $ionicPopup.confirm({
+					 template: ' <div class="list">'+
+							   '  <select id="stationlist">'+
+							   '    <option ng-repeat="item in listdata" value="{{item}}"> {{item}}</option>'+
+							   '  </select></div>                             '+
+							   '</div>                        ',
+					 
+					 title: 'Select Startpunkt',
+					 scope: $scope
+				   }).then(function(res) {
+					if(res) {
+						$("[name='startpunkt']").val($("#stationlist").val());
+					}
+				  });   
+		   
+		   
+			}
+
+			function processError(data, status, req) {
+					$ionicLoading.hide();
+					alert("ERROR! REQ: " + req.responseText + " STATUS: " + status);
+			}  
+ 
+		var GPSonSuccess = function(position) {
+			alert('Latitude: '          + position.coords.latitude          + '\n' +
+          'Longitude: '         + position.coords.longitude         + '\n' +
+          'Altitude: '          + position.coords.altitude          + '\n' +
+          'Accuracy: '          + position.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + position.coords.heading           + '\n' +
+          'Speed: '             + position.coords.speed             + '\n' +
+          'Timestamp: '         + position.timestamp                + '\n');
+			
+				getStations();
+			
+			};
+
+		// onError Callback receives a PositionError object
+		//
+		function GPSonError(error) {
+					alert('code: '    + error.code    + '\n' +
+						  'message: ' + error.message + '\n');
+				}
+
+	navigator.geolocation.getCurrentPosition(GPSonSuccess, GPSonError);
+ } 
 
   $scope.submitUnpunktlich = function() {
 		var startpunkt_v = $("[name='startpunkt']").val();
@@ -339,6 +455,64 @@ angular.module('todo', ['ionic','ngCordova'])
 		return false;
 	}
 	
+	$scope.saveLoadNeues = function(alert_off) {
+	
+		var record = [ {
+			vorname: encodeURI($("[name='vorname']").val()),
+			name: encodeURI($("[name='name']").val()),
+			email: encodeURI($("[name='email']").val()),
+			phone: encodeURI($("[name='phone']").val()),
+			street: encodeURI($("[name='street']").val()),
+			flat: encodeURI($("[name='flat']").val()),
+			postcode: encodeURI($("[name='postcode']").val()),
+			city: encodeURI($("[name='city']").val()),
+			accountholder: encodeURI($("[name='accountholder']").val()),
+			iban: encodeURI($("[name='iban']").val()),
+			bic: encodeURI($("[name='bic']").val()),
+			ticketname: encodeURI($("[name='ticketname']").val()),
+			tarifraum: encodeURI($("[name='tarifraum']").val()),
+			starttime: encodeURI($("[name='starttime']").val()),
+			startpunkt: encodeURI($("[name='startpunkt']").val()),
+			stadt: encodeURI($("[name='stadt']").val()),
+			linie: encodeURI($("[name='linie']").val()),
+			richtung: encodeURI($("[name='richtung']").val()),
+			verkehrsunternehmen: encodeURI($("[name='verkehrsunternehmen']").val()),
+			datum: encodeURI($("[name='datum']").val()),
+			taxinutzung: encodeURI($("[name='taxinutzung']").val()),
+			fernverkehr: encodeURI($("[name='fernverkehr']").val()),
+			bemerkungen: encodeURI($("[name='bemerkungen']").val()),
+			images: $scope.loadimages 
+			} ];
+		
+			
+		
+		var currentTime=new Date();
+		var key=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) + ' ' + pad(currentTime.getHours(),2) + ':' + pad(currentTime.getMinutes(),2) + ':' + pad(currentTime.getSeconds(),2) + ' ' + encodeURI($("[name='startpunkt']").val());
+	
+		
+		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
+		var formsInProgress=eval("(" + formsInProgress_js + ")");
+		
+		var status;
+		if(!alert_off) status=false;
+			else status=true;
+		
+		if (!(Object.prototype.toString.call( formsInProgress ) === '[object Array]'))
+		{
+			formsInProgress = [ { title: key , record: record, status:  status} ] ;
+		}
+		else 
+		{
+			formsInProgress.push( { title: key , record: record, status: status } );
+		}
+		
+		var json=array2json(formsInProgress);
+		
+		window.localStorage.setItem('formsInProgress',json);
+		if(!alert_off) $ionicPopup.alert({title:'Success!',template:'Das Formular wurde gesichert'});
+		return false;
+	}
+	
 	$scope.deleteNeues = function () {
 		window.localStorage.removeItem('formsInProgress');
 		window.location.hash="#/t/mm";
@@ -364,6 +538,19 @@ angular.module('todo', ['ionic','ngCordova'])
 		return true;
 	}
 	
+	$scope.showLoadImages = function(index) {
+		 $scope.src=urlForImage(index);
+		 alert(index);
+		 alert($scope.src);
+		 $ionicModal.fromTemplateUrl('templates/image-modal.html', {
+			scope: $scope,
+			animation: 'slide-in-up'
+		  }).then(function(modal) {
+			$scope.modal = modal;
+			$scope.modal.show(); 	
+		  })  
+	}
+	
 	$scope.submitNeues = function () {
 		 $scope.email=	$("[name='email']").val();
 		 $scope.preventSuccessPopup=0;
@@ -372,7 +559,7 @@ angular.module('todo', ['ionic','ngCordova'])
 			scope: $scope,
 			animation: 'slide-in-up'
 		  }).then(function(modal) {
-			$scope.modal = modal
+			$scope.modal = modal;
 			$scope.modal.show(); 	
 		  })  
 		  
@@ -743,10 +930,7 @@ angular.module('todo', ['ionic','ngCordova'])
 	  return imageName;
 	}
 	
-	$scope.showImages = function(index) {
-		 $scope.activeSlide = index;
-		 $scope.showModal('templates/image-popover.html');
-	}
+	
 	
 	$scope.showModal = function(templateUrl) {
 		 $ionicModal.fromTemplateUrl(templateUrl, {
@@ -855,13 +1039,9 @@ angular.module('todo', ['ionic','ngCordova'])
 	hide('#unpsendbutton');
 	show('#clearbutton');
 	hide('#savebutton');
+	
 	displaybottombar();
 	
-		$scope.$on('$ionicView.beforeEnter', function() {
-			$scope.loadimages=[];
-			
-		});
-
 		console.log($scope.$state.current);
 		//alert($scope.$state.current.url);
 		
@@ -932,9 +1112,7 @@ angular.module('todo', ['ionic','ngCordova'])
 	hide('#savebutton');
 	displaybottombar();
 	
-		$scope.$on('$ionicView.beforeEnter', function() {
-			$scope.images=[];
-		});
+		
 		
 		//alert($scope.$state.current.url);
 		var vorname=window.localStorage.getItem('vorname');
@@ -971,7 +1149,7 @@ angular.module('todo', ['ionic','ngCordova'])
 	
 	
 	
-	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: datum, value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'time', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestell', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung kosten', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr kosten', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street },{ type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
+	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: 'Datum', value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'time', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestell', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung kosten', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr kosten', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street },{ type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
 	
 	
     $scope.toggleGroup = function (group) {

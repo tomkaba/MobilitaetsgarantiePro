@@ -16,6 +16,7 @@
 	<script src="js/storage/ls-store.js"></script>
 	<script src="js/utils.js"></script>
 	<script src="lib/jsPDF/jspdf.min.js"></script>
+	<script src="lib/xml2array.js"></script>
 	<script src="lib/ng-cordova.min.js"></script>
 	<script src="cordova.js"></script>
 	<script src="js/camera.js"></script>
@@ -53,14 +54,17 @@
 				<span class="title" id="topbartitle" style="font-size:13px;">Schlichtungsstelle Nahverkehr</span>
 			</div>
 			  <ion-nav-view name="menuContent"></ion-nav-view>
-			  <div class="bar bar-footer bar-dark" id="bottombar" style="display:none">
-				<a href="#mm" data-ng-show="!($state.includes('t.neuen')) && !($state.includes('t.neuen2'))" id="zuruckbutton" class="button button-small button-dark" style="float:left">
+			  <div class="bar bar-footer bar-dark" id="bottombar" style="display:none" data-ng-show="!($state.includes('t.mainmenu'))">
+				<a href="#mm" data-ng-show="!($state.includes('t.neuen')) && !($state.includes('t.neuen2')) && !($state.includes('t.mainmenu'))" id="zuruckbutton" class="button button-small button-dark" style="float:left">
 					Zurück
 				</a>
-				<a ng-click="clearNeues()" id="clearbutton" class="button button-small button-dark" style="display:none;float:left;margin-left:5px;">
+				<a ng-click="clearNeues()" data-ng-show="$state.includes('t.neuen')||$state.includes('t.neuen2')" id="clearbutton" class="button button-small button-dark" style="display:none;float:left;margin-left:5px;">
 					Zurücksetzten
 				</a>
-				<a ng-click="saveNeues()" data-ng-show="$state.includes('t.neuen') || $state.includes('t.neuen2')" id="saveneuesbutton" class="button button-small button-dark" style="float:left;margin-left:5px;">
+				<a ng-click="saveNeues()" data-ng-show="$state.includes('t.neuen')" id="saveneuesbutton" class="button button-small button-dark" style="float:left;margin-left:5px;">
+					Speichern
+				</a>
+				<a ng-click="saveLoadNeues()" data-ng-show="$state.includes('t.neuen2')" id="saveneuesbutton" class="button button-small button-dark" style="float:left;margin-left:5px;">
 					Speichern
 				</a>
 				<a ng-click="deleteNeues()" data-ng-show="$state.includes('t.saved')" id="deleteneuesbutton" class="button button-small button-dark" style="float:left;margin-left:5px;">
@@ -95,12 +99,12 @@
 			  </ion-header-bar>
 			  <ion-content>
 				<ion-list>
-								<ion-item><a ng-cloak menu-close href="#/t/mm" >Hauptmenu</a></ion-item>
-								<ion-item><a ng-cloak menu-close href="#/t/profildaten" >Profildaten/Vorlagen</a></ion-item>
-								<ion-item><a ng-cloak menu-close href="#/t/saved" >Meine Erstattungen</a></ion-item>
-								<ion-item><a ng-cloak menu-close href="#" >Rechtliche Hinweise</a></ion-item>
-								<ion-item><a ng-cloak menu-close href="#" >Infos zur Mobilitätsgarantie</a></ion-item>
-								<ion-item><a ng-cloak menu-close href="#" >Build: 9.12.2015 23:20</a></ion-item>
+								<ion-item><a menu-close href="#/t/mm"><div style="width:100%">Hauptmenu</div></a></ion-item>
+								<ion-item><a menu-close href="#/t/profildaten" ><div style="width:100%">Profildaten/Vorlagen</div></a></ion-item>
+								<ion-item><a menu-close href="#/t/saved" ><div style="width:100%">Meine Erstattungen</div></a></ion-item>
+								<ion-item><a menu-close href="#" >Rechtliche Hinweise</a></ion-item>
+								<ion-item><a menu-close href="#" >Infos zur Mobilitätsgarantie</a></ion-item>
+								<ion-item><a menu-close href="#" >Build: 15.12.2015 24:00</a></ion-item>
 				</ion-list>
 			  </ion-content>
 			</ion-side-menu>

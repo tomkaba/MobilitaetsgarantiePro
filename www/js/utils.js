@@ -362,8 +362,9 @@ function clearNeuesForm() {
 }
 
 function a() {
-                //var wsUrl = "http://s18591189.onlinehome-server.info/portals/dataportal";
-				var wsUrl = "http://195.244.239.47/portals/dataportal";
+                var wsUrl = "http://s18591189.onlinehome-server.info/portals/dataportal";
+				//var wsUrl = "http://195.244.239.47/portals/dataportal";
+				
                 var request =
 '<?xml version="1.0" encoding="utf-8"?> \
     <mserviceRequest responseEncoding="UTF-8" version="2.0.2"> \
@@ -410,7 +411,10 @@ function sendformSuccess(data, status, req) {
 
 function processSuccess(data, status, req) {
             if (status == "success")
+			{
                 alert('Your form was sent');
+				alert(req.responseText);
+			}
 }
 
 function processError(data, status, req) {

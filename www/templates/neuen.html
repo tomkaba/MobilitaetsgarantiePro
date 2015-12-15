@@ -35,7 +35,10 @@
 							 </label>
 						  </div>
 						  <div ng-if="item.type=='textarea'">
-							<textarea rows=7 cols=60 name="{{item.name}}" placeholder="{{item.placeholder}}">{{item.value}}</textarea>
+							<label class="item item-input item-stacked-label">
+									<span class="input-label">{{item.placeholder}}</span>
+									<textarea rows=7 cols=60 name="{{item.name}}" placeholder="{{item.placeholder}}">{{item.value}}</textarea>
+							</label>
 						  </div>
 						  <div ng-if="item.type=='checkbox'">
 							<li class="item item-checkbox">
@@ -46,11 +49,35 @@
 						    </li>
 						  </div>
 						  <div ng-if="item.type=='date'">
-							<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}">
+							<label class="item item-input item-stacked-label">
+									<span class="input-label">{{item.placeholder}}</span>
+									<input type="{{item.type}}" name="{{item.name}}" value="{{item.value}}" size=40>
+							</label>
 						  </div>
 						  <div ng-if="item.type!='select' && item.type!='textarea' &&  item.type!='checkbox' && item.type!='date' ">
-							<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}">
+							
+							<div ng-if="item.name!='startpunkt'">
+								<label class="item item-input item-stacked-label">
+										<span class="input-label">{{item.placeholder}}</span>
+										<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.value}}" size=40>
+								</label>
+							</div>
+							<div ng-if="item.name=='startpunkt'" >
+								<div style="width:80%;float:left">
+									<label class="item item-input item-stacked-label">
+											<span class="input-label">{{item.placeholder}}</span>
+											<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.value}}" size=40>
+									</label>
+								</div>
+								<div style="float:right">
+									<button ng-click="showList()" class="button button-small icon ion-ios-location" style="float:right;margin-left:10px;"></button>
+								</div>
+							</div>
+						 
 						  </div>
+						  
+						  
+						  
                 </ion-item>
 				
 				</div>
@@ -67,11 +94,16 @@
 						-->
 						</div>	
 						
-						
-						<div class="item item-text-wrap">
-							   <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" height="60px"
-							   width="60px" style="padding:5px;" ng-click="showImages($index)" />
-						</div>
+						<ion-list>
+						  <ion-item ng-repeat="image in images">
+							<img ng-src="{{urlForImage(image)}}" height="120px"
+										width="120px"   />
+							<button class="button button-small icon ion-ios-minus" ng-click="images.splice($index, 1)" style="float:right;margin-left:10px;">
+							 </button>
+							
+						  </ion-item>
+						  
+						</ion-list>
 
 			</ion-item>
 			</ion-list>
