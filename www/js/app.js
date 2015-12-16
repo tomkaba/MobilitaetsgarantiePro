@@ -3,7 +3,8 @@ angular.module('todo', ['ionic','ngCordova'])
 
 .run(function ($state,$rootScope) {
     $rootScope.$state = $state;
-	
+	$rootScope.images = [];
+	$rootScope.pdfimages=[];
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -176,7 +177,7 @@ angular.module('todo', ['ionic','ngCordova'])
 
 })
 
-.controller('TodoCtrl', function($scope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading,$cordovaCamera,$cordovaFile,$ionicModal) {
+.controller('TodoCtrl', function($scope,$rootScope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading,$cordovaCamera,$cordovaFile,$ionicModal) {
 
   document.addEventListener("deviceready", onDeviceReady, false);
   
@@ -216,9 +217,34 @@ angular.module('todo', ['ionic','ngCordova'])
 					showDelay: 0
 			});
 			
-	function getStations() {
-						var wsUrl = "http://s18591189.onlinehome-server.info/portals/dataportal";
-						//var wsUrl = "http://195.244.239.47/portals/dataportal";
+	function getStations(position) {
+						//var wsUrl = "http://s18591189.onlinehome-server.info/portals/dataportal";
+						//var wsUrl = "http://195.244.239.47/portals/dataportal"; //TVM
+						var wsUrl = "http://195.244.239.51/portals/dataportal"; //EVM
+						//var wsUrl = "https://www.handyticket.de/portals/dataportal"; //Livesystem
+/*			
+alert('Latitude: '          + position.coords.latitude          + '\n' +
+          'Longitude: '         + position.coords.longitude         + '\n' +
+          'Altitude: '          + position.coords.altitude          + '\n' +
+          'Accuracy: '          + position.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + position.coords.heading           + '\n' +
+          'Speed: '             + position.coords.speed             + '\n' +
+          'Timestamp: '         + position.timestamp                + '\n');
+*/
+
+			var lon=position.coords.longitude;
+			var lat = position.coords.latitude;
+				
+			var s=$("[name='endpunkt']").val();
+			if(s=='Berlin')
+			{
+				lon=	"13.365317"; 
+				lat= "52.523172";	
+			}
+			
+						//alert(wsUrl);
+						
 						
 						var request =
 		'<?xml version="1.0" encoding="utf-8"?> \
@@ -237,8 +263,8 @@ angular.module('todo', ['ionic','ngCordova'])
 					<data> \
 						<listOrganisations> \
 							<gps> \
-								<longitude>8.49648</longitude> \
-								<latitude>50.1211</latitude> \
+								<longitude>'+lon+'</longitude> \
+								<latitude>'+lat+'</latitude> \
 							</gps> \
 						</listOrganisations> \
 					</data> \
@@ -261,63 +287,66 @@ angular.module('todo', ['ionic','ngCordova'])
 			function processSuccess(data, status, req) {
 				   $ionicLoading.hide();
 				   $scope.listdata = [];
-				   alert(req.responseText);
+	
 				   
 				   
-				   
-				  
-				   
-				   //$arr=xml2array(req.responseText);
-				   
-				   for (var i=0; i<10;i++){
-					 $scope.listdata.push(i)
+				   var station;
+				   var str=req.responseText;
+	//			   alert('RESPONSE:' + str);
+				   var matches=str.match(/name="[^"]+"/g);
+				   if(matches!=null)
+				   {
+					   
+					   
+					   for(i=0;i< matches.length;i++) {
+						 
+						 station=matches[i].replace('name="','');
+						 station=station.replace(/"$/,'');
+						 //alert(station);
+						 $scope.listdata.push(station);
+					   }
+					   
+					   var confirmPopup = $ionicPopup.confirm({
+						 template: ' <div class="list">'+
+								   '  <select id="stationlist">'+
+								   '    <option ng-repeat="item in listdata" value="{{item}}"> {{item}}</option>'+
+								   '  </select></div>                             '+
+								   '</div>                        ',
+						 
+						 title: 'Select Startpunkt',
+						 scope: $scope
+					   }).then(function(res) {
+						if(res) {
+							$("[name='startpunkt']").val($("#stationlist").val());
+						}
+					  });
 				   }
-				   
-				   
-				   var confirmPopup = $ionicPopup.confirm({
-					 template: ' <div class="list">'+
-							   '  <select id="stationlist">'+
-							   '    <option ng-repeat="item in listdata" value="{{item}}"> {{item}}</option>'+
-							   '  </select></div>                             '+
-							   '</div>                        ',
-					 
-					 title: 'Select Startpunkt',
-					 scope: $scope
-				   }).then(function(res) {
-					if(res) {
-						$("[name='startpunkt']").val($("#stationlist").val());
-					}
-				  });   
-		   
-		   
+				   else
+				   {
+						var confirmPopup = $ionicPopup.alert({
+							template: 'No stations were detected nearby. Please enter your Startpunkt manually.',
+							title: 'No stations'
+					    });
+				   }
 			}
 
 			function processError(data, status, req) {
 					$ionicLoading.hide();
-					alert("ERROR! REQ: " + req.responseText + " STATUS: " + status);
+					alert("NETWORK ERROR! REQ: " + req.responseText + " STATUS: " + status);
 			}  
  
 		var GPSonSuccess = function(position) {
-			alert('Latitude: '          + position.coords.latitude          + '\n' +
-          'Longitude: '         + position.coords.longitude         + '\n' +
-          'Altitude: '          + position.coords.altitude          + '\n' +
-          'Accuracy: '          + position.coords.accuracy          + '\n' +
-          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-          'Heading: '           + position.coords.heading           + '\n' +
-          'Speed: '             + position.coords.speed             + '\n' +
-          'Timestamp: '         + position.timestamp                + '\n');
-			
-				getStations();
-			
+				getStations(position);
 			};
 
 		// onError Callback receives a PositionError object
 		//
 		function GPSonError(error) {
+					$ionicLoading.hide();
 					alert('code: '    + error.code    + '\n' +
 						  'message: ' + error.message + '\n');
 				}
-
+	 
 	navigator.geolocation.getCurrentPosition(GPSonSuccess, GPSonError);
  } 
 
@@ -337,21 +366,14 @@ angular.module('todo', ['ionic','ngCordova'])
 			return false;
 		}
 		
-		var myPopup =$ionicPopup.confirm({
-			title: 'Send?',
-			template: 'Are you sure you wana send this form?',
-			okText: 'Ja',
-			cancelText: 'Nein'
-		  }).then(function(res) {
-			if (res) {
-					// Setup the loader
-			$ionicLoading.show({
+		
+		$ionicLoading.show({
 					template: 'Sending...',
 					animation: 'fade-in',
 					showBackdrop: true,
 					maxWidth: 200,
 					showDelay: 0
-			});
+		});
 					
 			
 			var url = "http://etho.pl/unpunktlich.php";
@@ -378,9 +400,7 @@ angular.module('todo', ['ionic','ngCordova'])
 									
 								}
 							});
-			}
-			});
-				 
+
 		
 	}; 
 	
@@ -423,7 +443,7 @@ angular.module('todo', ['ionic','ngCordova'])
 			taxinutzung: encodeURI($("[name='taxinutzung']").val()),
 			fernverkehr: encodeURI($("[name='fernverkehr']").val()),
 			bemerkungen: encodeURI($("[name='bemerkungen']").val()),
-			images: $scope.images 
+			images: $rootScope.images 
 			} ];
 		
 			
@@ -484,11 +504,12 @@ angular.module('todo', ['ionic','ngCordova'])
 			images: $scope.loadimages 
 			} ];
 		
-			
+		
 		
 		var currentTime=new Date();
 		var key=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) + ' ' + pad(currentTime.getHours(),2) + ':' + pad(currentTime.getMinutes(),2) + ':' + pad(currentTime.getSeconds(),2) + ' ' + encodeURI($("[name='startpunkt']").val());
-	
+		
+		
 		
 		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
 		var formsInProgress=eval("(" + formsInProgress_js + ")");
@@ -567,9 +588,16 @@ angular.module('todo', ['ionic','ngCordova'])
 	}	
 	
 		
-	$scope.sendPDF = function () {
+	$scope.sendPDF = function (loadmode) {
 	
-		$scope.closeModal();
+		//$scope.closeModal();
+		$ionicLoading.show({
+					template: 'Generating PDF...',
+					animation: 'fade-in',
+					showBackdrop: true,
+					maxWidth: 200,
+					showDelay: 0
+			});
 		
 		var record = {
 			vorname: $("[name='vorname']").val(),
@@ -601,20 +629,14 @@ angular.module('todo', ['ionic','ngCordova'])
 			
 		
 		$scope.saveNeues(1);
-		$scope.sendto =	$("[name='sendto']").val();
+		$scope.sendto =	$("[name='email']").val();
 		
-		$ionicLoading.show({
-					template: 'Generating PDF...',
-					animation: 'fade-in',
-					showBackdrop: true,
-					maxWidth: 200,
-					showDelay: 0
-			});
+		
 		
 		//FIRST GENERATE THE PDF DOCUMENT
 		var getImageFromUrl = function(url, callback) {
 			var img = new Image();
-
+			
 			img.onError = function() {
 				alert('Cannot load image: "'+url+'"');
 			};
@@ -623,7 +645,11 @@ angular.module('todo', ['ionic','ngCordova'])
 			};
 			img.src = url;
 		}
-			
+				
+		
+		
+		
+		
 		var doc = new jsPDF();
 		var margin = 0;
 		
@@ -641,14 +667,23 @@ angular.module('todo', ['ionic','ngCordova'])
 					 
 					 writer.onwriteend = function(evt) {
 						$ionicLoading.hide();
-						cordova.plugins.email.open({
-						to:      [$scope.sendto],
-						bcc:     ['tomek.kabarowski@gmail.com'],
-						subject: 'Neues erstattungsformular',
-						body:    'Please find your neues erstattungsformular attached',
-						isHtml:  true,
-						attachments: [NativePath]
-						});
+						
+						//cordova.plugins.email.isAvailable(
+						//	function(isAvailable) {
+						//		alert(isAvailable);
+								cordova.plugins.email.open({
+								to:      [$scope.sendto],
+								bcc:     ['tomek.kabarowski@gmail.com'],
+								subject: 'Neues erstattungsformular',
+								body:    'Please find your neues erstattungsformular attached',
+								isHtml:  true,
+								attachments: [NativePath]
+								},function() {
+									//alert('email view dismissed');
+									true;
+								});
+						//	}
+						// );
 					};
 			 
 					var fname = fileEntry.name;
@@ -725,7 +760,38 @@ angular.module('todo', ['ionic','ngCordova'])
 					doc.text(22,204,record["iban"]);
 					doc.text(133,204,record["bic"]);
 					
-					writer.write(  doc.output("blob") );
+					
+					
+					
+					encodeImageUri = function(imageUri, callback) {
+						var c = document.createElement('canvas');
+						var ctx = c.getContext("2d");
+						var img = new Image();
+						img.onload = function() {
+							c.width = 200;
+							c.height = this.height*200/this.width;
+							ctx.drawImage(img, 0, 0,c.width,c.height);
+								
+							if(typeof callback === 'function'){
+								var dataURL = c.toDataURL("image/jpeg");
+								callback(dataURL,c.height);
+							}
+						};
+						img.src = imageUri;
+					}
+					
+					var cnt=0;
+					for($i=0;$i<$rootScope.images.length;$i++)
+					{
+						encodeImageUri($rootScope.images[$i], function(base64,height){
+						  doc.addPage();
+						  doc.addImage(imgPage2,0,0,210,297);	
+						  doc.addImage(base64,50,130,100,100);
+						  cnt++;
+						  if(cnt==$rootScope.images.length) writer.write(  doc.output("blob") );
+						});
+					}
+					
 					
 				  }, function(error) {
 					 alert(error);
@@ -874,6 +940,8 @@ angular.module('todo', ['ionic','ngCordova'])
 					if(mode==1)
 						$scope.loadimages.push(entry.nativeURL);
 					else $scope.images.push(entry.nativeURL);
+					
+					$rootScope.images.push(entry.nativeURL);
 			 });
 		 }
 		 
@@ -918,6 +986,8 @@ angular.module('todo', ['ionic','ngCordova'])
 		 function onImageSuccess(fileURI) {
 			 if(mode==1) $scope.loadimages.push(fileURI);
 			 else $scope.images.push(fileURI);
+			 
+			 $rootScope.images.push(fileURI);
 		 }
 		 
 		 });
@@ -1031,7 +1101,7 @@ angular.module('todo', ['ionic','ngCordova'])
 })
 
 
-.controller('LoadNeuenCtrl', function($scope) {
+.controller('LoadNeuenCtrl', function($scope,$rootScope) {
 	set_topbar_title('Neues Erstattungsformular');
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1049,10 +1119,10 @@ angular.module('todo', ['ionic','ngCordova'])
 		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
 		var raw_formsInProgress=eval("(" + formsInProgress_js + ")");
 		var formsInProgress=decodeURIArray(raw_formsInProgress);
-		console.log(formsInProgress);
+		//console.log(formsInProgress);
 		var record=formsInProgress[$scope.loadNeueFromOld-1];
 		
-		
+		//alert(record['record'][0]['startpunkt']);
 		
 		
 		//console.log(record);
@@ -1082,7 +1152,7 @@ angular.module('todo', ['ionic','ngCordova'])
 		var datum=record['record'][0]['datum'];
 		
 		$scope.loadimages=record['record'][0]['images'];
-	
+		$rootScope.images=$scope.loadimages;
 	
 	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: datum, value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'text', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestell', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
 	

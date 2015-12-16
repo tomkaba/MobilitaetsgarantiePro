@@ -87,10 +87,23 @@ Die Eingabe Ihrer Mailadresse ermöglicht uns (gegebenenfalls) Rückfragen zu st
 						<span class="input-label" >Planmäßige Abfahrtszeit</span>
 						<input type="time" name="uhrzeit" >
 					  </label>
-					  <label class="item item-input item-stacked-label" style="text-align:left">
-						<span class="input-label" >Startpunkt</span>
+				</div>	  
+				<div class="list">	  
+								<div style="width:80%;float:left">
+									<label class="item item-input item-stacked-label">
+											<span class="input-label">Startpunkt</span>
+											<input type="text" name="startpunkt" placeholder="Startpunkt" size=40>
+									</label>
+								</div>
+								<div style="float:right">
+									<button ng-click="showList()" class="button button-small icon ion-ios-location" style="float:right;margin-left:10px;"></button>
+								</div>
+						<!-- <span class="input-label" >Startpunkt</span>
 						<input type="text" name="startpunkt" placeholder="Startpunkt">
-					  </label>
+						-->
+				</div>
+				<div style="clear:both"></div>
+				<div class="list">	  
 					  <label class="item item-input item-stacked-label" style="text-align:left">
 						<span class="input-label" >Endpunkt</span>
 						<input type="text" name="endpunkt" placeholder="Endpunkt">

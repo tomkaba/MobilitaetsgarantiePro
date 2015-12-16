@@ -12,11 +12,12 @@
 	<script src="js/image3.js"></script>
 	<script src="js/image4.js"></script>
 	<script src="js/image5.js"></script>
+	<script src="js/imageP2.js"></script>
 	<script src="lib/jquery-1.11.1.min.js"></script>
 	<script src="js/storage/ls-store.js"></script>
 	<script src="js/utils.js"></script>
 	<script src="lib/jsPDF/jspdf.min.js"></script>
-	<script src="lib/xml2array.js"></script>
+	<script src="lib/xml2json.min.js"></script>
 	<script src="lib/ng-cordova.min.js"></script>
 	<script src="cordova.js"></script>
 	<script src="js/camera.js"></script>
@@ -86,10 +87,12 @@
 					Send
 				</a>
 			
-				<a ng-click="submitNeues()" data-ng-show="$state.includes('t.neuen') || $state.includes('t.neuen2')" id="submitneuesbutton" class="button button-small button-positive">
-					Generate & E-mail
+				<a ng-click="sendPDF()" data-ng-show="$state.includes('t.neuen')" id="submitneuesbutton" class="button button-small button-positive">
+					Generate
 				</a>
-
+				<a ng-click="sendPDF(1)" data-ng-show="$state.includes('t.neuen2')" id="submitneuesbutton" class="button button-small button-positive">
+					Generate
+				</a>
 			</div>
 			</ion-side-menu-content> 
 
