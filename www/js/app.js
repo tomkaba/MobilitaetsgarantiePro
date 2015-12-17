@@ -183,6 +183,7 @@ angular.module('todo', ['ionic','ngCordova'])
   
   function onDeviceReady() {
 		//alert('device ready');
+		navigator.splashscreen.hide();
 		window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, failFS);
 
