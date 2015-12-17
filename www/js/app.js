@@ -559,6 +559,27 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		return true;
 	}
 	
+	$scope.addCalendarEntry = function(id) {
+		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
+		var formsInProgress=eval("(" + formsInProgress_js + ")");
+		var datum=formsInProgress[id]['record'][0]['datum'].split("-");
+		//console.log(datum);
+		datum[0]=parseInt(datum[0]);
+		datum[1]=parseInt(datum[1]);
+		datum[2]=parseInt(datum[2]);
+		
+		newdate= new Date(datum[0],datum[1],datum[2]+28,12,0,0);
+		enddate= new Date(datum[0],datum[1],datum[2]+28,12,0,0);
+		var title = "Response from Schlichtungsstelle Nahverkehr";
+		var notes = "I should have response from Schlichtungsstelle Nahverkehr regarding my Erstattungsantrag";
+		var success = function(message) { alert("Success: " + JSON.stringify(message)); };
+		var error = function(message) { alert("Error: " + message); };
+		//console.log(newdate);
+		 window.plugins.calendar.createEventInteractively(title,eventLocation,notes,startDate,endDate,success,error);
+
+	}
+	
+	
 	$scope.showLoadImages = function(index) {
 		 $scope.src=urlForImage(index);
 		 alert(index);

@@ -11,13 +11,16 @@
 							<button ng-click="loadNeueForm($index)" class="button button-small icon ion-ios-play">
 							 {{form.title}} <i class="icon ion-email"></i>								 
 							 </button> 
+							
 							<button ng-click="deleteNeueForm($index)" class="button button-small icon ion-trash-a " style="float:right;margin-right:10px;">
 							 </button>
+							 <button ng-click="addCalendarEntry($index)" class="button button-small icon ion-ios-calendar-outline" style="float:right;margin-right:10px;"></button>
 						</div>
 						<div ng-if="form.status !== 'true'">
 							<button ng-click="loadNeueForm($index)" class="button button-small icon ion-ios-play">
 							 {{form.title}} <i class="icon ion-ios-compose-outline"></i>						 
 							 </button> 
+				 
 							 <button ng-click="deleteNeueForm($index)" class="button button-small icon ion-trash-a " style="float:right;margin-right:10px;">
 							 </button>
 						</div>
