@@ -580,7 +580,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		//console.log(newdate);
 		if(ionic.Platform.isAndroid())
 		{
-		  window.plugins.calendar.createEventInteractively(title,eventLocation,notes,newdate,enddate,success,error);
+		  //window.plugins.calendar.createEventInteractively(title,eventLocation,notes,newdate,enddate,success,error);
+		  window.plugins.calendar.createEvent(title,eventLocation,notes,newdate,enddate,success,error); 	
 		}
 		else
 		{
