@@ -577,7 +577,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var error = function(message) { alert("Error: " + message); };
 		//console.log(newdate);
 		alert('start');
-		 cordova.plugins.calendar.createEventInteractively(title,eventLocation,notes,newdate,enddate,success,error);
+		 window.plugins.calendar.createEventInteractively(title,eventLocation,notes,newdate,enddate,success,error);
 		alert('top');
 	}
 	
