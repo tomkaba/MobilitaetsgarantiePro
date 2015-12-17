@@ -193,6 +193,8 @@ angular.module('todo', ['ionic','ngCordova'])
 		function failFS() {
 			alert('fail');
 		}
+		
+		
   }
 
  
@@ -576,8 +578,14 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var success = function(message) { $ionicPopup.alert({title:'Calendar',template:'Reminder added on date '+newdate});};
 		var error = function(message) { alert("Error: " + message); };
 		//console.log(newdate);
-		
-		 window.plugins.calendar.createEvent(title,eventLocation,notes,newdate,enddate,success,error);
+		if(ionic.Platform.isAndroid())
+		{
+		  window.plugins.calendar.createEventInteractively(title,eventLocation,notes,newdate,enddate,success,error);
+		}
+		else
+		{
+		  window.plugins.calendar.createEvent(title,eventLocation,notes,newdate,enddate,success,error); 	
+		}
 		
 	}
 	
@@ -1052,6 +1060,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	hide('#clearbutton');
 	hidebottombar();
 	assignLsProfildaten();
+
 })
 
 .controller('UnpunktlichCtrl', function($scope) {
