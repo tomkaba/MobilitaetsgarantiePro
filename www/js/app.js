@@ -573,12 +573,12 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var title = "Response from Schlichtungsstelle Nahverkehr";
 		var eventLocation = "Home";
 		var notes = "I should have response from Schlichtungsstelle Nahverkehr regarding my Erstattungsantrag";
-		var success = function(message) { alert("Success: " + JSON.stringify(message)); };
+		var success = function(message) { true; };
 		var error = function(message) { alert("Error: " + message); };
 		//console.log(newdate);
-		alert('start');
+		
 		 window.plugins.calendar.createEventInteractively(title,eventLocation,notes,newdate,enddate,success,error);
-		alert('top');
+		
 	}
 	
 	
