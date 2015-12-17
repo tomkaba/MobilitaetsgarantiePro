@@ -573,7 +573,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var title = "Response from Schlichtungsstelle Nahverkehr";
 		var eventLocation = "Home";
 		var notes = "I should have response from Schlichtungsstelle Nahverkehr regarding my Erstattungsantrag";
-		var success = function(message) { true; };
+		var success = function(message) { $ionicPopup.alert({title:'Calendar',template:'Reminder added on date '+newdate});};
 		var error = function(message) { alert("Error: " + message); };
 		//console.log(newdate);
 		
