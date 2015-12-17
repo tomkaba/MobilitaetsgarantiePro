@@ -569,14 +569,16 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		datum[2]=parseInt(datum[2]);
 		
 		newdate= new Date(datum[0],datum[1],datum[2]+28,12,0,0);
-		enddate= new Date(datum[0],datum[1],datum[2]+28,12,0,0);
+		enddate= new Date(datum[0],datum[1],datum[2]+28,12,10,0);
 		var title = "Response from Schlichtungsstelle Nahverkehr";
+		var eventLocation = "Home";
 		var notes = "I should have response from Schlichtungsstelle Nahverkehr regarding my Erstattungsantrag";
 		var success = function(message) { alert("Success: " + JSON.stringify(message)); };
 		var error = function(message) { alert("Error: " + message); };
 		//console.log(newdate);
-		 window.plugins.calendar.createEventInteractively(title,eventLocation,notes,startDate,endDate,success,error);
-
+		alert('start');
+		 cordova.plugins.calendar.createEventInteractively(title,eventLocation,notes,newdate,enddate,success,error);
+		alert('top');
 	}
 	
 	
