@@ -652,7 +652,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			linie: $("[name='linie']").val(),
 			richtung: $("[name='richtung']").val(),
 			verkehrsunternehmen: $("[name='verkehrsunternehmen']").val(),
-			datum: ($("[name='datum']").val()).replace(/-/g,""),
+			datum: (($("[name='datum']").val()).replace(/-/g,"")).substr(2),
 			taxinutzung: $("[name='taxinutzung']").val(),
 			fernverkehr: $("[name='fernverkehr']").val(),
 			bemerkungen: $("[name='bemerkungen']").val(),
