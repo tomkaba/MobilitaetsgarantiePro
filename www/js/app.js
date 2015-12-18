@@ -206,7 +206,7 @@ angular.module('todo', ['ionic','ngCordova'])
   $scope.$on('$ionicView.afterEnter', function(){
     setTimeout(function(){
       document.getElementById("custom-overlay").style.display = "none";      
-    }, 1);
+    }, 2000);
   }); 
   
   $scope.listdata=[];
@@ -652,7 +652,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			linie: $("[name='linie']").val(),
 			richtung: $("[name='richtung']").val(),
 			verkehrsunternehmen: $("[name='verkehrsunternehmen']").val(),
-			datum: $("[name='datum']").val(),
+			datum: ($("[name='datum']").val()).replace("-",""),
 			taxinutzung: $("[name='taxinutzung']").val(),
 			fernverkehr: $("[name='fernverkehr']").val(),
 			bemerkungen: $("[name='bemerkungen']").val(),
@@ -823,6 +823,13 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 						  cnt++;
 						  if(cnt==$rootScope.images.length) writer.write(  doc.output("blob") );
 						});
+					}
+					
+					if($rootScope.images.length==0) 
+					{
+						doc.addPage();
+						doc.addImage(imgPage2,0,0,210,297);	
+						if(cnt==$rootScope.images.length) writer.write(  doc.output("blob") );
 					}
 					
 					
