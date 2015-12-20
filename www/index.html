@@ -19,6 +19,7 @@
 	<script src="lib/jsPDF/jspdf.min.js"></script>
 	<script src="lib/xml2json.min.js"></script>
 	<script src="lib/ng-cordova.min.js"></script>
+	<script src="lib/image.js"></script>
 	<script src="cordova.js"></script>
 	<script src="js/camera.js"></script>
 	<script src="js/plugins/Calendar.js"></script>
@@ -31,13 +32,11 @@
  
  <div id="custom-overlay">
 				<div class='splash'>
-					<div class="logo"><img src="img/logo.png"></div>
-					<div id='deviceready' class='blink'>
-						<p class='event listening'><a href="#mm">App wird geladen...</a></p>
-					</div>
-				</div>
-				<div class='bottom'>
-					<img src='img/problemme.png' width=100%>
+					<script>
+					var w=window.screen.width;
+					var h=window.screen.height;
+					</script>
+					<img src="startscreen.jpg" height="100%" border=0>
 				</div>
  </div> 
 
@@ -74,7 +73,7 @@
 				<a href="#mm" id="weiterbutton" class="button button-small button-positive" style="display:none;float:right">
 					Weiter
 				</a>
-				<a href="#f1" id="formularbutton" class="button button-small button-energized" style="display:none;float:right">
+				<a href="#/t/neuen" id="formularbutton" class="button button-small button-energized" style="display:none;float:right">
 					Neues Erstattungsformular
 				</a>
 				<a href="#/t/unpunktlich" id="unpunktlichbutton" class="button button-small button-calm" style="display:none;float:right">
@@ -84,7 +83,7 @@
 					Speichern
 				</a>
 				<a ng-click="submitUnpunktlich()" id="unpsendbutton" class="button button-small button-positive" style="display:none;float:right">
-					Send
+					Senden
 				</a>
 			
 				<a ng-click="sendPDF()" data-ng-show="$state.includes('t.neuen')" id="submitneuesbutton" class="button button-small button-positive" style="margin-right:10px;float:right">

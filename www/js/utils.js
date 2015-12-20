@@ -165,11 +165,11 @@ function o1d5y() {
 		css_click("#button_ja");	
 		css_unclick("#button_nein");
 		enable("#button_next");
-		show("#dialog_ja_nein");	
+		//show("#dialog_ja_nein");	
 		set_description(description);
 		show("#dialog_description");
-		//$("#weiterbutton").attr("href","#/t/o17");
-		//show("#weiterbutton");
+		$("#weiterbutton").attr("href","#/t/o16");
+		show("#weiterbutton");
 }
 
 function o1d6y() {
@@ -245,6 +245,8 @@ function submitProfildaten() {
 	var tarifraum=$("[name='tarifraum']").val();
 	var starttime=$("[name='starttime']").val();
 	var startpunkt=$("[name='startpunkt']").val();
+
+	var calendar=$("[name='calendar']").is(":checked");
 	
 	var stadt=$("[name='stadt']").val();
 	var linie=$("[name='linie']").val();
@@ -271,6 +273,7 @@ function submitProfildaten() {
 	window.localStorage.setItem('linie',linie);
 	window.localStorage.setItem('richtung',richtung);
 	window.localStorage.setItem('verkehrsunternehmen',verkehrsunternehmen);
+	window.localStorage.setItem('calendar',calendar);
 	
 	
 	

@@ -40,9 +40,20 @@
 									<input type="text" name="{{item.name}}" placeholder="{{item.value}}" size=40>
 								 </label>
 						  </div>
-						  <div ng-if="item.type!='select' && item.type!='stacked' ">
-							
-							<!-- <input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}" size=40> -->
+						   <div ng-if="item.type=='checkbox'">
+							<li class="item item-checkbox">
+							 <label class="checkbox">
+								<div ng-if="item.value==='true'">
+									<input type="checkbox" id="{{item.name}}" name="{{item.name}}" checked value="1">
+								</div>
+								<div ng-if="item.value!=='true'">
+									<input type="checkbox" id="{{item.name}}"  name="{{item.name}}"  value="1">
+								</div>
+							 </label>
+							 <span class="item-text-wrap" style="font-size:14px;">{{item.placeholder}}</span>
+						    </li>
+						  </div>
+						  <div ng-if="item.type!='select' && item.type!='stacked' && item.type!='checkbox'">
 								<label class="item item-input item-stacked-label">
 									<span class="input-label">{{item.placeholder}}</span>
 									<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.value}}" size=40>
