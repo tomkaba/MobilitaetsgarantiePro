@@ -356,7 +356,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		//
 		function GPSonError(error) {
 					$ionicLoading.hide();
-					alert('code: '    + error.code    + '\n' +
+					alert('Error! code: '    + error.code    + '\n' +
 						  'message: ' + error.message + '\n');
 				}
 	 
@@ -525,6 +525,9 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		
 		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
 		var formsInProgress=eval("(" + formsInProgress_js + ")");
+		
+		if( formsInProgress[$scope.loadNeueFromOld-1]['status'] !== true)
+			formsInProgress.splice($scope.loadNeueFromOld-1, 1);
 		
 		var status;
 		if(!alert_off) status=false;

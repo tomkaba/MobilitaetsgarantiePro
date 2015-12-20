@@ -421,7 +421,7 @@ function processSuccess(data, status, req) {
 }
 
 function processError(data, status, req) {
-            alert("REQ: " + req.responseText + " STATUS: " + status);
+            alert("ERROR! REQ: " + req.responseText + " STATUS: " + status);
 }  
 
 
