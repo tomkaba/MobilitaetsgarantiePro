@@ -187,7 +187,7 @@ function o1d6y() {
 }
 
 function o1d6n() {
-		var description="Sie haben keinen Anspruch aufgrund der Verspätung, da es bei der Mobilitätsgarantie nur um die Erstattung tatsächlich entstandener Kosten für die Weiterreise geht und nicht um eine Kompensation für Verspätungen/Wartezeit. In Ihrem Fall kommt vielleicht eine Entschädigung nach dem Fahrgastrechtegesetz in Betracht, wenn Ihre Verspätung sich am Zielbahnhof auf mehr als 60 Minuten beläuft. Weitere Informationen dazu finden Sie unter <a href=\"#\" onclick=\"window.open('http://www.example.org', '_system'); return false;\">www.example.org</a>.";
+		var description="Sie haben keinen Anspruch aufgrund der Verspätung, da es bei der Mobilitätsgarantie nur um die Erstattung tatsächlich entstandener Kosten für die Weiterreise geht und nicht um eine Kompensation für Verspätungen/Wartezeit. In Ihrem Fall kommt vielleicht eine Entschädigung nach dem Fahrgastrechtegesetz in Betracht, wenn Ihre Verspätung sich am Zielbahnhof auf mehr als 60 Minuten beläuft. Weitere Informationen dazu finden Sie unter <a href=\"#\" onclick=\"window.open('http://www.schlichtungsstelle-nahverkehr.de/fahrgastrechte', '_system'); return false;\">www.schlichtungsstelle-nahverkehr.de/fahrgastrechte</a>.";
 		css_click("#button_nein");	
 		css_unclick("#button_ja");
 		css_unclick("#button_ja2");
@@ -408,7 +408,7 @@ function a() {
 
 function sendformSuccess(data, status, req) {
             if (status == "success")
-                alert('Your form was sent');
+                alert('Ihr Formular wurde versendet');
 }
 
 
@@ -421,7 +421,7 @@ function processSuccess(data, status, req) {
 }
 
 function processError(data, status, req) {
-            alert("ERROR! REQ: " + req.responseText + " STATUS: " + status);
+            alert("Fehler! #" + req.responseText + " STATUS: " + status);
 }  
 
 

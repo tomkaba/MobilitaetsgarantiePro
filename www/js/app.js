@@ -223,7 +223,7 @@ angular.module('todo', ['ionic','ngCordova'])
   
   $scope.showList = function(){
 	$ionicLoading.show({
-					template: 'Please wait...',
+					template: 'Bitte warten...',
 					animation: 'fade-in',
 					showBackdrop: true,
 					maxWidth: 200,
@@ -337,15 +337,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 				   else
 				   {
 						var confirmPopup = $ionicPopup.alert({
-							template: 'No stations were detected nearby. Please enter your Startpunkt manually.',
-							title: 'No stations'
+							template: 'In der Nähe wurden keine Haltenstellen gefunden. Bitte geben Sie die Haltestelle manuell ein.',
+							title: 'Keine Haltestellen'
 					    });
 				   }
 			}
 
 			function processError(data, status, req) {
 					$ionicLoading.hide();
-					alert("NETWORK ERROR! REQ: " + req.responseText + " STATUS: " + status);
+					alert("Netzwerkfehler! " + req.responseText + " STATUS: " + status);
 			}  
  
 		var GPSonSuccess = function(position) {
@@ -356,8 +356,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		//
 		function GPSonError(error) {
 					$ionicLoading.hide();
-					alert('Error! code: '    + error.code    + '\n' +
-						  'message: ' + error.message + '\n');
+					alert('Fehler bei der Ermittlung der GPS-Daten! #'    + error.code    + '\n' +
+						  '' + error.message + '\n');
 				}
 	 
 	navigator.geolocation.getCurrentPosition(GPSonSuccess, GPSonError);
@@ -370,18 +370,18 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		
 		if(!startpunkt_v.length) 
 		{
-			$ionicPopup.alert({title:'No data',template:'Please enter Startpunkt'});
+			$ionicPopup.alert({title:'Keine Daten',template:'Bitte geben Sie den Startpunkt ein.'});
 			return false;
 		}
 		if(!linie_v.length) 
 		{
-			$ionicPopup.alert({title:'No data',template:'Please enter Linie'});
+			$ionicPopup.alert({title:'Keine Daten',template:'Bitte geben Sie die Linie ein.'});
 			return false;
 		}
 		
 		
 		$ionicLoading.show({
-					template: 'Sending...',
+					template: 'Senden...',
 					animation: 'fade-in',
 					showBackdrop: true,
 					maxWidth: 200,
@@ -408,7 +408,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 								error:  function(jqXHR, textStatus, ex) {
 									$scope.preventSuccessPopup=1;
 									$ionicLoading.hide();
-									$ionicPopup.alert({title:'Network error!',template:'ERROR! Ihre Meldung wurde NICHT übermittelt. Try again later'});
+									$ionicPopup.alert({title:'Netzwerkfehler!',template:'Fehler! Ihre Meldung wurde NICHT übermittelt. Bitte versuchen Sie es später.'});
 									//window.location.hash="#/t/mm";
 								}
 							});
@@ -418,8 +418,10 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 	$scope.clearNeues = function() {
 		$ionicPopup.confirm({
-			title: 'Clear form?',
-			template: 'Are you sure you wana clear all data in this form?'
+			title: 'Formular zurücksetzten?',
+			template: 'Wollen Sie wirklich alle Daten in diesem Formular löschen?',
+			okText: 'Ja',
+			cancelText: 'Nein'
 		  }).then(function(res) {
 			if (res) {
 				clearNeuesForm();
@@ -483,7 +485,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var json=array2json(formsInProgress);
 		
 		window.localStorage.setItem('formsInProgress',json);
-		if(!alert_off) $ionicPopup.alert({title:'Success!',template:'Das Formular wurde gesichert'});
+		if(!alert_off) $ionicPopup.alert({title:'Erfolg!',template:'Das Formular wurde gesichert'});
 		return false;
 	}
 	
@@ -585,11 +587,11 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		
 		newdate= new Date(datum[0],datum[1],datum[2]+28,12,0,0);
 		enddate= new Date(datum[0],datum[1],datum[2]+28,12,10,0);
-		var title = "Response from Schlichtungsstelle Nahverkehr";
-		var eventLocation = "Home";
-		var notes = "I should have response from Schlichtungsstelle Nahverkehr regarding my Erstattungsantrag";
-		var success = function(message) { $ionicPopup.alert({title:'Calendar',template:'Reminder added on date '+newdate});};
-		var error = function(message) { alert("Error: " + message); };
+		var title = "Ihr Erstattungsantrag vom "+formsInProgress[id]['record'][0]['datum'];
+		var eventLocation = "Schlichtungsstelle Nahverkehr";
+		var notes = "Sie sollten nach ca. 4 Wochen Antwort vom Verkehrsunternehmen erhalten haben. Bei Problemen können Sie ggf. die Schlichtungsstelle Nahverkehr einbeziehen.";
+		var success = function(message) { $ionicPopup.alert({title:'Kalender',template:'Kalendereintrag wurde für '+newdate+' erstellt'});};
+		var error = function(message) { alert("Fehler: " + message); };
 		//console.log(newdate);
 		if(ionic.Platform.isAndroid())
 		{
@@ -637,7 +639,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 		//$scope.closeModal();
 		$ionicLoading.show({
-					template: 'Generating PDF...',
+					template: 'Erstelle PDF ...',
 					animation: 'fade-in',
 					showBackdrop: true,
 					maxWidth: 200,
@@ -683,7 +685,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			var img = new Image();
 			
 			img.onError = function() {
-				alert('Cannot load image: "'+url+'"');
+				alert('Bild kann nicht geladen werden: "'+url+'"');
 			};
 			img.onload = function() {
 				callback(img);
@@ -720,7 +722,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 								to:      [$scope.sendto],
 								bcc:     ['tomek.kabarowski@gmail.com'],
 								subject: 'Neues erstattungsformular',
-								body:    'Please find your neues erstattungsformular attached',
+								body:    'Im Anhang finden Sie das Erstattungsformular',
 								isHtml:  true,
 								attachments: [NativePath]
 								},function() {
