@@ -16,12 +16,13 @@
                           ng-repeat="item in group.items"
                           ng-show="isGroupShown(group)">
 						  <div ng-if="item.type=='select'">
-						    <label class="item item-input item-select">
+							
+						     <label class="item item-input item-select">
 								<div class="input-label">
-								  {{item.placeholder}}
+								{{item.placeholder}}
 								</div>
-								<select name="{{item.name}}">
-										
+								
+								<select name="{{item.name}}" >
 										<option ng-selected="tarifraum == 'VRR'" value="VRR">Verkehrsverbund Rhein-Ruhr (VRR)</option>
 										<option ng-selected="tarifraum == 'VGMVRL'" value="VGMVRL">Münsterland-/Ruhr-Lippe-Tarif (VGM/VRL)</option>
 										<option ng-selected="tarifraum == 'VGWS'" value="VGWS">Verkehrsgemeinschaft Westfalen-Süd (VGWS)</option>
@@ -37,7 +38,7 @@
 						  <div ng-if="item.type=='stacked'">
 								<label class="item item-input item-stacked-label">
 									<span class="input-label">{{item.placeholder}}</span>
-									<input type="text" name="{{item.name}}" placeholder="{{item.value}}" size=40>
+									<input type="text" name="{{item.name}}" value="{{item.value}}" size=40>
 								 </label>
 						  </div>
 						   <div ng-if="item.type=='checkbox'">
@@ -56,7 +57,7 @@
 						  <div ng-if="item.type!='select' && item.type!='stacked' && item.type!='checkbox'">
 								<label class="item item-input item-stacked-label">
 									<span class="input-label">{{item.placeholder}}</span>
-									<input type="{{item.type}}" name="{{item.name}}" placeholder="{{item.value}}" size=40>
+									<input type="{{item.type}}" name="{{item.name}}" value="{{item.value}}" size=40>
 								 </label>
 						  </div>
                 </ion-item>

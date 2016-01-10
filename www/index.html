@@ -26,7 +26,33 @@
 	
 	
 	<script src="js/app.js"></script>
-    
+  <style>
+  .item-input{
+	  display: block !important;
+	}
+
+	.input-label {
+		max-width: 100% !important;
+		width: 100% !important;
+	}
+
+
+	.item-select select {
+		position: relative !important;
+		max-width: 100% !important;
+		width: 100% !important;
+		padding-left: 0 !important;
+		direction: ltr !important;
+		
+	}
+
+
+	.item-select:after {
+	top: 70% !important;
+
+	}
+  
+  </style>  
   </head>
   <body ng-app="todo" ng-controller="TodoCtrl">
  
@@ -36,7 +62,7 @@
 					var w=window.screen.width;
 					var h=window.screen.height;
 					</script>
-					<img src="startscreen.jpg" height="100%" border=0>
+					<img src="startscreen.jpg" height="100%" width="100%" border=0>
 				</div>
  </div> 
 
@@ -55,7 +81,7 @@
 			</div>
 			  <ion-nav-view name="menuContent"></ion-nav-view>
 			  <div class="bar bar-footer bar-dark" id="bottombar" style="display:none" data-ng-show="!($state.includes('t.mainmenu'))">
-				<a href="#mm" data-ng-show="!($state.includes('t.neuen')) && !($state.includes('t.neuen2')) && !($state.includes('t.mainmenu'))" id="zuruckbutton" class="button button-small button-dark" style="float:left">
+				<a href="#mm" data-ng-show="!($state.includes('t.neuen')) && !($state.includes('t.neuen2')) && !($state.includes('t.mainmenu')) && !($state.includes('t.unpunktlich'))" id="zuruckbutton" class="button button-small button-dark" style="float:left">
 					Zurück
 				</a>
 				<a ng-click="clearNeues()" data-ng-show="$state.includes('t.neuen')||$state.includes('t.neuen2')" id="clearbutton" class="button button-small button-dark" style="display:none;float:left;margin-left:5px;">
@@ -68,7 +94,7 @@
 					Speichern
 				</a>
 				<a ng-click="deleteNeues()" data-ng-show="$state.includes('t.saved')" id="deleteneuesbutton" class="button button-small button-dark" style="float:left;margin-left:5px;">
-					Delete all
+					Alle löschen
 				</a>
 				<a href="#mm" id="weiterbutton" class="button button-small button-positive" style="display:none;float:right">
 					Weiter
@@ -106,7 +132,7 @@
 								<ion-item><a menu-close href="#/t/saved" ><div style="width:100%">Meine Erstattungen</div></a></ion-item>
 								<ion-item><a menu-close href="#" >Rechtliche Hinweise</a></ion-item>
 								<ion-item><a menu-close href="#" >Infos zur Mobilitätsgarantie</a></ion-item>
-								<ion-item><a menu-close href="#" >Build: 20.12.2015 19:20	</a></ion-item>
+								<ion-item><a menu-close href="#" >Build: 10.01.2016 24:00	</a></ion-item>
 				</ion-list>
 			  </ion-content>
 			</ion-side-menu>

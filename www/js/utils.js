@@ -117,7 +117,7 @@ function hidePopUpMessage() {
 }
 
 function o1d1n() {
-		var description="Nach der Mobilitätsgarantie gibt es einen Erstattungsanspruch ab einer Verspätung bei der Abfahrt von 20 Minuten Ist die Verspätung kürzer als 20 Minuten, haben Sie keinen Erstattungsanspruch. Melden Sie uns die Verspätung trotzdem!";
+		var description="Nach der Mobilitätsgarantie gibt es einen Erstattungsanspruch ab einer Verspätung bei der Abfahrt von 20 Minuten. Ist die Verspätung kürzer als 20 Minuten, haben Sie keinen Erstattungsanspruch. Melden Sie uns die Verspätung trotzdem!";
 		css_click("#button_nein");
 		set_description(description);
 		show("#dialog_description");
@@ -168,7 +168,7 @@ function o1d5y() {
 		//show("#dialog_ja_nein");	
 		set_description(description);
 		show("#dialog_description");
-		$("#weiterbutton").attr("href","#/t/o16");
+		$("#weiterbutton").attr("href","#/t/o17b");
 		show("#weiterbutton");
 }
 
@@ -360,6 +360,7 @@ function clearNeuesForm() {
 	$("[name='taxinutzung']").val('');
 	$("[name='fernverkehr']").val('');
 	$("[name='bemerkungen']").val('');
+	$("[name='zug']").val('');
 	$("[name='check1']").attr('checked', false);
 	$("[name='check2']").attr('checked', false);
 }

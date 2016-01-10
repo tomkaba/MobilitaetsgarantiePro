@@ -37,7 +37,7 @@
 						  <div ng-if="item.type=='textarea'">
 							<label class="item item-input item-stacked-label">
 									<span class="input-label">{{item.placeholder}}</span>
-									<textarea rows=7 cols=60 name="{{item.name}}" placeholder="{{item.placeholder}}">{{item.value}}</textarea>
+									<textarea rows=7 cols=60 name="{{item.name}}" >{{item.value}}</textarea>
 							</label>
 						  </div>
 						  <div ng-if="item.type=='checkbox'">
@@ -70,7 +70,7 @@
 									</label>
 								</div>
 								<div style="float:right">
-									<button ng-click="showList()" class="button button-small icon ion-ios-location" style="float:right;margin-left:10px;"></button>
+									<button ng-click="showList()" class="button button-small icon ion-pinpoint" style="float:right;margin-left:10px;"></button>
 								</div>
 							</div>
 						 

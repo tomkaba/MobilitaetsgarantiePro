@@ -168,6 +168,17 @@ angular.module('todo', ['ionic','ngCordova'])
       }
     })
    
+   .state('t.o17b', {
+      url: "/o17b",
+	  cache: false,
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/o17.html",
+		  controller: "O17bCtrl"
+        }
+      }
+    })
+	
 	.state('t.test', {	
 	   url: "/test",
 	   cache: false,
@@ -326,7 +337,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 								   '  </select></div>                             '+
 								   '</div>                        ',
 						 
-						 title: 'Select Startpunkt',
+						 title: 'Startpunkt auswählen',
 						 scope: $scope
 					   }).then(function(res) {
 						if(res) {
@@ -402,7 +413,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 								
 								success: function () {
 									$ionicLoading.hide();
-									if($scope.preventSuccessPopup==0) $ionicPopup.alert({title:'Success!',template:'Ihre Meldung wurde an die Schlichtungsstelle Nahverkehr übermittelt.'})
+									if($scope.preventSuccessPopup==0) $ionicPopup.alert({title:'Erfolg!',template:'Ihre Meldung wurde an die Schlichtungsstelle Nahverkehr übermittelt.'})
 									window.location.hash="#/t/mm";
 								},
 								error:  function(jqXHR, textStatus, ex) {
@@ -457,6 +468,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			taxinutzung: encodeURI($("[name='taxinutzung']").val()),
 			fernverkehr: encodeURI($("[name='fernverkehr']").val()),
 			bemerkungen: encodeURI($("[name='bemerkungen']").val()),
+			zug: encodeURI($("[name='zug']").val()),
 			images: $rootScope.images 
 			} ];
 		
@@ -515,6 +527,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			taxinutzung: encodeURI($("[name='taxinutzung']").val()),
 			fernverkehr: encodeURI($("[name='fernverkehr']").val()),
 			bemerkungen: encodeURI($("[name='bemerkungen']").val()),
+			zug: encodeURI($("[name='zug']").val()),
 			images: $scope.loadimages 
 			} ];
 		
@@ -547,7 +560,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var json=array2json(formsInProgress);
 		
 		window.localStorage.setItem('formsInProgress',json);
-		if(!alert_off) $ionicPopup.alert({title:'Success!',template:'Das Formular wurde gesichert'});
+		if(!alert_off) $ionicPopup.alert({title:'Erfolg!',template:'Das Formular wurde gesichert'});
 		return false;
 	}
 	
@@ -585,8 +598,13 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		datum[1]=parseInt(datum[1]);
 		datum[2]=parseInt(datum[2]);
 		
-		newdate= new Date(datum[0],datum[1],datum[2]+28,12,0,0);
-		enddate= new Date(datum[0],datum[1],datum[2]+28,12,10,0);
+		
+		
+		newdate= new Date(datum[0],datum[1],datum[2],12,0,0);
+		newdate.setDate(newdate.getDate()+28);
+		enddate= new Date(datum[0],datum[1],datum[2],12,10,0);
+		enddate.setDate(enddate.getDate()+28);
+		
 		var title = "Ihr Erstattungsantrag vom "+formsInProgress[id]['record'][0]['datum'];
 		var eventLocation = "Schlichtungsstelle Nahverkehr";
 		var notes = "Sie sollten nach ca. 4 Wochen Antwort vom Verkehrsunternehmen erhalten haben. Bei Problemen können Sie ggf. die Schlichtungsstelle Nahverkehr einbeziehen.";
@@ -676,7 +694,6 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			
 		
 		$scope.saveNeues(1);
-		$scope.sendto =	$("[name='email']").val();
 		
 		
 		
@@ -719,8 +736,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 						//	function(isAvailable) {
 						//		alert(isAvailable);
 								cordova.plugins.email.open({
-								to:      [$scope.sendto],
-								bcc:     ['tomek.kabarowski@gmail.com'],
+								to:      $("[name='email']").val(),
 								subject: 'Neues erstattungsformular',
 								body:    'Im Anhang finden Sie das Erstattungsformular',
 								isHtml:  true,
@@ -731,6 +747,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 								});
 						//	}
 						// );
+						window.location.hash="#/t/mm"; // go back to main menu
 					};
 			 
 					var fname = fileEntry.name;
@@ -1166,6 +1183,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var linie=record['record'][0]['linie'];
 		var richtung=record['record'][0]['richtung'];
 		var verkehrsunternehmen=record['record'][0]['verkehrsunternehmen'];
+		var zug=record['record'][0]['zug'];
 		
 		var n_taxinutzung=record['record'][0]['taxinutzung'];
 		var n_fernverkehr=record['record'][0]['fernverkehr'];
@@ -1175,7 +1193,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		$scope.loadimages=record['record'][0]['images'];
 		$rootScope.images=$scope.loadimages;
 	
-	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: datum, value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'text', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestell', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
+	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: 'Datum', value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: zug } , { type: 'text', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestelle', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
 	
 	
     $scope.toggleGroup = function (group) {
@@ -1221,6 +1239,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var tarifraum=window.localStorage.getItem('tarifraum');
 		var starttime=window.localStorage.getItem('starttime');
 		var startpunkt=window.localStorage.getItem('startpunkt');
+		var zug=window.localStorage.getItem('zug');
 		
 		var stadt=window.localStorage.getItem('stadt');
 		var linie=window.localStorage.getItem('linie');
@@ -1235,12 +1254,13 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var currentTime=new Date();
 		var datum=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) ;
 		
+		
 		$scope.tarifraum=window.localStorage.getItem('tarifraum');
 		
 	
 	
 	
-	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: 'Datum', value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: '' } , { type: 'time', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestell', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street },{ type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
+	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: 'Datum', value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: zug } , { type: 'time', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestelle', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street },{ type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
 	
 	
     $scope.toggleGroup = function (group) {
@@ -1326,7 +1346,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	displaybottombar();
 })
 .controller('O17Ctrl', function($scope) {
-	$("#zuruckbutton").attr('href','#/t/o15'); 
+	$("#zuruckbutton").attr('href','#/t/o16'); 
 	show('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
@@ -1337,6 +1357,17 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	displaybottombar();
 })
   
+.controller('O17bCtrl', function($scope) {
+	$("#zuruckbutton").attr('href','#/t/o15'); 
+	show('#formularbutton'); 
+	hide('#weiterbutton'); 
+	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
+	hide('#clearbutton');
+	hide("#savebutton"); 
+	set_topbar_title('Erstattungsanspruch prüfen 7/7'); 
+	displaybottombar();
+})
   
 .controller('InfoCtrl', function($scope) {
 	$("#zuruckbutton").attr('href','#/t/mm'); 
