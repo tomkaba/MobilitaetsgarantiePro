@@ -477,7 +477,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var currentTime=new Date();
 		var key=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) + ' ' + pad(currentTime.getHours(),2) + ':' + pad(currentTime.getMinutes(),2) + ':' + pad(currentTime.getSeconds(),2) + ' ' + encodeURI($("[name='startpunkt']").val());
 	
-		
+		var savedate = currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2);
+	
 		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
 		var formsInProgress=eval("(" + formsInProgress_js + ")");
 		
@@ -487,11 +488,11 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		
 		if (!(Object.prototype.toString.call( formsInProgress ) === '[object Array]'))
 		{
-			formsInProgress = [ { title: key , record: record, status:  status} ] ;
+			formsInProgress = [ { title: key , record: record, status:  status, savedate: savedate} ] ;
 		}
 		else 
 		{
-			formsInProgress.push( { title: key , record: record, status: status } );
+			formsInProgress.push( { title: key , record: record, status: status, savedate: savedate } );
 		}
 		
 		var json=array2json(formsInProgress);
@@ -536,7 +537,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var currentTime=new Date();
 		var key=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) + ' ' + pad(currentTime.getHours(),2) + ':' + pad(currentTime.getMinutes(),2) + ':' + pad(currentTime.getSeconds(),2) + ' ' + encodeURI($("[name='startpunkt']").val());
 		
-		
+		var savedate = currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2);
 		
 		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
 		var formsInProgress=eval("(" + formsInProgress_js + ")");
@@ -550,11 +551,11 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		
 		if (!(Object.prototype.toString.call( formsInProgress ) === '[object Array]'))
 		{
-			formsInProgress = [ { title: key , record: record, status:  status} ] ;
+			formsInProgress = [ { title: key , record: record, status:  status, savedate: savedate} ] ;
 		}
 		else 
 		{
-			formsInProgress.push( { title: key , record: record, status: status } );
+			formsInProgress.push( { title: key , record: record, status: status, savedate: savedate } );
 		}
 		
 		var json=array2json(formsInProgress);
@@ -592,7 +593,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	$scope.addCalendarEntry = function(id) {
 		var formsInProgress_js = window.localStorage.getItem('formsInProgress');
 		var formsInProgress=eval("(" + formsInProgress_js + ")");
-		var datum=formsInProgress[id]['record'][0]['datum'].split("-");
+		//var datum=formsInProgress[id]['record'][0]['datum'].split("-");
+		var datum=formsInProgress[id]['savedate'].split("-");
 		//console.log(datum);
 		datum[0]=parseInt(datum[0]);
 		datum[1]=parseInt(datum[1]);
@@ -600,12 +602,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		
 		
 		
-		newdate= new Date(datum[0],datum[1],datum[2],12,0,0);
+		newdate= new Date(datum[0],datum[1]-1,datum[2],12,0,0);
+		//console.log(newdate);
 		newdate.setDate(newdate.getDate()+28);
+		//console.log(newdate);
 		enddate= new Date(datum[0],datum[1],datum[2],12,10,0);
 		enddate.setDate(enddate.getDate()+28);
 		
-		var title = "Ihr Erstattungsantrag vom "+formsInProgress[id]['record'][0]['datum'];
+		var title = "Ihr Erstattungsantrag vom "+datum;
+		
 		var eventLocation = "Schlichtungsstelle Nahverkehr";
 		var notes = "Sie sollten nach ca. 4 Wochen Antwort vom Verkehrsunternehmen erhalten haben. Bei Problemen können Sie ggf. die Schlichtungsstelle Nahverkehr einbeziehen.";
 		var success = function(message) { $ionicPopup.alert({title:'Kalender',template:'Kalendereintrag wurde für '+newdate+' erstellt'});};
@@ -716,6 +721,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		
 		var doc = new jsPDF();
 		var margin = 0;
+		var mailto = $("[name='email']").val();
 		
 		var createPDF = function() {
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
@@ -736,7 +742,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 						//	function(isAvailable) {
 						//		alert(isAvailable);
 								cordova.plugins.email.open({
-								to:      $("[name='email']").val(),
+								to:      mailto,
 								subject: 'Neues erstattungsformular',
 								body:    'Im Anhang finden Sie das Erstattungsformular',
 								isHtml:  true,
@@ -1094,7 +1100,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	displaybottombar();
 	
 	var formsInProgress_js = window.localStorage.getItem('formsInProgress');
-	console.log(formsInProgress_js);
+	//console.log(formsInProgress_js);
 	//alert(formsInProgress_js );
 	//$scope.savedforms=eval("(" + formsInProgress_js + ")");
 	var raw_savedforms=JSON.parse(formsInProgress_js);

@@ -195,7 +195,7 @@ function o1d6n() {
 		hide("#weiterbutton");
 		hide("#dialog_description");
 		hide("#d6subquestion_janein");
-	    $("#d6subquestion").css('height','260px');
+	    $("#d6subquestion").css('height','270px');
 		$("#d6subquestion").css('font-size','13px');
 		$("#d6subquestion").css('text-align','left');
 		$("#d6subquestion").html(description);
