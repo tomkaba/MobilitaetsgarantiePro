@@ -1092,7 +1092,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 
 })
 
-.controller('SavedCtrl', function($scope) {
+.controller('SavedCtrl', function($scope,$ionicLoading) {
 	set_topbar_title('Meine Erstattungen');
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1102,14 +1102,19 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	hide('#unpsendbutton');
 	displaybottombar();
 	
+	$ionicLoading.show({
+					template: 'Bitte warten...',
+					animation: 'fade-in',
+					showBackdrop: true,
+					maxWidth: 200,
+					showDelay: 0
+			});	
 	var formsInProgress_js = window.localStorage.getItem('formsInProgress');
-	//console.log(formsInProgress_js);
-	//alert(formsInProgress_js );
-	//$scope.savedforms=eval("(" + formsInProgress_js + ")");
 	var raw_savedforms=JSON.parse(formsInProgress_js);
-	//console.log(raw_savedforms);
 	var savedforms=decodeURIArray(raw_savedforms);
-	//console.log(savedforms);
+	
+	$ionicLoading.hide();
+
 	$scope.savedforms=savedforms;
 })
 
@@ -1126,11 +1131,11 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	show('#savebutton');
 	displaybottombar();
 	
-	
+	$scope.tarifraum=window.localStorage.getItem('tarifraum');
 	$scope.groups = [{name:"Profildaten",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: window.localStorage.getItem('vorname') } , { type: 'text', name: 'name', placeholder: 'Name', value: window.localStorage.getItem('name') } , { type: 'email', name: 'email', placeholder: 'E-Mail-Addresse', value: window.localStorage.getItem('email') }, { type: 'text', name:'phone', placeholder: 'Telefon', value: window.localStorage.getItem('phone') } ]}, {name:"Adresse",  items: [ { type: 'text', name: 'street', placeholder: 'Straße', value: window.localStorage.getItem('street') } , { type: 'text', name: 'flat', placeholder: 'Nr', value: window.localStorage.getItem('flat') } , { type: 'text', name: 'postcode', placeholder: 'PLZ', value: window.localStorage.getItem('postcode') }, { type: 'text', name: 'city', placeholder: 'Ort', value: window.localStorage.getItem('city') } ]}, {name:"Kontoverbindung",  items: [ { type: 'stacked', name: 'accountholder', placeholder: 'Kontoinhaber', value: window.localStorage.getItem('accountholder') } , { type: 'stacked', name: 'iban', placeholder: 'IBAN', value: window.localStorage.getItem('iban')  } , { type: 'stacked', name: 'bic', placeholder: 'BIC', value: window.localStorage.getItem('bic')  }]}, {name:"Vorschlagswerte für Fahrt",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: window.localStorage.getItem('ticketname')  } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: window.localStorage.getItem('tarifraum') , options:  [ { value: 'VRR' , name: 'Verkehrsverbund Rhein-Ruhr (VRR)' }, { value: 'VGMVRL' , name: 'Münsterland-/Ruhr-Lippe-Tarif (VGM/VRL)' }, { value: 'VGWS' , name: 'Verkehrsgemeinschaft Westfalen-Süd (VGWS)' }, { value: 'VRS' , name: 'Verkehrsverbund Rhein-Sieg (VRS)' }, { value: 'OWL' , name: 'Der Sechser (OWL Verkehr)' }, { value: 'VGN' , name: 'Verkehrsgemeinschaft Niederrhein (VGN)' }, { value: 'AVV' , name: 'Aachener Verkehrsverbund (AVV)' }, { value: 'VPH' , name: 'Verkehrs-Servicegesellschaft Paderborn/Höxter (VPH)' }, { value: 'NRW' , name: 'NRW-Tarif' } ] } , { type: 'time', name: 'starttime', placeholder: 'Planmäßige Abfahrt', value: window.localStorage.getItem('starttime')  } , { type: 'text', name: 'startpunkt', placeholder: 'Einstiegshaltestelle', value: window.localStorage.getItem('startpunkt')  } , { type: 'text', name: 'stadt', placeholder: 'Stadt/Gemeinde', value: window.localStorage.getItem('stadt')  } , { type: 'text', name: 'linie', placeholder: 'Linie', value: window.localStorage.getItem('linie')  } , { type: 'text', name: 'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: window.localStorage.getItem('richtung')  } ,  { type: 'text', name: 'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: window.localStorage.getItem('verkehrsunternehmen')  } ]}, {name:"Kalendereintrag",  items: [ { type: 'checkbox', name: 'calendar', placeholder: 'Automatischer Kalendereintrag erzeugen', value: window.localStorage.getItem('calendar') }  ]} ];
 	
 	
-	$scope.tarifraum=window.localStorage.getItem('tarifraum');
+	
 	$scope.flag=0;
 	
     $scope.toggleGroup = function (group) {
