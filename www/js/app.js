@@ -721,7 +721,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		
 		var doc = new jsPDF();
 		var margin = 0;
-		var mailto = $("[name='email']").val();
+		var mailto = window.localStorage.getItem('email');
 		
 		var createPDF = function() {
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
@@ -742,7 +742,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 						//	function(isAvailable) {
 						//		alert(isAvailable);
 								cordova.plugins.email.open({
-								to:      mailto,
+								to:      window.localStorage.getItem('email'),
 								subject: 'Neues erstattungsformular',
 								body:    'Im Anhang finden Sie das Erstattungsformular',
 								isHtml:  true,
