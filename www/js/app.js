@@ -92,7 +92,7 @@ angular.module('todo', ['ionic','ngCordova'])
 
 	.state('t.infosmg', {
 		url: "/infosmg",
-		cache: true,
+		cache: false,
 		views: {
         'menuContent' :{
           templateUrl: "templates/infosmg.html",
@@ -397,59 +397,134 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
  
  $scope.downloadPDFinfos= function() {
  
-	function downloadFile(url,localname,id){
-		
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
-			function onFileSystemSuccess(fileSystem) {
-				fileSystem.root.getFile(
-				localname, {create: true, exclusive: false}, 
-				function gotFileEntry(fileEntry) {
-					
-					var fileTransfer = new FileTransfer();
-					alert(url);
-					alert(localname);
-					fileTransfer.download(
-						url,
-						localname,
-						function(theFile) {
-							alert('loaded ');
-							alert(" download complete: " + theFile.toURI());
-							
-							var currentdate = new Date(); 
-							var datetime = 	currentdate.getDate() + "/"
-											+ (currentdate.getMonth()+1)  + "/" 
-											+ currentdate.getFullYear() + " @ "  
-											+ currentdate.getHours() + ":"  
-											+ currentdate.getMinutes() + ":" 
-											+ currentdate.getSeconds();
-							if(id==1)
-							{ 
-								window.localStorage.setItem('pdf1status',datetime);
-							}
-							
-							if(id==2)
-							{
-								window.localStorage.setItem('pdf2status',datetime);
-							}
-						},
-						function(error) {
-							alert("Fehler! #" + error.code +' '+error.source);
-						}
-					);
-				}, function (error) { alert('Fehler! #'+error.code); });
-			}, function (error) { alert('Fehler! #'+error.code); });
+	
+	function DownloadFile(URL, Folder_Name, File_Name) {
+
+			download(URL, Folder_Name, File_Name); //If available download function call
 	}
+
+	function download(URL, Folder_Name, File_Name) {
+	//step to request a file system 
 	
 	
-	$ionicPopup.alert({title:'Downloading...',template:'Files will be downloaded in background. You will be notified as soon as files are downloaded.'});
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, fileSystemSuccess, fileSystemFail);
+		
+		function fileSystemSuccess(fileSystem) {
+		
+			function filetransfer(download_link, fp) {
+				//alert('DL:'+download_link);
+				//alert(File_Name);
+				var fileTransfer = new FileTransfer();
+				// File download function with URL and local path
+				fileTransfer.download(download_link, fp,
+									function (entry) {
+										$ionicLoading.hide();
+										var currentdate = new Date(); 
+										var datetime = 	currentdate.getDate() + "/" + (currentdate.getMonth()+1)  + "/" + currentdate.getFullYear() + " "  + currentdate.getHours() + ":"  + currentdate.getMinutes();
+										//alert('Verfahrensansordnung has been downloaded.');
+										
+										if(File_Name=='pdf2.pdf')
+										{
+											window.localStorage.setItem('pdf2status',datetime);
+											
+											NativePath = entry.toNativeURL();
+											NativePath = NativePath.replace('file:///localhost/','');
+											window.localStorage.setItem('pdf2link',NativePath);
+										}
+										
+										
+										if(File_Name=='pdf2.pdf')
+										{
+											
+											$ionicLoading.show({
+													template: 'Downloading Flyer...',
+													animation: 'fade-in',
+													showBackdrop: true,
+													maxWidth: 200,
+													showDelay: 0
+											});		
+											var fileTransfer2 = new FileTransfer();
+											//alert(fp_base+'pdf1.pdf');
+											fileTransfer2.download('http://www.schlichtungsstelle-nahverkehr.de/media229A', fp_base+'pdf1.pdf', function (entry) {
+										
+											var currentdate2 = new Date(); 
+											var datetime2 = currentdate2.getDate() + "/" + (currentdate2.getMonth()+1)  + "/" + currentdate2.getFullYear() + " "  + currentdate2.getHours() + ":"  + currentdate2.getMinutes();
+											$ionicLoading.hide();
+											window.localStorage.setItem('pdf1status',datetime2);
+											var NativePath2 = entry.toNativeURL();
+											NativePath2 = NativePath2.replace('file:///localhost/','');
+											window.localStorage.setItem('pdf1link',NativePath2);
+											
+											
+											$scope.$state.go($scope.$state.current, {}, {reload: true});
+											}, function(error) {  alert("download error source " + error.source); });
+										}
+									},
+								 function (error) {
+									 //Download abort errors or download failed errors
+									 alert("download error source " + error.source);
+									 //alert("download error target " + error.target);
+									 //alert("upload error code" + error.code);
+								 }
+							);
+			}
+		
+			var download_link = encodeURI(URL);
+			//ext = download_link.substr(download_link.lastIndexOf('.') + 1); //Get extension of URL
+		
+			//var directoryEntry = fileSystem.root; // to get root path of directory
+			//directoryEntry.getDirectory(Folder_Name, { create: true, exclusive: false }, onDirectorySuccess, onDirectoryFail); // creating folder in sdcard
+			var rootdir = fileSystem.root;
+			var fp = rootdir.toURL(); // Returns Fulpath of local directory
+			fp_base=fp;
+			fp = fp + File_Name; // fullpath and name of the file which we want to give
 			
-	$scope.downloadedPDFs=0;
-			
-	downloadFile('http://www.schlichtungsstelle-nahverkehr.de/media228A','pdf2');
-	//downloadFile('http://www.schlichtungsstelle-nahverkehr.de/media229A','pdf1');
-	downloadFile('http://www.w3.org/2011/web-apps-ws/papers/Nitobi.pdf','pdf3');
+			// download function call
+			filetransfer(download_link, fp);
+		}
+
+		function onDirectorySuccess(parent) {
+			// Directory created successfuly
+		}
+
+		function onDirectoryFail(error) {
+			//Error while creating directory
+			alert("Unable to create new directory: " + error.code);
+		}
+
+		  function fileSystemFail(evt) {
+			//Unable to access file system
+			alert(evt.target.error.code);
+		 }
+	}
+ 
 	
+	$ionicLoading.show({
+					template: 'Downloading Verfahrensansordnung...',
+					animation: 'fade-in',
+					showBackdrop: true,
+					maxWidth: 200,
+					showDelay: 0
+			});		
+	
+	
+
+	DownloadFile('http://www.schlichtungsstelle-nahverkehr.de/media228A','','pdf2.pdf');
  }
+	
+  $scope.open_pdflink = function(id) {
+	var pdflink;
+	if(id==1) pdflink=window.localStorage.getItem('pdf1link');
+	if(id==2) pdflink=window.localStorage.getItem('pdf2link');
+	
+	if (!pdflink) return false;
+	
+	window.open(pdflink, '_system');
+	return false;
+	
+  }
+
+	
 
   $scope.submitUnpunktlich = function() {
 		var startpunkt_v = $("[name='startpunkt']").val();
@@ -1494,15 +1569,18 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	var pdf1status=window.localStorage.getItem('pdf1status');
 	var pdf2status=window.localStorage.getItem('pdf2status');
 	
-	if (!pdf1status) { $scope.pdf1status='(nicht heruntergeladen)'; $scope.pdf1link=false; }
+	
+	if (!pdf1status) { $scope.pdf1status='(nicht heruntergeladen)';  }
 		else 
 			{ 
-				$scope.pdf1status='(heruntergeladen am: '+pdf1status+')';
+				$scope.pdf1status='(heruntergeladen am:'+pdf1status+')';
+				
 			}
-	if (!pdf2status) { $scope.pdf2status='(nicht heruntergeladen)'; $scope.pdf2link=false; }
+	if (!pdf2status) { $scope.pdf2status='(nicht heruntergeladen)';  }
 		else 
 			{
-				$scope.pdf2status='(heruntergeladen am: '+pdf2status+')';
+				$scope.pdf2status="(heruntergeladen am:"+pdf2status+')';
+			
 			}
 		
 	displaybottombar();
