@@ -118,6 +118,9 @@
 				<a ng-click="sendPDF(1)" data-ng-show="$state.includes('t.neuen2')" id="submitneuesbutton" class="button button-small button-positive" style="margin-right:10px;float:right">
 					Senden
 				</a>
+				<a ng-click="downloadPDFinfos()" data-ng-show="$state.includes('t.infosmg')" id="downloadpdfbutton" class="button button-small button-positive" style="float:right;margin-right:5px;">
+					Alle aktualisieren
+				</a>
 			</div>
 			</ion-side-menu-content> 
 
@@ -130,9 +133,9 @@
 								<a menu-close href="#/t/mm"><div style="width:100%;"><ion-item>Hauptmenu</div></ion-item></a>
 								<a menu-close href="#/t/profildaten" ><ion-item><div style="width:100%">Profildaten/Vorlagen</div></ion-item></a>
 								<a menu-close href="#/t/saved" ><ion-item><div style="width:100%">Meine Erstattungen</div></ion-item></a>
-								<ion-item><a menu-close href="#" >Rechtliche Hinweise</a></ion-item>
-								<ion-item><a menu-close href="#" >Infos zur Mobilitätsgarantie</a></ion-item>
-								<ion-item><a menu-close href="#" >Build: 11.01.2016 16:00	</a></ion-item>
+								<a menu-close href="#/t/impressum" ><ion-item>Impressum</ion-item></a>
+								<a menu-close href="#/t/infosmg" ><ion-item>Infos zur Mobilitätsgarantie</ion-item></a>
+								<ion-item><a menu-close href="#" >Build: 13.01.2016 24:00	</a></ion-item>
 				</ion-list>
 			  </ion-content>
 			</ion-side-menu>

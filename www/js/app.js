@@ -70,7 +70,7 @@ angular.module('todo', ['ionic','ngCordova'])
 	
 	.state('t.info', {
 		url: "/info",
-		cache: false,
+		cache: true,
 		views: {
         'menuContent' :{
           templateUrl: "templates/info.html",
@@ -79,7 +79,28 @@ angular.module('todo', ['ionic','ngCordova'])
       }
     })
 
-	
+	.state('t.impressum', {
+		url: "/impressum",
+		cache: true,
+		views: {
+        'menuContent' :{
+          templateUrl: "templates/impressum.html",
+		  controller: "ImpressumCtrl"
+        }
+      }
+    })
+
+	.state('t.infosmg', {
+		url: "/infosmg",
+		cache: true,
+		views: {
+        'menuContent' :{
+          templateUrl: "templates/infosmg.html",
+		  controller: "InfosMGCtrl"
+        }
+      }
+    })
+		
 	.state('t.saved', {
       url: "/saved",
 	  cache: false,
@@ -373,6 +394,62 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	 
 	navigator.geolocation.getCurrentPosition(GPSonSuccess, GPSonError);
  } 
+ 
+ $scope.downloadPDFinfos= function() {
+ 
+	function downloadFile(url,localname,id){
+		
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
+			function onFileSystemSuccess(fileSystem) {
+				fileSystem.root.getFile(
+				localname, {create: true, exclusive: false}, 
+				function gotFileEntry(fileEntry) {
+					
+					var fileTransfer = new FileTransfer();
+					alert(url);
+					alert(localname);
+					fileTransfer.download(
+						url,
+						localname,
+						function(theFile) {
+							alert('loaded ');
+							alert(" download complete: " + theFile.toURI());
+							
+							var currentdate = new Date(); 
+							var datetime = 	currentdate.getDate() + "/"
+											+ (currentdate.getMonth()+1)  + "/" 
+											+ currentdate.getFullYear() + " @ "  
+											+ currentdate.getHours() + ":"  
+											+ currentdate.getMinutes() + ":" 
+											+ currentdate.getSeconds();
+							if(id==1)
+							{ 
+								window.localStorage.setItem('pdf1status',datetime);
+							}
+							
+							if(id==2)
+							{
+								window.localStorage.setItem('pdf2status',datetime);
+							}
+						},
+						function(error) {
+							alert("Fehler! #" + error.code +' '+error.source);
+						}
+					);
+				}, function (error) { alert('Fehler! #'+error.code); });
+			}, function (error) { alert('Fehler! #'+error.code); });
+	}
+	
+	
+	$ionicPopup.alert({title:'Downloading...',template:'Files will be downloaded in background. You will be notified as soon as files are downloaded.'});
+			
+	$scope.downloadedPDFs=0;
+			
+	downloadFile('http://www.schlichtungsstelle-nahverkehr.de/media228A','pdf2');
+	//downloadFile('http://www.schlichtungsstelle-nahverkehr.de/media229A','pdf1');
+	downloadFile('http://www.w3.org/2011/web-apps-ws/papers/Nitobi.pdf','pdf3');
+	
+ }
 
   $scope.submitUnpunktlich = function() {
 		var startpunkt_v = $("[name='startpunkt']").val();
@@ -1402,5 +1479,43 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	hide('#clearbutton');
 	hide("#savebutton"); 
 	set_topbar_title('Schlichtungsstelle Nahverkehr'); 
+	displaybottombar();
+})
+
+.controller('InfosMGCtrl', function($scope) {
+	$("#zuruckbutton").attr('href','#/t/mm'); 
+	hide('#formularbutton'); 
+	hide('#weiterbutton'); 
+	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
+	hide('#clearbutton');
+	hide("#savebutton"); 
+	set_topbar_title('Informationen zur Mobilitätsgarantie'); 
+	var pdf1status=window.localStorage.getItem('pdf1status');
+	var pdf2status=window.localStorage.getItem('pdf2status');
+	
+	if (!pdf1status) { $scope.pdf1status='(nicht heruntergeladen)'; $scope.pdf1link=false; }
+		else 
+			{ 
+				$scope.pdf1status='(heruntergeladen am: '+pdf1status+')';
+			}
+	if (!pdf2status) { $scope.pdf2status='(nicht heruntergeladen)'; $scope.pdf2link=false; }
+		else 
+			{
+				$scope.pdf2status='(heruntergeladen am: '+pdf2status+')';
+			}
+		
+	displaybottombar();
+})
+
+.controller('ImpressumCtrl', function($scope) {
+	$("#zuruckbutton").attr('href','#/t/mm'); 
+	hide('#formularbutton'); 
+	hide('#weiterbutton'); 
+	hide('#unpunktlichbutton'); 
+	hide('#unpsendbutton');
+	hide('#clearbutton');
+	hide("#savebutton"); 
+	set_topbar_title('Impressum'); 
 	displaybottombar();
 });
