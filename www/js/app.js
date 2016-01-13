@@ -518,8 +518,12 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	if(id==2) pdflink=window.localStorage.getItem('pdf2link');
 	
 	if (!pdflink) return false;
-	
-	window.open(pdflink, '_system');
+	if(ionic.Platform.isIOS())
+		{	
+			window.open(pdflink, '_blank', 'EnableViewPortScale=yes');
+		}
+	else
+		window.open(pdflink, '_system');
 	return false;
 	
   }
