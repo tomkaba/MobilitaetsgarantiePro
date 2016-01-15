@@ -1,7 +1,7 @@
 angular.module('todo', ['ionic','ngCordova'])
 
 
-.run(function ($state,$rootScope) {
+.run(function ($state,$ionicPlatform,$ionicSideMenuDelegate, $rootScope) {
     $rootScope.$state = $state;
 	$rootScope.images = [];
 	$rootScope.pdfimages=[];
@@ -457,12 +457,12 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 											
 											
 											$scope.$state.go($scope.$state.current, {}, {reload: true});
-											}, function(error) {  alert("download error source " + error.source); });
+											}, function(error) {  alert("Fehler beim Download #" + error.source); });
 										}
 									},
 								 function (error) {
 									 //Download abort errors or download failed errors
-									 alert("download error source " + error.source);
+									 alert("Fehler beim Download #" + error.source);
 									 //alert("download error target " + error.target);
 									 //alert("upload error code" + error.code);
 								 }
@@ -592,6 +592,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		  }).then(function(res) {
 			if (res) {
 				clearNeuesForm();
+				$rootScope.images=[];
+				
 				$scope.tarifraum=0;
 			}
 		});
@@ -688,7 +690,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			fernverkehr: encodeURI($("[name='fernverkehr']").val()),
 			bemerkungen: encodeURI($("[name='bemerkungen']").val()),
 			zug: encodeURI($("[name='zug']").val()),
-			images: $scope.loadimages 
+			images: $rootScope.images 
 			} ];
 		
 		
@@ -852,10 +854,13 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			taxinutzung: $("[name='taxinutzung']").val(),
 			fernverkehr: $("[name='fernverkehr']").val(),
 			bemerkungen: $("[name='bemerkungen']").val(),
-			images: $scope.images, 
+			images: $rootScope.images, 
 			zug:$("[name='zug']").val(),
+			check1:$("[name='check1']").prop('checked'),
+			check2:$("[name='check2']").prop('checked')
 			} ;
 			
+		
 		
 		$scope.saveNeues(1);
 		
@@ -882,7 +887,10 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var margin = 0;
 		var mailto = window.localStorage.getItem('email');
 		
+		
 		var createPDF = function() {
+		
+			
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
 				
 			    fileSystem.root.getFile("erstattungsform.pdf", {create: true}, function(entry) {
@@ -936,6 +944,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 					doc.addImage(imgData9, 'JPEG', 189, 0, 21, 297); 
 					
 					
+		
 					
 					
 					doc.setFontSize(7);
@@ -963,6 +972,19 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 					}
 					doc.setFontSize(13);
 					doc.text(posX,posY,'X');
+					
+					if(record['check1']==true)
+					{
+						
+						doc.text(22,243,'X');
+					}
+					
+					if(record['check2']==true)
+					{
+						
+						doc.text(107,216,'X');
+					}
+					
 					
 					doc.setFont('terminal');
 					doc.setFontSize(11);
@@ -996,6 +1018,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 						var c = document.createElement('canvas');
 						var ctx = c.getContext("2d");
 						var img = new Image();
+						var new_width;
+						var new_height;
 						img.onload = function() {
 							c.width = this.width*0.2;
 							c.height = this.height*0.2;
@@ -1004,7 +1028,18 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 								
 							if(typeof callback === 'function'){
 								var dataURL = c.toDataURL("image/jpeg");
-								callback(dataURL,c.height);
+								if(c.width>=c.height)
+								{
+									new_width=120;
+									new_height=Math.floor(c.height*120/c.width);
+								}
+								else
+								{
+									new_height=120;
+									new_width=Math.floor(c.width*120/c.height);
+								}
+								
+								callback(dataURL,new_width,new_height);
 							}
 						};
 						img.src = imageUri;
@@ -1013,10 +1048,10 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 					var cnt=0;
 					for($i=0;$i<$rootScope.images.length;$i++)
 					{
-						encodeImageUri($rootScope.images[$i], function(base64,height){
+						encodeImageUri($rootScope.images[$i], function(base64,width,height){
 						  doc.addPage();
 						  doc.addImage(imgPage2,0,0,210,297);	
-						  doc.addImage(base64,20,130,120,120);
+						  doc.addImage(base64,20,130,width,height);
 						  cnt++;
 						  if(cnt==$rootScope.images.length) writer.write(  doc.output("blob") );
 						});
@@ -1050,6 +1085,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		encodeImageUri = function(imageUri, callback) {
 						var c = document.createElement('canvas');
 						var ctx = c.getContext("2d");
+						var new_width;
+						var new_height;
 						
 						var img = new Image();
 						img.onload = function() {
@@ -1060,7 +1097,17 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 								
 							if(typeof callback === 'function'){
 								var dataURL = c.toDataURL("image/jpeg");
-								callback(dataURL,c.height);
+								if(c.width>=c.height)
+								{
+									new_width=120;
+									new_height=Math.floor(c.height*120/c.width);
+								}
+								else
+								{
+									new_height=120;
+									new_width=Math.floor(c.width*120/c.height);
+								}
+								callback(dataURL,new_width,new_height);
 							}
 						};
 						img.src = imageUri;
@@ -1077,7 +1124,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 						  doc.output("dataurlnewwindow");
 						});
 		
-*/
+		*/
 			
 					
 				
@@ -1248,7 +1295,14 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 
 })
 
-.controller('SavedCtrl', function($scope,$ionicLoading) {
+.controller('SavedCtrl', function($scope,$ionicLoading,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+      function() {
+        window.location.hash="#/t/mm";
+      }, 100
+    );
+    $scope.$on('$destroy', deregisterFirst);
+
 	set_topbar_title('Meine Erstattungen');
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1275,7 +1329,14 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	$scope.savedforms=savedforms;
 })
 
-.controller('ProfildatenCtrl', function($scope) {
+.controller('ProfildatenCtrl', function($scope,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+      function() {
+        window.location.hash="#/t/mm";
+      }, 100
+    );
+    $scope.$on('$destroy', deregisterFirst);
+	
 	
 	
 
@@ -1362,7 +1423,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var datum=record['record'][0]['datum'];
 		
 		$scope.loadimages=record['record'][0]['images'];
-		$rootScope.images=$scope.loadimages;
+		$rootScope.images=record['record'][0]['images'];
 	
 	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: 'Datum', value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: zug } , { type: 'time', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestelle', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
 	
@@ -1382,7 +1443,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 })
 
 
-.controller('NeuenCtrl', function($scope) {
+.controller('NeuenCtrl', function($scope,$rootScope,$filter) {
 	set_topbar_title('Neues Erstattungsformular');
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1425,19 +1486,24 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var currentTime=new Date();
 		var datum;
 		
-		/*
+		Date.prototype.toDateInputValue = (function() {
+			var local = new Date(this);
+			local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+			return local.toJSON().slice(0,10);
+		});
+
 		if(ionic.Platform.isIOS())
-		{	
 			datum= new Date().toISOString().slice(0,10);
-		}
 		else
-		*/
-		datum= new Date().toISOString().slice(0,10);
+			{
+				datum=$filter("date")(Date.now(), 'yyyy-MM-dd');
+				$scope.today=$filter("date")(Date.now(), 'yyyy-MM-dd');
+			}
 			//datum=currentTime.getFullYear() + '-' + pad(currentTime.getMonth() + 1,2) + '-' + pad(currentTime.getDate(),2) ; 
-			
+		
 		$scope.tarifraum=window.localStorage.getItem('tarifraum');
 		
-	
+		$rootScope.images=[];
 	
 	
 	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: 'Datum', value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: zug } , { type: 'time', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestelle', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street },{ type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
@@ -1561,7 +1627,14 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	displaybottombar();
 })
 
-.controller('InfosMGCtrl', function($scope) {
+.controller('InfosMGCtrl', function($scope,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+      function() {
+        window.location.hash="#/t/mm";
+      }, 100
+    );
+    $scope.$on('$destroy', deregisterFirst);
+	
 	$("#zuruckbutton").attr('href','#/t/mm'); 
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1590,7 +1663,14 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	displaybottombar();
 })
 
-.controller('ImpressumCtrl', function($scope) {
+.controller('ImpressumCtrl', function($scope,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+      function() {
+        window.location.hash="#/t/mm";
+      }, 100
+    );
+    $scope.$on('$destroy', deregisterFirst);
+
 	$("#zuruckbutton").attr('href','#/t/mm'); 
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 

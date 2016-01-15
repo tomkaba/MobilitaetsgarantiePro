@@ -58,11 +58,22 @@
  
  <div id="custom-overlay">
 				<div class='splash'>
+				<div id="image_placeholder"></div>
+				
 					<script>
 					var w=window.screen.width;
 					var h=window.screen.height;
+					if(h>w)
+					{
+						$("#image_placeholder").html('<img src="startscreen.jpg" height="100%" width="100%" border=0>');
+					}
+					else
+					{
+						
+						$("#image_placeholder").html('<img src="startscreen.jpg" height="100%" border=0>');
+					}
+					
 					</script>
-					<img src="startscreen.jpg" height="100%" width="100%" border=0>
 				</div>
  </div> 
 
@@ -135,7 +146,7 @@
 								<a menu-close href="#/t/saved" ><ion-item><div style="width:100%">Meine Erstattungen</div></ion-item></a>
 								<a menu-close href="#/t/impressum" ><ion-item>Impressum</ion-item></a>
 								<a menu-close href="#/t/infosmg" ><ion-item>Infos zur Mobilitätsgarantie</ion-item></a>
-								<ion-item><a menu-close href="#" >Build: 14.01.2016 00:30	</a></ion-item>
+								<ion-item><a menu-close href="#" >Build: 15.01.2016 14:50	</a></ion-item>
 				</ion-list>
 			  </ion-content>
 			</ion-side-menu>

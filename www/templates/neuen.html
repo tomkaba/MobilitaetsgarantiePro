@@ -51,7 +51,7 @@
 						  <div ng-if="item.type=='date'">
 							<label class="item item-input item-stacked-label">
 									<span class="input-label">{{item.placeholder}}</span>
-									<input type="date" name="{{item.name}}" value="{{item.value}}" size=40>
+									<input type="date" name="{{item.name}}" value="{{item.value}}">
 							</label>
 						  </div>
 						  <div ng-if="item.type!='select' && item.type!='textarea' &&  item.type!='checkbox' && item.type!='date' ">
@@ -63,14 +63,14 @@
 								</label>
 							</div>
 							<div ng-if="item.name=='startpunkt'" >
-								<div style="width:80%;float:left">
+								<div style="width:75%;float:left">
 									<label class="item item-input item-stacked-label">
 											<span class="input-label">{{item.placeholder}}</span>
 											<input type="{{item.type}}" name="{{item.name}}" value="{{item.value}}" size=40>
 									</label>
 								</div>
 								<div style="float:right">
-									<button ng-click="showList()" class="button button-small icon ion-pinpoint" style="float:right;margin-left:10px;"></button>
+									<button ng-click="showList()" class="button icon ion-pinpoint" style="float:right;margin-left:10px;"></button>
 								</div>
 							</div>
 						 
@@ -95,10 +95,10 @@
 						</div>	
 						
 						<ion-list>
-						  <ion-item ng-repeat="image in images">
+						  <ion-item ng-repeat="image in $root.images">
 							<img ng-src="{{urlForImage(image)}}" height="120px"
 										width="120px"   />
-							<button class="button button-small icon ion-trash-a" ng-click="images.splice($index, 1)" style="float:right;margin-left:10px;">
+							<button class="button button-small icon ion-trash-a" ng-click="$root.images.splice($index, 1)" style="float:right;margin-left:10px;">
 							 </button>
 							
 						  </ion-item>
