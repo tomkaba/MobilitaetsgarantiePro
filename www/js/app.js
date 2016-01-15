@@ -830,6 +830,9 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 					showDelay: 0
 			});
 		
+		var datum=$("[name='datum']").val().substr(2).split("-");
+		var pdfdatum=datum[2]+datum[1]+datum[0];
+		//alert(pdfdatum);
 		var record = {
 			vorname: $("[name='vorname']").val(),
 			name: $("[name='name']").val(),
@@ -850,7 +853,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			linie: $("[name='linie']").val(),
 			richtung: $("[name='richtung']").val(),
 			verkehrsunternehmen: $("[name='verkehrsunternehmen']").val(),
-			datum: (($("[name='datum']").val()).replace(/-/g,"")).substr(2),
+			datum: pdfdatum,
 			taxinutzung: $("[name='taxinutzung']").val(),
 			fernverkehr: $("[name='fernverkehr']").val(),
 			bemerkungen: $("[name='bemerkungen']").val(),
@@ -861,7 +864,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			} ;
 			
 		
-		
+			
 		$scope.saveNeues(1);
 		
 		
