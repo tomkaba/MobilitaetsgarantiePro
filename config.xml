@@ -62,7 +62,7 @@
   
   
   
-  <gap:splash src="www/screen.jpg" />
+  
   	
 
   <access origin="*"/>
