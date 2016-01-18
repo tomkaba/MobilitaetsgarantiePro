@@ -530,17 +530,21 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 
   $scope.showDatePicker = function() {
   
-	var datum=new Date();
+	var datum;
 	$current_date=$("#dateinput").val();
 	if($current_date.length>0)
 	{
 		datumarr=$current_date.split("-");
 		
-		datum=Date(datumarr[0],datumarr[1]-1,datumarr[2]);
-		
+		datum=new Date(datumarr[0],datumarr[1]-1,datumarr[2],12,0,0,0);
+		alert(datumarr[0]+'--'+datumarr[1]+'--'+datumarr[2]);
 		alert('Datum: '+datum);
 	}
-	else alert('Datum default: '+datum);
+	else 
+	{
+		datum=new Date();
+		alert('Datum default: '+datum);
+	}
 	
 	var options = {
 		  date: datum,
