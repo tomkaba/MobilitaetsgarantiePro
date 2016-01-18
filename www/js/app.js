@@ -534,19 +534,16 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	$current_date=$("#dateinput").val();
 	if($current_date.length>0)
 	{
-		datum=$current_date.split("-");
+		datumarr=$current_date.split("-");
 		
-		datum[0]=parseInt(datum[0]);
-		datum[1]=parseInt(datum[1]);
-		datum[2]=parseInt(datum[2]);
-	
-		datum=Date(datum[0],datum[1]-1,datum[2]);
+		datum=Date(datumarr[0],datumarr[1]-1,datumarr[2]);
 		
+		alert('Datum: '+datum);
 	}
-	alert('Datum: '+datum);
+	else alert('Datum default: '+datum);
 	
 	var options = {
-		  date: new Date(),
+		  date: datum,
 		  mode: 'date',
 		  doneButtonLabel: 'OK',
 		  cancelButtonLabel : 'Abbrechen'
