@@ -528,8 +528,17 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
   }
 
-	
+  $scope.showDatePicker = function() {
+	var options = {
+		  date: new Date(),
+		  mode: 'date'
+	};
 
+	datePicker.show(options, function(date){
+	  alert("date result " + date);  
+	});
+  }	
+  
   $scope.submitUnpunktlich = function() {
 		var startpunkt_v = $("[name='startpunkt']").val();
 		var linie_v = $("[name='linie']").val();
