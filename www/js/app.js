@@ -529,13 +529,36 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
   }
 
   $scope.showDatePicker = function() {
+  
+	var datum=new Date();
+	$current_date=$("#dateinput").val();
+	if($current_date.length>0)
+	{
+		datum=$current_date.split("-");
+		
+		datum[0]=parseInt(datum[0]);
+		datum[1]=parseInt(datum[1]);
+		datum[2]=parseInt(datum[2]);
+	
+		datum=Date(datum[0],datum[1]-1,datum[2]);
+		
+	}
+	alert('Datum: '+datum);
+	
 	var options = {
 		  date: new Date(),
-		  mode: 'date'
+		  mode: 'date',
+		  doneButtonLabel: 'OK',
+		  cancelButtonLabel : 'Abbrechen'
 	};
 
 	datePicker.show(options, function(date){
-	  alert("date result " + date);  
+		var day = date.getDate();
+		var monthIndex = date.getMonth();
+		var year = date.getFullYear();
+		if(date!='cancel')
+			$("#dateinput").val(year+'-'+pad(monthIndex+1,2)+'-'+pad(day,2));
+	  
 	});
   }	
   
