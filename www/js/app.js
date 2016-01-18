@@ -537,13 +537,13 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		datumarr=$current_date.split("-");
 		
 		datum=new Date(datumarr[0],datumarr[1]-1,datumarr[2],12,0,0,0);
-		alert(datumarr[0]+'--'+datumarr[1]+'--'+datumarr[2]);
-		alert('Datum: '+datum);
+		//alert(datumarr[0]+'--'+datumarr[1]+'--'+datumarr[2]);
+		//alert('Datum: '+datum);
 	}
 	else 
 	{
 		datum=new Date();
-		alert('Datum default: '+datum);
+		//alert('Datum default: '+datum);
 	}
 	
 	var options = {
