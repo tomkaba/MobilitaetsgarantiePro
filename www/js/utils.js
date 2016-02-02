@@ -173,7 +173,7 @@ function o1d5y() {
 }
 
 function o1d6y() {
-		var description="Verspätung tagsüber (05:00 bis 20:00 Uhr)?";
+		var description="Verspätung tagsüber<br/>(05:00 bis 20:00 Uhr)?";
 		css_click("#button_ja");	
 		css_unclick("#button_nein");
 		$("#d6subquestion").css('height','60px');

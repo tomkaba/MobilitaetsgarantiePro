@@ -240,6 +240,7 @@ angular.module('todo', ['ionic','ngCordova'])
 		
   }
 
+  
  
   $scope.toggleMenu = function() {
     $ionicSideMenuDelegate.toggleLeft();
@@ -660,6 +661,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			fernverkehr: encodeURI($("[name='fernverkehr']").val()),
 			bemerkungen: encodeURI($("[name='bemerkungen']").val()),
 			zug: encodeURI($("[name='zug']").val()),
+			check1: encodeURI($("[name='check1']").prop('checked')),
+			check2: encodeURI($("[name='check2']").prop('checked')),
 			images: $rootScope.images 
 			} ];
 		
@@ -723,6 +726,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			fernverkehr: encodeURI($("[name='fernverkehr']").val()),
 			bemerkungen: encodeURI($("[name='bemerkungen']").val()),
 			zug: encodeURI($("[name='zug']").val()),
+			check1: encodeURI($("[name='check1']").prop('checked')),
+			check2: encodeURI($("[name='check2']").prop('checked')),
 			images: $rootScope.images 
 			} ];
 		
@@ -807,7 +812,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		
 		var eventLocation = "Schlichtungsstelle Nahverkehr";
 		var notes = "Sie sollten nach ca. 4 Wochen Antwort vom Verkehrsunternehmen erhalten haben. Bei Problemen können Sie ggf. die Schlichtungsstelle Nahverkehr einbeziehen.";
-		var success = function(message) { $ionicPopup.alert({title:'Kalender',template:'Kalendereintrag wurde für '+newdate+' erstellt'});};
+		var success = function(message) { $ionicPopup.alert({title:'Kalender',template:'Kalendereintrag wurde für den '+newdate+' erstellt.'});};
 		var error = function(message) { alert("Fehler: " + message); };
 		//console.log(newdate);
 		if(ionic.Platform.isAndroid())
@@ -1334,6 +1339,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('SavedCtrl', function($scope,$ionicLoading,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
       function() {
+		set_topbar_title('Schlichtungsstelle Nahverkehr');
         window.location.hash="#/t/mm";
       }, 100
     );
@@ -1368,6 +1374,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('ProfildatenCtrl', function($scope,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
       function() {
+		set_topbar_title('Schlichtungsstelle Nahverkehr');
         window.location.hash="#/t/mm";
       }, 100
     );
@@ -1453,15 +1460,27 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var verkehrsunternehmen=record['record'][0]['verkehrsunternehmen'];
 		var zug=record['record'][0]['zug'];
 		
+		
 		var n_taxinutzung=record['record'][0]['taxinutzung'];
 		var n_fernverkehr=record['record'][0]['fernverkehr'];
 		var n_bemerkungen=record['record'][0]['bemerkungen'];
+		
 		var datum=record['record'][0]['datum'];
+
+		var check1='';
+		var check2='';
+		if(record['record'][0]['check1']=='true')
+			check1='checked';
+		if(record['record'][0]['check2']=='true')
+			check2='checked';
+		console.log(record['record'][0]);
+		console.log(check1);
+		console.log(check2);
 		
 		$scope.loadimages=record['record'][0]['images'];
 		$rootScope.images=record['record'][0]['images'];
 	
-	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: 'Datum', value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: zug } , { type: 'time', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestelle', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: '', value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: '', value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
+	$scope.groups = [ {name:"Angaben zum Ticket",  items: [ { type: 'text', name: 'ticketname', placeholder: 'Ticketname', value: ticketname } , { type: 'select', name: 'tarifraum', placeholder: 'Tarifraum', value: 'tarifraum' }  ]} , {name:"Infos zur verspäteten Fahrt",  items: [ { type: 'date', name: 'datum', placeholder: 'Datum', value: datum } , { type: 'text', name: 'zug', placeholder: 'Zug-Nr', value: zug } , { type: 'time', name: 'starttime', placeholder: 'Planmäßige Abfahrt:', value: starttime }, { type: 'text', name:'startpunkt', placeholder: 'Einstiegshaltestelle', value: startpunkt }, { type: 'text', name:'stadt', placeholder: 'Stadt/Gemeinde', value: stadt }, { type: 'text', name:'linie', placeholder: 'Linie', value: linie }, { type: 'text', name:'richtung', placeholder: 'Richtung/Zielhaltestelle der Linie', value: richtung }, { type: 'text', name:'verkehrsunternehmen', placeholder: 'Verkehrsunternehmen', value: verkehrsunternehmen } ]} , {name:"Entstandene Kosten",  items: [ { type: 'text', name: 'taxinutzung', placeholder: 'Taxinutzung', value: n_taxinutzung } , { type: 'text', name: 'fernverkehr', placeholder: 'Fernverkehr', value: n_fernverkehr }  , { type: 'textarea', name: 'bemerkungen', placeholder: 'Bemerkungen', value: n_bemerkungen } ]} , {name:"Antragsteller",  items: [ { type: 'text', name: 'vorname', placeholder: 'Vorname', value: vorname } , { type: 'text', name: 'name', placeholder: 'Name', value: name }  , { type: 'text', name: 'street', placeholder: 'Straße', value: street }, { type: 'text', name: 'flat', placeholder: 'Nr', value: flat}, { type: 'text', name: 'postcode', placeholder: 'PLZ', value: postcode } , { type: 'text', name: 'city', placeholder: 'Ort', value: city } , { type: 'text', name: 'phone', placeholder: 'Telefon (Angabe freiwillig)', value: phone } , { type: 'text', name: 'email', placeholder: 'E-Mail (Angabe freiwillig)', value: email }  ]} , {name:"Kontodaten",  items: [ { type: 'text', name: 'accountholder', placeholder: 'Kontoinhaber', value: accountholder } , { type: 'text', name: 'iban', placeholder: 'IBAN', value: iban }  , { type: 'text', name: 'bic', placeholder: 'BIC', value: bic }  ]} , {name:"Rechtliche Hinweise",  items: [ { type: 'checkbox', name: 'check1', placeholder: check1, value: 'Ich stimme der Weitergabe meiner Daten an andere Verkehrsverbünde bzw. Verkehrsgemeinschaften und Verkehrsunternehmen im Rahmen der Abwicklung meines Erstattungsantrages zu. Nach Abwicklung meines Erstattungsantrages werden meine weitergegebenen Daten bei Dritten gelöscht. Bei fehlender Zustimmung wird der vorliegende Erstattungsantrag nicht bearbeitet.' } , { type: 'checkbox', name: 'check2', placeholder: check2, value: 'Ich bin damit einverstanden, dass meine Kontaktdaten für Marktforschung im Zusammenhang mit den Fahrgastrechten verwendet und anschließend anonymisiert genutzt werden.' } ]} ];
 	
 	
     $scope.toggleGroup = function (group) {
@@ -1572,7 +1591,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	set_topbar_title('Erstattungsanspruch prüfen 1/7'); 
 	displaybottombar();
 })
-.controller('O12Ctrl', function($scope) {
+.controller('O12Ctrl', function($scope,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+	function() {
+			set_topbar_title('Schlichtungsstelle Nahverkehr');
+			window.location.hash="#/t/mm";
+	  }, 100
+	);
+	$scope.$on('$destroy', deregisterFirst);
+
 	$("#zuruckbutton").attr('href','#/t/o1'); 
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1583,7 +1610,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	set_topbar_title('Erstattungsanspruch prüfen 2/7'); 
 	displaybottombar();
 })
-.controller('O13Ctrl', function($scope) {
+.controller('O13Ctrl', function($scope,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+	  function() {
+				set_topbar_title('Schlichtungsstelle Nahverkehr');
+				window.location.hash="#/t/mm";
+		  }, 100
+	  );
+	  $scope.$on('$destroy', deregisterFirst);
+
 	$("#zuruckbutton").attr('href','#/t/o12'); 
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1594,7 +1629,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	set_topbar_title('Erstattungsanspruch prüfen 3/7'); 
 	displaybottombar();
 })
-.controller('O14Ctrl', function($scope) {
+.controller('O14Ctrl', function($scope,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+	  function() {
+				set_topbar_title('Schlichtungsstelle Nahverkehr');	
+				window.location.hash="#/t/mm";
+		  }, 100
+	  );
+	  $scope.$on('$destroy', deregisterFirst);
+
 	$("#zuruckbutton").attr('href','#/t/o13'); 
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1605,7 +1648,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	set_topbar_title('Erstattungsanspruch prüfen 4/7'); 
 	displaybottombar();
 })
-.controller('O15Ctrl', function($scope) {
+.controller('O15Ctrl', function($scope,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+	  function() {
+				set_topbar_title('Schlichtungsstelle Nahverkehr');
+				window.location.hash="#/t/mm";
+		  }, 100
+	  );
+	  $scope.$on('$destroy', deregisterFirst);
+
 	$("#zuruckbutton").attr('href','#/t/o14'); 
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1616,7 +1667,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	set_topbar_title('Erstattungsanspruch prüfen 5/7'); 
 	displaybottombar();
 })
-.controller('O16Ctrl', function($scope) {
+.controller('O16Ctrl', function($scope,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+	  function() {
+				set_topbar_title('Schlichtungsstelle Nahverkehr');
+				window.location.hash="#/t/mm";
+		  }, 100
+	  );
+	  $scope.$on('$destroy', deregisterFirst);
+
 	$("#zuruckbutton").attr('href','#/t/o15'); 
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1627,7 +1686,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	set_topbar_title('Erstattungsanspruch prüfen 6/7'); 
 	displaybottombar();
 })
-.controller('O17Ctrl', function($scope) {
+.controller('O17Ctrl', function($scope,$ionicPlatform) {
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+	  function() {
+				set_topbar_title('Schlichtungsstelle Nahverkehr');
+				window.location.hash="#/t/mm";
+		  }, 100
+	  );
+	  $scope.$on('$destroy', deregisterFirst);
+
 	$("#zuruckbutton").attr('href','#/t/o16'); 
 	show('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1666,7 +1733,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('InfosMGCtrl', function($scope,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
       function() {
-        window.location.hash="#/t/mm";
+				set_topbar_title('Schlichtungsstelle Nahverkehr');	
+				window.location.hash="#/t/mm";
       }, 100
     );
     $scope.$on('$destroy', deregisterFirst);
@@ -1702,7 +1770,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('ImpressumCtrl', function($scope,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
       function() {
-        window.location.hash="#/t/mm";
+				set_topbar_title('Schlichtungsstelle Nahverkehr');
+				window.location.hash="#/t/mm";
       }, 100
     );
     $scope.$on('$destroy', deregisterFirst);

@@ -40,14 +40,23 @@
 									<textarea rows=7 cols=60 name="{{item.name}}" >{{item.value}}</textarea>
 							</label>
 						  </div>
-						  <div ng-if="item.type=='checkbox'">
+						  <div ng-if="item.type=='checkbox' && item.placeholder=='checked' ">
 							<li class="item item-checkbox">
 							 <label class="checkbox">
-							   <input type="checkbox" name="{{item.name}}">
+							   <input type="checkbox" name="{{item.name}}" checked >
 							 </label>
 							 <span class="item-text-wrap" style="font-size:14px;">{{item.value}}</span>
 						    </li>
 						  </div>
+						  <div ng-if="item.type=='checkbox' && item.placeholder!='checked' ">
+							<li class="item item-checkbox">
+							 <label class="checkbox">
+							   <input type="checkbox" name="{{item.name}}" >
+							 </label>
+							 <span class="item-text-wrap" style="font-size:14px;">{{item.value}}</span>
+						    </li>
+						  </div>
+						  
 						  <div ng-if="item.type=='date'">
 							<label class="item item-input item-stacked-label">
 									<span class="input-label">{{item.placeholder}}</span>
