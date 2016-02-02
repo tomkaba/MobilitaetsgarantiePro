@@ -550,6 +550,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	var options = {
 		  date: datum,
 		  mode: 'date',
+		  titleText : 'Datum',
 		  doneButtonLabel: 'OK',
 		  locale: 'de_DE',
 		  cancelButtonLabel : 'Abbrechen',
@@ -587,6 +588,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	var options = {
 		  date: datum,
 		  mode: 'time',
+		  is24Hour : true,
+		  titleText : 'Zeit',
 		  doneButtonLabel: 'OK',
 		  locale: 'de_DE',
 		  cancelButtonLabel : 'Abbrechen',

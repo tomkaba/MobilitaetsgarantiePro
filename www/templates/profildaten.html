@@ -54,7 +54,13 @@
 							 <span class="item-text-wrap" style="font-size:14px;">{{item.placeholder}}</span>
 						    </li>
 						  </div>
-						  <div ng-if="item.type!='select' && item.type!='stacked' && item.type!='checkbox'">
+						  <div ng-if="item.type=='time'">
+							<label class="item item-input item-stacked-label">
+									<span class="input-label">{{item.placeholder}}</span>
+									<input type="text" name="{{item.name}}" readonly id='timeinput' value="{{item.value}}" ng-click="showTimePicker()">
+							</label>
+						  </div>
+						  <div ng-if="item.type!='select' && item.type!='stacked' && item.type!='checkbox' && item.type!='time'">
 								<label class="item item-input item-stacked-label">
 									<span class="input-label">{{item.placeholder}}</span>
 									<input type="{{item.type}}" name="{{item.name}}" value="{{item.value}}" size=40>
