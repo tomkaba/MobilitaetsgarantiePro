@@ -551,7 +551,9 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		  date: datum,
 		  mode: 'date',
 		  doneButtonLabel: 'OK',
-		  cancelButtonLabel : 'Abbrechen'
+		  locale: 'de_DE',
+		  cancelButtonLabel : 'Abbrechen',
+		  cancelText: 'Abbrechen'
 	};
 
 	datePicker.show(options, function(date){
