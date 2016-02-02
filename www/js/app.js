@@ -532,10 +532,10 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
   $scope.showDatePicker = function() {
   
 	var datum;
-	$current_date=$("#dateinput").val();
-	if($current_date.length>0)
+	current_date=$("#dateinput").val();
+	if(current_date.length>0)
 	{
-		datumarr=$current_date.split("-");
+		datumarr=current_date.split("-");
 		
 		datum=new Date(datumarr[0],datumarr[1]-1,datumarr[2],12,0,0,0);
 		//alert(datumarr[0]+'--'+datumarr[1]+'--'+datumarr[2]);
@@ -565,6 +565,45 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	  
 	});
   }	
+  
+  
+   $scope.showTimePicker = function() {
+  
+	var datum;
+	current_time=$("#timeinput").val();
+	if(current_time.length>0)
+	{
+		datumarr=current_time.split(":");
+		
+		datum=new Date(2000,1,1,datumarr[0],datumarr[1],0,0);
+		
+	}
+	else 
+	{
+		datum=new Date();
+		//alert('Datum default: '+datum);
+	}
+	
+	var options = {
+		  date: datum,
+		  mode: 'time',
+		  doneButtonLabel: 'OK',
+		  locale: 'de_DE',
+		  cancelButtonLabel : 'Abbrechen',
+		  cancelText: 'Abbrechen'
+	};
+
+	datePicker.show(options, function(date){
+		var hour = date.getHours();
+		var minute = date.getMinutes();
+		
+		
+		if(date!='cancel')
+			$("#timeinput").val(pad(hour,2)+':'+pad(minute,2));
+	  
+	});
+  }	
+  
   
   $scope.submitUnpunktlich = function() {
 		var startpunkt_v = $("[name='startpunkt']").val();
