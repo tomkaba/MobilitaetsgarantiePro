@@ -809,9 +809,19 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	}
 	
 	$scope.deleteNeues = function () {
-		window.localStorage.removeItem('formsInProgress');
-		window.location.hash="#/t/mm";
-		return false;
+	
+		$ionicPopup.confirm({
+			title: 'Formulare löschen?',
+			template: 'Möchten Sie wirklich alle Fromulare löschen?',
+			okText: 'Ja',
+			cancelText: 'Nein'
+		  }).then(function(res) {
+			if (res) {
+				window.localStorage.removeItem('formsInProgress');
+				window.location.hash="#/t/mm";
+				return false;
+			}
+		});
 	}
 	
 	$scope.loadNeueForm = function (id) {
