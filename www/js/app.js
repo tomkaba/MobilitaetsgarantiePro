@@ -1340,7 +1340,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			 $rootScope.images.push(fileURI);
 		 }
 		 }, function(err) {
-			alert('Error:'+err);
+			alert('Fehler!');
 		});
 	}
 	
