@@ -1320,7 +1320,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		 // 2
 		 var options = {
 		 destinationType : Camera.DestinationType.FILE_URI,
-		 sourceType : Camera.PictureSourceType.PHOTOLIBRARY, // Camera.PictureSourceType.PHOTOLIBRARY
+		 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM, // Camera.PictureSourceType.PHOTOLIBRARY
 		 allowEdit : false,
 		 encodingType: Camera.EncodingType.JPEG,
 		 popoverOptions: CameraPopoverOptions,
