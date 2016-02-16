@@ -1333,6 +1333,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		 onImageSuccess(imageData);
 		 
 		 function onImageSuccess(fileURI) {
+			alert('onImageSuccess:'+fileURI);
 			 if(mode==1) $scope.loadimages.push(fileURI);
 			 else $scope.images.push(fileURI);
 			 
