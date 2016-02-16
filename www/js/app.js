@@ -812,7 +812,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 		$ionicPopup.confirm({
 			title: 'Formulare löschen?',
-			template: 'Möchten Sie wirklich alle Fromulare löschen?',
+			template: 'Möchten Sie wirklich alle Formulare löschen?',
 			okText: 'Ja',
 			cancelText: 'Nein'
 		  }).then(function(res) {
@@ -862,11 +862,14 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		enddate= new Date(datum[0],datum[1],datum[2],12,10,0);
 		enddate.setDate(enddate.getDate()+28);
 		
+		var newdatestr= newdate.getDate()+"."+(newdate.getMonth()+1)+"."+newdate.getFullYear();
+		//alert(newdatestr);
+		
 		var title = "Ihr Erstattungsantrag vom "+datum;
 		
 		var eventLocation = "Schlichtungsstelle Nahverkehr";
 		var notes = "Sie sollten nach ca. 4 Wochen Antwort vom Verkehrsunternehmen erhalten haben. Bei Problemen können Sie ggf. die Schlichtungsstelle Nahverkehr einbeziehen.";
-		var success = function(message) { $ionicPopup.alert({title:'Kalender',template:'Kalendereintrag wurde für den '+newdate+' erstellt.'});};
+		var success = function(message) { $ionicPopup.alert({title:'Kalender',template:'Kalendereintrag wurde für den '+newdatestr+' erstellt.'});};
 		var error = function(message) { alert("Fehler: " + message); };
 		//console.log(newdate);
 		if(ionic.Platform.isAndroid())
@@ -956,8 +959,10 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			} ;
 			
 		
-			
-		$scope.saveNeues(1);
+		if (loadmode)
+			$scope.saveLoadNeues(1);
+		else
+			$scope.saveNeues(1);
 		
 		
 		
