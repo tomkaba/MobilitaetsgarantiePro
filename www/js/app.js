@@ -378,7 +378,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 
 			function processError(data, status, req) {
 					$ionicLoading.hide();
-					alert("Netzwerkfehler! " + req.responseText + " STATUS: " + status);
+					alert("Netzwerkfehler!");
 			}  
  
 		var GPSonSuccess = function(position) {
