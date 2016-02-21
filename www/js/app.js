@@ -647,7 +647,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 								
 								success: function () {
 									$ionicLoading.hide();
-									if($scope.preventSuccessPopup==0) $ionicPopup.alert({title:'Erfolg!',template:'Ihre Meldung wurde an die Schlichtungsstelle Nahverkehr übermittelt.'})
+									if($scope.preventSuccessPopup==0) $ionicPopup.alert({title:'Erfolg!',template:'Ihre Meldung wurde an die Schlichtungsstelle Nahverkehr übermittelt.'});
+									set_topbar_title('Schlichtungsstelle Nahverkehr');
 									window.location.hash="#/t/mm";
 								},
 								error:  function(jqXHR, textStatus, ex) {
@@ -818,6 +819,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		  }).then(function(res) {
 			if (res) {
 				window.localStorage.removeItem('formsInProgress');
+				set_topbar_title('Schlichtungsstelle Nahverkehr');
 				window.location.hash="#/t/mm";
 				return false;
 			}
@@ -859,7 +861,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		//console.log(newdate);
 		newdate.setDate(newdate.getDate()+28);
 		//console.log(newdate);
-		enddate= new Date(datum[0],datum[1],datum[2],12,10,0);
+		enddate= new Date(datum[0],datum[1]-1,datum[2],12,10,0);
 		enddate.setDate(enddate.getDate()+28);
 		
 		var newdatestr= newdate.getDate()+"."+(newdate.getMonth()+1)+"."+newdate.getFullYear();
@@ -1020,6 +1022,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 								});
 						//	}
 						// );
+						set_topbar_title('Schlichtungsstelle Nahverkehr');
 						window.location.hash="#/t/mm"; // go back to main menu
 					};
 			 
@@ -1560,6 +1563,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 
 
 .controller('NeuenCtrl', function($scope,$rootScope,$filter) {
+
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+      function() {
+				set_topbar_title('Schlichtungsstelle Nahverkehr');
+				window.location.hash="#/t/mm";
+      }, 100
+    );
+    $scope.$on('$destroy', deregisterFirst);
+	
 	set_topbar_title('Neues Erstattungsformular');
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1655,8 +1667,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('O12Ctrl', function($scope,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
 	function() {
-			set_topbar_title('Schlichtungsstelle Nahverkehr');
-			window.location.hash="#/t/mm";
+			set_topbar_title('Erstattungsanspruch prüfen 1/7');
+			window.location.hash="#/t/o1";
 	  }, 100
 	);
 	$scope.$on('$destroy', deregisterFirst);
@@ -1674,8 +1686,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('O13Ctrl', function($scope,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
 	  function() {
-				set_topbar_title('Schlichtungsstelle Nahverkehr');
-				window.location.hash="#/t/mm";
+				set_topbar_title('Erstattungsanspruch prüfen 2/7');
+				window.location.hash="#/t/o12";
 		  }, 100
 	  );
 	  $scope.$on('$destroy', deregisterFirst);
@@ -1693,8 +1705,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('O14Ctrl', function($scope,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
 	  function() {
-				set_topbar_title('Schlichtungsstelle Nahverkehr');	
-				window.location.hash="#/t/mm";
+				set_topbar_title('Erstattungsanspruch prüfen 3/7');	
+				window.location.hash="#/t/o13";
 		  }, 100
 	  );
 	  $scope.$on('$destroy', deregisterFirst);
@@ -1712,8 +1724,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('O15Ctrl', function($scope,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
 	  function() {
-				set_topbar_title('Schlichtungsstelle Nahverkehr');
-				window.location.hash="#/t/mm";
+				set_topbar_title('Erstattungsanspruch prüfen 4/7');
+				window.location.hash="#/t/o14";
 		  }, 100
 	  );
 	  $scope.$on('$destroy', deregisterFirst);
@@ -1731,8 +1743,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('O16Ctrl', function($scope,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
 	  function() {
-				set_topbar_title('Schlichtungsstelle Nahverkehr');
-				window.location.hash="#/t/mm";
+				set_topbar_title('Erstattungsanspruch prüfen 5/7');
+				window.location.hash="#/t/o15";
 		  }, 100
 	  );
 	  $scope.$on('$destroy', deregisterFirst);
@@ -1750,8 +1762,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 .controller('O17Ctrl', function($scope,$ionicPlatform) {
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
 	  function() {
-				set_topbar_title('Schlichtungsstelle Nahverkehr');
-				window.location.hash="#/t/mm";
+				set_topbar_title('Erstattungsanspruch prüfen 6/7');
+				window.location.hash="#/t/o16";
 		  }, 100
 	  );
 	  $scope.$on('$destroy', deregisterFirst);
@@ -1768,7 +1780,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 })
   
 .controller('O17bCtrl', function($scope) {
-	$("#zuruckbutton").attr('href','#/t/o15'); 
+	$("#zuruckbutton").attr('href','#/t/o16'); 
 	show('#formularbutton'); 
 	hide('#weiterbutton'); 
 	hide('#unpunktlichbutton'); 
