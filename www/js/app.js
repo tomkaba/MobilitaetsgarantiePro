@@ -1311,7 +1311,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		}
 			 
 		function onImageFail(err) {
-				alert('Fehler: '+err);
+				console.log('Fehler: '+err);
 		}
 			
 
@@ -1347,7 +1347,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 				alert('Fehler:'+err);
 			 };
 			
-			 $navigator.camera.getPicture(onImageSuccess,onImageFail,options);
+			 navigator.camera.getPicture(onImageSuccess,onImageFail,options);
 			
 		}, false);
 	}
