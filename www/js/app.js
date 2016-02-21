@@ -1319,32 +1319,37 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 	
 	$scope.getImage = function(loadmode) {
-		 var mode=loadmode; 	
-		 // 2
-		 var options = {
-		 destinationType : Camera.DestinationType.FILE_URI,
-		 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM, // Camera.PictureSourceType.PHOTOLIBRARY
-		 allowEdit : false,
-		 encodingType: Camera.EncodingType.JPEG,
-		 popoverOptions: CameraPopoverOptions,
-		 };
-		 
-		 // 3
-		 $cordovaCamera.getPicture(options).then(function(imageData) {
-		 
-		 // 4
-		 onImageSuccess(imageData);
-		 
-		 function onImageSuccess(fileURI) {
-			
-			 if(mode==1) $scope.loadimages.push(fileURI);
-			 else $scope.images.push(fileURI);
+		document.addEventListener("deviceready", function () {
+		
+			 var mode=loadmode; 	
+			 // 2
+			 var options = {
+			 destinationType : Camera.DestinationType.FILE_URI,
+			 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM, // Camera.PictureSourceType.PHOTOLIBRARY
+			 allowEdit : false,
+			 encodingType: Camera.EncodingType.JPEG
+			 };
 			 
-			 $rootScope.images.push(fileURI);
-		 }
-		 }, function(err) {
-			alert('Fehler!');
-		});
+			 // 3
+			 
+			 $cordovaCamera.getPicture(options).then(function(imageData) {
+			 
+			 // 4
+			 alert(imageData);
+			 onImageSuccess(imageData);
+			 
+			 function onImageSuccess(fileURI) {
+				
+				 if(mode==1) $scope.loadimages.push(fileURI);
+				 else $scope.images.push(fileURI);
+				 
+				 $rootScope.images.push(fileURI);
+			 }
+			 }, function(err) {
+				alert('Fehler!');
+			});
+			
+		}, false);
 	}
 	
 	$scope.urlForImage = function(imageName) {
