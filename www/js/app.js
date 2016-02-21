@@ -1,4 +1,4 @@
-angular.module('todo', ['ionic','ngCordova'])
+angular.module('todo', ['ionic'])
 
 
 .run(function ($state,$ionicPlatform,$ionicSideMenuDelegate, $rootScope) {
