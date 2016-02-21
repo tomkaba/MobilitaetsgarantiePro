@@ -1328,12 +1328,6 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM // Camera.PictureSourceType.PHOTOLIBRARY
 			 };
 			 
-			 navigator.camera.getPicture(options).then(function(imageData) {
-			 
-			 // 4
-			 //alert(imageData);
-			 onImageSuccess(imageData);
-			 
 			 function onImageSuccess(fileURI) {
 				
 				$scope.$apply(function () {
@@ -1344,9 +1338,13 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 				});
 				
 			 }
-			 }, function(err) {
+			 
+			function onImageFail(err) {
 				alert('Fehler:'+err);
-			});
+			}
+			 
+			 navigator.camera.getPicture(onImageSuccess,onImageFail,options);
+			 
 	}
 	
 	$scope.urlForImage = function(imageName) {
