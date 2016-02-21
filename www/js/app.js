@@ -1,4 +1,4 @@
-angular.module('todo', ['ionic'])
+angular.module('todo', ['ionic','ngCordova'])
 
 
 .run(function ($state,$ionicPlatform,$ionicSideMenuDelegate, $rootScope) {
@@ -1311,7 +1311,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		}
 			 
 		function onImageFail(err) {
-				console.log('Fehler: '+err);
+				alert('Fehler: '+err);
 		}
 			
 
@@ -1320,36 +1320,33 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 	
 	$scope.getImage = function(loadmode) {
-		document.addEventListener("deviceready", function () {
-		
-			 var mode=loadmode; 	
+			
+			var mode=loadmode; 	
 			 // 2
 			 var options = {
 			 destinationType : Camera.DestinationType.FILE_URI,
 			 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM // Camera.PictureSourceType.PHOTOLIBRARY
 			 };
 			 
-			 // 3
+			 navigator.camera.getPicture(options).then(function(imageData) {
 			 
-			 
-			 
-			 
+			 // 4
+			 //alert(imageData);
+			 onImageSuccess(imageData);
 			 
 			 function onImageSuccess(fileURI) {
 				
-				 if(mode==1) $scope.loadimages.push(fileURI);
-				 else $scope.images.push(fileURI);
-				 
-				 $rootScope.images.push(fileURI);
-			 };
-			 
-			 function onImageFail(err) {
+				$scope.$apply(function () {
+					 if(mode==1) $scope.loadimages.push(fileURI);
+					 else $scope.images.push(fileURI);
+					 
+					 $rootScope.images.push(fileURI);
+				});
+				
+			 }
+			 }, function(err) {
 				alert('Fehler:'+err);
-			 };
-			
-			 navigator.camera.getPicture(onImageSuccess,onImageFail,options);
-			
-		}, false);
+			});
 	}
 	
 	$scope.urlForImage = function(imageName) {
