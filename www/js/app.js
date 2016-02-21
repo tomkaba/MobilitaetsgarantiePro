@@ -228,6 +228,8 @@ angular.module('todo', ['ionic','ngCordova'])
 		navigator.splashscreen.hide();
 		window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, failFS);
+		
+		console.log($cordovaCamera);
 
 		function gotFS(fileSystem) {
 		  //alert("entered gotFS: " + fileSystem.root.toURL());
@@ -1335,7 +1337,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			 $cordovaCamera.getPicture(options).then(function(imageData) {
 			 
 			 // 4
-			 alert(imageData);
+			 //alert(imageData);
 			 onImageSuccess(imageData);
 			 
 			 function onImageSuccess(fileURI) {
@@ -1346,7 +1348,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 				 $rootScope.images.push(fileURI);
 			 }
 			 }, function(err) {
-				alert('Fehler!');
+				alert('Fehler:'+err);
 			});
 			
 		}, false);
