@@ -17,7 +17,7 @@ angular.module('todo', ['ionic','ngCordova'])
     })
     .state('t.mainmenu', {
       url: "/mm",
-	  cache: true,
+	  cache: false,
       views: {
         'menuContent' :{
           templateUrl: "templates/mainmenu.html",
@@ -1562,7 +1562,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 })
 
 
-.controller('NeuenCtrl', function($scope,$rootScope,$filter) {
+.controller('NeuenCtrl', function($scope,$rootScope,$filter,$ionicPlatform) {
 
 	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
       function() {
