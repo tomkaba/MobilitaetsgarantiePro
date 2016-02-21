@@ -1478,7 +1478,16 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 })
 
 
-.controller('LoadNeuenCtrl', function($scope,$rootScope) {
+.controller('LoadNeuenCtrl', function($scope,$rootScope,$ionicPlatform) {
+	
+	var deregisterFirst = $ionicPlatform.registerBackButtonAction(
+      function() {
+				set_topbar_title('Schlichtungsstelle Nahverkehr');
+				window.location.hash="#/t/mm";
+      }, 100
+    );
+    $scope.$on('$destroy', deregisterFirst);
+	
 	set_topbar_title('Neues Erstattungsformular');
 	hide('#formularbutton'); 
 	hide('#weiterbutton'); 
@@ -1487,6 +1496,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	show('#clearbutton');
 	hide('#savebutton');
 	
+		
 	displaybottombar();
 	
 		console.log($scope.$state.current);
