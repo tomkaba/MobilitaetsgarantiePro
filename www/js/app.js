@@ -1,4 +1,4 @@
-angular.module('todo', ['ionic','ngCordova'])
+angular.module('todo', ['ionic'])
 
 
 .run(function ($state,$ionicPlatform,$ionicSideMenuDelegate, $rootScope) {
@@ -219,7 +219,7 @@ angular.module('todo', ['ionic','ngCordova'])
 
 })
 
-.controller('TodoCtrl', function($scope,$rootScope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading,$cordovaCamera,$cordovaFile,$ionicModal) {
+.controller('TodoCtrl', function($scope,$rootScope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading,$ionicModal) {
 
   document.addEventListener("deviceready", onDeviceReady, false);
   
@@ -229,14 +229,14 @@ angular.module('todo', ['ionic','ngCordova'])
 		window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, failFS);
 		
-		console.log($cordovaCamera);
+		console.log(navigator.camera);
 
 		function gotFS(fileSystem) {
 		  //alert("entered gotFS: " + fileSystem.root.toURL());
 		}
 		
 		function failFS() {
-			alert('fail');
+			alert('fehler');
 		}
 		
 		
@@ -1258,10 +1258,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		 };
 		 
 		 // 3
-		 $cordovaCamera.getPicture(options).then(function(imageData) {
-		 
-		 // 4
-		 onImageSuccess(imageData);
+		
 		 
 		 function onImageSuccess(fileURI,loadmode) {
 			createFileEntry(fileURI);
@@ -1307,16 +1304,18 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			 var text = "";
 			 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 			 
-			 for (var i=0; i < 5; i++) {
-			 text += possible.charAt(Math.floor(Math.random() * possible.length));
-			 }
+				 for (var i=0; i < 5; i++) {
+				 text += possible.charAt(Math.floor(Math.random() * possible.length));
+				 }
 			 return text;
-			 }
+		}
 			 
-			 }, function(err) {
-			 console.log(err);
-		 });
-		 
+		function onImageFail(err) {
+				alert('Fehler: '+err);
+		}
+			
+
+			navigator.camera.getPicture(onImageSuccess,onImageFail,options);
 	}
 	
 	
@@ -1332,11 +1331,9 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			 
 			 // 3
 			 
-			 $cordovaCamera.getPicture(options).then(function(imageData) {
 			 
-			 // 4
-			 //alert(imageData);
-			 onImageSuccess(imageData);
+			 
+			 
 			 
 			 function onImageSuccess(fileURI) {
 				
@@ -1344,10 +1341,13 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 				 else $scope.images.push(fileURI);
 				 
 				 $rootScope.images.push(fileURI);
-			 }
-			 }, function(err) {
+			 };
+			 
+			 function onImageFail(err) {
 				alert('Fehler:'+err);
-			});
+			 };
+			
+			 $navigator.camera.getPicture(onImageSuccess,onImageFail,options);
 			
 		}, false);
 	}
