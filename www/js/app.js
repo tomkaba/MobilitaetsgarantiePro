@@ -1327,9 +1327,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			 // 2
 			 var options = {
 			 destinationType : Camera.DestinationType.FILE_URI,
-			 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM, // Camera.PictureSourceType.PHOTOLIBRARY
-			 allowEdit : false,
-			 encodingType: Camera.EncodingType.JPEG
+			 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM // Camera.PictureSourceType.PHOTOLIBRARY
 			 };
 			 
 			 // 3
