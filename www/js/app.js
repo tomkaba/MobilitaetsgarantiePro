@@ -1321,7 +1321,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 	$scope.getImage = function(loadmode) {
 			
-			var mode=loadmode;
+			//var mode=loadmode;
 			
 			var options = {
 			quality: 50,
@@ -1337,8 +1337,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			$cordovaCamera.getPicture(options).then(function(imageUri) {
 				
 				$scope.$apply(function () {
-					if(mode==1) $scope.loadimages.push(imageUri);
-					else $scope.images.push(imageUri);
+					//if(mode==1) $scope.loadimages.push(imageUri);
+					//else $scope.images.push(imageUri);
 					 
 					$rootScope.images.push(imageUri);
 					alert('URI:'+imageUri);
