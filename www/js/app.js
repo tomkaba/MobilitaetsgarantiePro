@@ -1,4 +1,4 @@
-angular.module('todo', ['ionic'])
+angular.module('todo', ['ionic','ngCordova'])
 
 
 .run(function ($state,$ionicPlatform,$ionicSideMenuDelegate, $rootScope) {
@@ -219,7 +219,7 @@ angular.module('todo', ['ionic'])
 
 })
 
-.controller('TodoCtrl', function($scope,$rootScope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading,$ionicModal) {
+.controller('TodoCtrl', function($scope,$rootScope,$ionicSideMenuDelegate,$ionicPopup,$ionicLoading,$ionicModal,$cordovaCamera) {
 
   document.addEventListener("deviceready", onDeviceReady, false);
   
@@ -1320,6 +1320,28 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 	
 	$scope.getImage = function(loadmode) {
+			
+			var options = {
+			quality: 50,
+			destinationType: Camera.DestinationType.FILE_URI,
+			sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+			targetWidth: 200,
+			targetHeight: 200
+			};
+
+
+
+
+			$cordovaCamera.getPicture(options).then(function(imageUri) {
+				alert('img', imageUri);
+				$scope.$apply(function () {
+					$rootScope.images.push(fileURI);
+				});
+
+			}, function(err) {
+				alert('Error:'+err);
+			});
+			
 			/*
 			var mode=loadmode; 	
 			 // 2
@@ -1346,6 +1368,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			 navigator.camera.getPicture(onImageSuccess,onImageFail,options);
 			*/
 			
+			/*
 			window.imagePicker.getPictures(
 			function(results) {
 				for (var i = 0; i < results.length; i++) {
@@ -1355,6 +1378,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 				alert('Error: ' + error);
 			}
 			);
+			*/
 			 
 	}
 	
