@@ -1333,13 +1333,16 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 
 
 			$cordovaCamera.getPicture(options).then(function(imageUri) {
-				alert('img', imageUri);
+				
 				$scope.$apply(function () {
-					$rootScope.images.push(fileURI);
+					if(mode==1) $scope.loadimages.push(imageUri);
+					else $scope.images.push(imageUri);
+					 
+					$rootScope.images.push(imageUri);
 				});
 
 			}, function(err) {
-				alert('Error:'+err);
+				alert('Fehler:'+err);
 			});
 			
 			/*
