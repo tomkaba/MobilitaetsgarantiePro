@@ -1323,6 +1323,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			
 				
 			var mode=loadmode; 	
+			/*
 			 // 2
 			 var options = {
 			 quality: 85,
@@ -1348,19 +1349,26 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			}
 			 
 			 navigator.camera.getPicture(onImageSuccess,onImageFail,options);
+			*/
 			
 			
-			/*
 			window.imagePicker.getPictures(
 			function(results) {
 				for (var i = 0; i < results.length; i++) {
-					alert('Image URI: ' + results[i]);
+				
+					$scope.$apply(function () {
+					 if(mode==1) $scope.loadimages.push(results[i]);
+					 else $scope.images.push(results[i]);
+					 
+					 $rootScope.images.push(results[i]);
+					});
+					//alert('Image URI: ' + results[i]);
 				}
 			}, function (error) {
-				alert('Error: ' + error);
+				alert('Fehler: ' + error);
 			}
 			);
-			*/
+			
 			 
 	}
 	
