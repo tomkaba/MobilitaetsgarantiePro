@@ -1321,39 +1321,15 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 	$scope.getImage = function(loadmode) {
 			
-			//var mode=loadmode;
-			
-			var options = {
-			quality: 50,
-			destinationType: Camera.DestinationType.FILE_URI,
-			sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-			targetWidth: 200,
-			targetHeight: 200
-			};
-
-
-
-
-			$cordovaCamera.getPicture(options).then(function(imageUri) {
 				
-				$scope.$apply(function () {
-					//if(mode==1) $scope.loadimages.push(imageUri);
-					//else $scope.images.push(imageUri);
-					 
-					$rootScope.images.push(imageUri);
-					alert('URI:'+imageUri);
-				});
-
-			}, function(err) {
-				alert('Fehler:'+err);
-			});
-			
-			/*
 			var mode=loadmode; 	
 			 // 2
 			 var options = {
+			 quality: 50,
 			 destinationType : Camera.DestinationType.FILE_URI,
-			 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM // Camera.PictureSourceType.PHOTOLIBRARY
+			 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM, // Camera.PictureSourceType.PHOTOLIBRARY
+			 targetWidth: 200,
+			 targetHeight: 200
 			 };
 			 
 			 function onImageSuccess(fileURI) {
@@ -1372,7 +1348,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			}
 			 
 			 navigator.camera.getPicture(onImageSuccess,onImageFail,options);
-			*/
+			
 			
 			/*
 			window.imagePicker.getPictures(
