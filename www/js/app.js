@@ -1320,7 +1320,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 	
 	$scope.getImage = function(loadmode) {
-			
+			/*
 			var mode=loadmode; 	
 			 // 2
 			 var options = {
@@ -1344,6 +1344,17 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			}
 			 
 			 navigator.camera.getPicture(onImageSuccess,onImageFail,options);
+			*/
+			
+			window.imagePicker.getPictures(
+			function(results) {
+				for (var i = 0; i < results.length; i++) {
+					alert('Image URI: ' + results[i]);
+				}
+			}, function (error) {
+				alert('Error: ' + error);
+			}
+			);
 			 
 	}
 	
