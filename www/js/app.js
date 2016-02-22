@@ -1321,6 +1321,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 	
 	$scope.getImage = function(loadmode) {
 			
+			var mode=loadmode;
+			
 			var options = {
 			quality: 50,
 			destinationType: Camera.DestinationType.FILE_URI,
@@ -1339,6 +1341,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 					else $scope.images.push(imageUri);
 					 
 					$rootScope.images.push(imageUri);
+					alert('URI:'+imageUri);
 				});
 
 			}, function(err) {
