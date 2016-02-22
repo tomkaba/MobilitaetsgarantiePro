@@ -1325,11 +1325,11 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			var mode=loadmode; 	
 			 // 2
 			 var options = {
-			 quality: 50,
+			 quality: 85,
 			 destinationType : Camera.DestinationType.FILE_URI,
 			 sourceType : Camera.PictureSourceType.SAVEDPHOTOALBUM, // Camera.PictureSourceType.PHOTOLIBRARY
-			 targetWidth: 200,
-			 targetHeight: 200
+			 targetWidth: 1000,
+			 targetHeight: 1000
 			 };
 			 
 			 function onImageSuccess(fileURI) {
