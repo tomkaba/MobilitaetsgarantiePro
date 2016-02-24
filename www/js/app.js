@@ -256,7 +256,6 @@ angular.module('todo', ['ionic','ngCordova'])
 		setTimeout(function(){
 		  document.getElementById("custom-overlay").style.display = "none";      
 		}, 2000);
-		alert('Android');
 	}
 	else
 	{
