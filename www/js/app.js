@@ -249,9 +249,15 @@ angular.module('todo', ['ionic','ngCordova'])
   };
   
   $scope.$on('$ionicView.afterEnter', function(){
-    setTimeout(function(){
-      document.getElementById("custom-overlay").style.display = "none";      
-    }, 2000);
+    
+	
+	if(!ionic.Platform.isIOS())
+	{
+		document.getElementById("custom-overlay").style.display = "block";      
+		setTimeout(function(){
+		  document.getElementById("custom-overlay").style.display = "none";      
+		}, 2000);
+	}	
   }); 
   
   $scope.listdata=[];
