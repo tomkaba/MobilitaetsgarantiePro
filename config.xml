@@ -26,7 +26,8 @@
   <gap:plugin name="nl.x-services.plugins.calendar" />
   
   <gap:plugin name="cordova-plugin-datepicker" source="npm" />
-  <gap:plugin name="com.synconset.imagepicker" spec="1.0.4" source="pgb" />
+  <plugin name="imagepickerde" source="npm" />
+  
   
   <gap:plugin name="org.apache.cordova.battery-status"/>
   <gap:plugin name="org.apache.cordova.camera"/>
