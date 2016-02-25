@@ -336,6 +336,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 							dataType: "xml",
 							data: request,
 							success: processSuccess,
+							success: processSuccess,
 							error: processError
 						});
 
@@ -1375,6 +1376,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 				}
 			}, function (error) {
 				alert('Fehler: ' + error);
+			}, {
+				maximumImagesCount: 1
 			}
 			);
 			
