@@ -623,6 +623,31 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
   $scope.submitUnpunktlich = function() {
 		var startpunkt_v = $("[name='startpunkt']").val();
 		var linie_v = $("[name='linie']").val();
+		var vorname_v = $("[name='vorname']").val();
+		var name_v = $("[name='name']").val();
+		var email_v = $("[name='email']").val();
+		var verspaetung_v = $("[name='verspaetung']").val();
+		var informiert_v = $("[name='informiert']").val();
+		var verpasst_v = $("[name='verpasst']").val();
+		var datum_v = $("[name='datum']").val();
+		var uhrzeit_v = $("[name='uhrzeit']").val();
+		var starttime_v = $("[name='starttime']").val();
+		var mitteilung_v = $("[name='mitteilung']").val();
+		
+		if (startpunkt_v == 'undefined') startpunkt_v ='';
+		if (linie_v == 'undefined') linie_v ='';
+		if (vorname_v == 'undefined') vorname_v ='';
+		if (name_v == 'undefined') name_v ='';
+		if (email_v == 'undefined') email_v ='';
+		if (verspaetung_v == 'undefined') verspaetung_v ='';
+		if (informiert_v == 'undefined') informiert_v ='';
+		if (verpasst_v == 'undefined') verpasst_v ='';
+		if (datum_v == 'undefined') datum_v ='';
+		if (uhrzeit_v == 'undefined') uhrzeit_v ='';
+		if (starttime_v == 'undefined') starttime_v ='';
+		if (mitteilung_v == 'undefined') mitteilung_v ='';
+		
+		
 		$scope.preventSuccessPopup=0;
 		
 		if(!startpunkt_v.length) 
@@ -646,8 +671,10 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		});
 					
 			
-			var url = "http://etho.pl/unpunktlich.php";
-			var request_arr=[ {vorname: $("[name='vorname']").val(), name: $("[name='name']").val(), email: $("[name='email']").val() , verspaetung: $("[name='verspaetung']").val(), informiert: $("[name='informiert']").val() , verpasst: $("[name='verpasst']").val(), datum: $("[name='datum']").val(),  uhrzeit: $("[name='uhrzeit']").val(),  starttime: $("[name='starttime']").val(), startpunkt: startpunkt_v,  linie: linie_v, mitteilung: $("[name='mitteilung']").val()   } ];
+			var url = "http://dev4.systags.de/unpuenktlichkeit";
+			
+						
+			var request_arr=[ {attempt: 1, source: 'app', vorname: vorname_v, name: name_v, email: email_v , verspaetung: verspaetung_v, informiert: informiert_v , verpasst: verpasst_v, datum: datum_v,  uhrzeit: uhrzeit_v,  starttime: starttime_v, startpunkt: startpunkt_v,  linie: linie_v, mitteilung: mitteilung_v   } ];
 			var request= array2json(request_arr);
 				
 				jQuery.support.cors = true;
