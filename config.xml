@@ -22,14 +22,34 @@
   <preference name="auto-hide-splash-screen" value="true"/>
   
   
-  <gap:plugin name="cordova-plugin-email-composer" version="0.8.3" source="npm" />
-  <gap:plugin name="nl.x-services.plugins.calendar" />
+  <plugin name="cordova-plugin-email-composer" source="npm" />
+  <plugin name="nl.x-services.plugins.calendar" source="npm" />
   
-  <gap:plugin name="cordova-plugin-datepicker" source="npm" /> 
+  <plugin name="cordova-plugin-datepicker" source="npm" /> 
   <plugin name="imagepickerde" source="npm" />
   
   
   
+   <plugin name="cordova-plugin-battery-status" source="npm" />
+   <plugin name="cordova-plugin-camera" source="npm" />
+   <plugin name="cordova-plugin-media-capture" source="npm" />
+   <plugin name="cordova-plugin-console" source="npm" />
+   <plugin name="cordova-plugin-contacts" source="npm" />
+   <plugin name="cordova-plugin-device" source="npm" />
+   <plugin name="cordova-plugin-device-motion" source="npm" />
+    <plugin name="cordova-plugin-device-orientation" source="npm" />
+    <plugin name="cordova-plugin-dialogs" source="npm" />
+    <plugin name="cordova-plugin-file" source="npm" />
+    <plugin name="cordova-plugin-file-transfer" source="npm" />
+    <plugin name="cordova-plugin-geolocation" source="npm" />
+    <plugin name="cordova-plugin-globalization" source="npm" />
+    <plugin name="cordova-plugin-inappbrowser" source="npm" />
+    <plugin name="cordova-plugin-media" source="npm" />
+    <plugin name="cordova-plugin-network-information" source="npm" />
+    <plugin name="cordova-plugin-splashscreen" source="npm" />
+    <plugin name="cordova-plugin-vibration" source="npm" />
+	
+  <!--
   
   <gap:plugin name="org.apache.cordova.battery-status"/>
   <gap:plugin name="org.apache.cordova.camera"/>
@@ -41,14 +61,18 @@
   <gap:plugin name="org.apache.cordova.device-orientation"/>
   <gap:plugin name="org.apache.cordova.dialogs"/>
   
-   
+  
+  
+  <gap:plugin name="org.apache.cordova.file-transfer"/>
   <gap:plugin name="org.apache.cordova.geolocation"/>
-  <!-- <gap:plugin name="org.apache.cordova.globalization"/> -->
+   <gap:plugin name="org.apache.cordova.globalization"/> 
   <gap:plugin name="org.apache.cordova.inappbrowser"/>
   <gap:plugin name="org.apache.cordova.media"/>
   <gap:plugin name="org.apache.cordova.network-information"/>
   <gap:plugin name="org.apache.cordova.splashscreen"/>
   <gap:plugin name="org.apache.cordova.vibration"/>
+  
+  -->
   
   
   
