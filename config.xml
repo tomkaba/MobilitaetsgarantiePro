@@ -28,6 +28,8 @@
   <gap:plugin name="cordova-plugin-datepicker" source="npm" /> 
   <plugin name="imagepickerde" source="npm" />
   
+  <plugin name="cordova-plugin-file" source="npm" /> 
+  
   
   <gap:plugin name="org.apache.cordova.battery-status"/>
   <gap:plugin name="org.apache.cordova.camera"/>
@@ -39,9 +41,7 @@
   <gap:plugin name="org.apache.cordova.device-orientation"/>
   <gap:plugin name="org.apache.cordova.dialogs"/>
   
-  <!-- <gap:plugin name="org.apache.cordova.file"/> -->
-  <gap:plugin name="cordova-plugin-file" source="npm" /> 
-  
+   
   <gap:plugin name="org.apache.cordova.file-transfer"/>
   <gap:plugin name="org.apache.cordova.geolocation"/>
   <!-- <gap:plugin name="org.apache.cordova.globalization"/> -->
