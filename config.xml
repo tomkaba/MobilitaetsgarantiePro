@@ -22,11 +22,7 @@
   <preference name="auto-hide-splash-screen" value="true"/>
   
   
-  <plugin name="cordova-plugin-email-composer" source="npm" />
-  <plugin name="nl.x-services.plugins.calendar" source="npm" />
   
-  <plugin name="cordova-plugin-datepicker" source="npm" /> 
-  <plugin name="imagepickerde" source="npm" />
   
   
   
