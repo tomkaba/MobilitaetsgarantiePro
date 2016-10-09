@@ -25,7 +25,7 @@
   <gap:plugin name="cordova-plugin-email-composer" version="0.8.3" source="npm" />
   <gap:plugin name="nl.x-services.plugins.calendar" />
   
-  <gap:plugin name="cordova-plugin-datepicker" source="npm" />
+  <!-- <gap:plugin name="cordova-plugin-datepicker" source="npm" /> -->
   <plugin name="imagepickerde" source="npm" />
   
   
