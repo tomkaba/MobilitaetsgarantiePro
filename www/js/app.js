@@ -648,6 +648,30 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		if (mitteilung_v == 'undefined') mitteilung_v ='';
 		
 		
+		function post(path, params, method) {
+			method = method || "post"; // Set method to post by default if not specified.
+
+			// The rest of this code assumes you are not using a library.
+			// It can be made less wordy if you use one.
+			var form = document.createElement("form");
+			form.setAttribute("method", method);
+			form.setAttribute("action", path);
+
+			for(var key in params) {
+				if(params.hasOwnProperty(key)) {
+					var hiddenField = document.createElement("input");
+					hiddenField.setAttribute("type", "hidden");
+					hiddenField.setAttribute("name", key);
+					hiddenField.setAttribute("value", params[key]);
+
+					form.appendChild(hiddenField);
+				 }
+			}
+
+			document.body.appendChild(form);
+			form.submit();
+		}
+		
 		$scope.preventSuccessPopup=0;
 		
 		if(!startpunkt_v.length) 
@@ -672,17 +696,29 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 					
 			
 			var url = "http://dev4.systags.de/unpuenktlichkeit";
-			
+			//var url = "http://etho.pl/unpunktlich.php";
 						
-			var request_arr=[ {attempt: 1, source: 'app', vorname: vorname_v, name: name_v, email: email_v , verspaetung: verspaetung_v, informiert: informiert_v , verpasst: verpasst_v, datum: datum_v,  uhrzeit: uhrzeit_v,  starttime: starttime_v, startpunkt: startpunkt_v,  linie: linie_v, mitteilung: mitteilung_v   } ];
+			var request_arr={attempt: 1, source: 'app', vorname: vorname_v, name: name_v, email: email_v , verspaetung: verspaetung_v, informiert: informiert_v , verpasst: verpasst_v, datum: datum_v,  uhrzeit: uhrzeit_v,  starttime: starttime_v, startpunkt: startpunkt_v,  linie: linie_v, mitteilung: mitteilung_v   };
 			var request= array2json(request_arr);
 				
+			$.post(url,request_arr,function(result) {
+				console.log(result);
+			});
+			
+			$ionicLoading.hide();
+			if($scope.preventSuccessPopup==0) $ionicPopup.alert({title:'Erfolg!',template:'Ihre Meldung wurde an die Schlichtungsstelle Nahverkehr übermittelt.'});
+			set_topbar_title('Schlichtungsstelle Nahverkehr');
+			window.location.hash="#/t/mm";
+			
+			/*	
 				jQuery.support.cors = true;
 				$.ajax({
 								url: url,
 								async: false,
 								contentType: "text/html",
-								data: { 'unpunktlichkeitmelden': request },
+								method: "post",
+								//data: { 'unpunktlichkeitmelden': request },
+								data: request_arr,
 								
 								success: function () {
 									$ionicLoading.hide();
@@ -697,8 +733,14 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 									//window.location.hash="#/t/mm";
 								}
 							});
-
-		
+			*/
+			/*
+			post(url,request_arr);
+			$ionicLoading.hide();
+			if($scope.preventSuccessPopup==0) $ionicPopup.alert({title:'Erfolg!',template:'Ihre Meldung wurde an die Schlichtungsstelle Nahverkehr übermittelt.'});
+			set_topbar_title('Schlichtungsstelle Nahverkehr');
+			window.location.hash="#/t/mm";
+			*/
 	}; 
 	
 	$scope.clearNeues = function() {
