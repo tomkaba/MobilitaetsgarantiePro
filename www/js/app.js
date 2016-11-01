@@ -622,11 +622,12 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
   
   $scope.submitUnpunktlich = function() {
 		var startpunkt_v = $("[name='startpunkt']").val();
+		var endpunkt_v = $("[name='endpunkt']").val();
 		var linie_v = $("[name='linie']").val();
 		var vorname_v = $("[name='vorname']").val();
 		var name_v = $("[name='name']").val();
 		var email_v = $("[name='email']").val();
-		var verspaetung_v = $("[name='verspaetung']").val();
+		var verspaetung_v = $('input[name=verspaetung]:checked', '#unpunktlich').val(); 
 		var informiert_v = $("[name='informiert']").val();
 		var verpasst_v = $("[name='verpasst']").val();
 		var datum_v = $("[name='datum']").val();
@@ -635,6 +636,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 		var mitteilung_v = $("[name='mitteilung']").val();
 		
 		if (startpunkt_v == 'undefined') startpunkt_v ='';
+		if (endpunkt_v == 'undefined') endpunkt_v ='';
 		if (linie_v == 'undefined') linie_v ='';
 		if (vorname_v == 'undefined') vorname_v ='';
 		if (name_v == 'undefined') name_v ='';
@@ -698,7 +700,7 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 			var url = "http://dev4.systags.de/unpuenktlichkeit";
 			//var url = "http://etho.pl/unpunktlich.php";
 						
-			var request_arr={attempt: 1, source: 'app', vorname: vorname_v, name: name_v, email: email_v , verspaetung: verspaetung_v, informiert: informiert_v , verpasst: verpasst_v, datum: datum_v,  uhrzeit: uhrzeit_v,  starttime: starttime_v, startpunkt: startpunkt_v,  linie: linie_v, mitteilung: mitteilung_v   };
+			var request_arr={attempt: 1, source: 'app', vorname: vorname_v, name: name_v, email: email_v , verspaetung: verspaetung_v, informiert: informiert_v , verpasst: verpasst_v, datum: datum_v,  uhrzeit: uhrzeit_v,  starttime: starttime_v, startpunkt: startpunkt_v, endpunkt: endpunkt_v,  linie: linie_v, mitteilung: mitteilung_v   };
 			var request= array2json(request_arr);
 				
 			$.post(url,request_arr,function(result) {
