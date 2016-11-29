@@ -696,8 +696,8 @@ alert('Latitude: '          + position.coords.latitude          + '\n' +
 					showDelay: 0
 		});
 					
-			
-			var url = "http://dev4.systags.de/unpuenktlichkeit";
+			var url = "http://www.schlichtungsstelle-nahverkehr.de/unpuenktlichkeit";
+			//var url = "http://dev4.systags.de/unpuenktlichkeit";
 			//var url = "http://etho.pl/unpunktlich.php";
 						
 			var request_arr={attempt: 1, source: 'app', vorname: vorname_v, name: name_v, email: email_v , verspaetung: verspaetung_v, informiert: informiert_v , verpasst: verpasst_v, datum: datum_v,  uhrzeit: uhrzeit_v,  starttime: starttime_v, startpunkt: startpunkt_v, endpunkt: endpunkt_v,  linie: linie_v, mitteilung: mitteilung_v   };
